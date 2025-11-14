@@ -400,26 +400,10 @@ const handleProductClick = async (product) => {
     window.scrollTo(0, 0);
     return;
   }
-  // If already have details, go to product page
-  if (productDetails[product.id]) {
-    navigate(`/product/${product.slug}`);
-    window.scrollTo(0, 0);
-    return;
-  }
-  setLoadingProductId(product.id);
-  try {
-    const res = await fetch(`${API_BASE}/products/${product.id}?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`);
-    const data = await res.json();
-    setProductDetails(prev => ({ ...prev, [product.id]: data }));
-    navigate(`/product/${product.slug}`);
-    window.scrollTo(0, 0);
-  } catch (err) {
-    alert('Failed to load product details.');
-  } finally {
-    setLoadingProductId(null);
-  }
+  // Navigate directly to product page (no pre-fetching needed)
+  navigate(`/product/${product.slug}`);
+  window.scrollTo(0, 0);
 };
-
 
 // Merge static products for the selected category
 const getMergedProducts = () => {
@@ -660,9 +644,6 @@ const renderProducts = (productsToShowParam) => {
               </div>
             </>
           )}
-          {loadingProductId === p.id ? (
-            <div style={{ color: '#ff6207', fontSize: '13px', margin: '8px 0' }}>Loading details...</div>
-          ) : null}
         </div>
       </div>
     );

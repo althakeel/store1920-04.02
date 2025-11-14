@@ -8,10 +8,16 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   // Initialize user from localStorage
   const [user, setUser] = useState(() => {
-    const id = localStorage.getItem("userId");
-    const email = localStorage.getItem("email");
-    const token = localStorage.getItem("token");
-    return id && email && token ? { id, email, token } : null;
+    const userDataString = localStorage.getItem("userData");
+    if (userDataString) {
+      try {
+        return JSON.parse(userDataString);
+      } catch (e) {
+        console.error('Error parsing userData from localStorage:', e);
+        return null;
+      }
+    }
+    return null;
   });
 
   const [loading, setLoading] = useState(true);
@@ -19,10 +25,17 @@ export const AuthProvider = ({ children }) => {
   // Sync user across tabs
   useEffect(() => {
     const syncUser = () => {
-      const id = localStorage.getItem("userId");
-      const email = localStorage.getItem("email");
-      const token = localStorage.getItem("token");
-      setUser(id && email && token ? { id, email, token } : null);
+      const userDataString = localStorage.getItem("userData");
+      if (userDataString) {
+        try {
+          setUser(JSON.parse(userDataString));
+        } catch (e) {
+          console.error('Error parsing userData:', e);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
     };
 
     // Run once on mount
@@ -31,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
     // Listen for changes from other tabs
     const handleStorageChange = (e) => {
-      if (["userId", "email", "token"].includes(e.key)) {
+      if (e.key === "userData") {
         syncUser();
       }
     };
@@ -43,10 +56,13 @@ export const AuthProvider = ({ children }) => {
   // Persist user to localStorage
   useEffect(() => {
     if (user) {
+      localStorage.setItem("userData", JSON.stringify(user));
+      // Keep legacy keys for backwards compatibility
       localStorage.setItem("userId", user.id);
       localStorage.setItem("email", user.email);
-      localStorage.setItem("token", user.token);
+      if (user.token) localStorage.setItem("token", user.token);
     } else {
+      localStorage.removeItem("userData");
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("token");
@@ -54,6 +70,7 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   const login = (userData) => {
+    console.log('Login called with userData:', userData);
     setUser(userData);
     // 🔑 Important: force storage event so other tabs update immediately
     localStorage.setItem("loginEvent", Date.now());
@@ -70,6 +87,7 @@ const logout = async () => {
   
   setUser(null);
   // Remove persisted user info
+  localStorage.removeItem("userData");
   localStorage.removeItem("userId");
   localStorage.removeItem("email");
   localStorage.removeItem("token");
@@ -81,10 +99,16 @@ const logout = async () => {
   useEffect(() => {
     const syncEvents = (e) => {
       if (e.key === "loginEvent" || e.key === "logoutEvent") {
-        const id = localStorage.getItem("userId");
-        const email = localStorage.getItem("email");
-        const token = localStorage.getItem("token");
-        setUser(id && email && token ? { id, email, token } : null);
+        const userDataString = localStorage.getItem("userData");
+        if (userDataString) {
+          try {
+            setUser(JSON.parse(userDataString));
+          } catch (e) {
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
       }
     };
     window.addEventListener("storage", syncEvents);

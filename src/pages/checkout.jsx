@@ -5,6 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import CheckoutLeft from '../components/CheckoutLeft';
 import CheckoutRight from '../components/CheckoutRight';
+import AutoFetchLocation from '../components/AutoFetchLocation';
 // import SignInModal from '../components/sub/SignInModal';
 import '../assets/styles/checkout.css';
 
@@ -471,6 +472,9 @@ meta_data: [
 
 return (
   <>
+    {/* Auto-fetch customer location on checkout page load */}
+    <AutoFetchLocation />
+    
     <div className="checkoutGrid" style={{ minHeight: '100vh', overflowY: 'auto' }}>
       <CheckoutLeft
         countries={countries}
