@@ -681,6 +681,7 @@ const renderProducts = (productsToShowParam) => {
       <div
         key={p.id}
         className="pcus-prd-card"
+        onClick={() => handleProductClick(p)}
         style={{ 
           cursor: "pointer", 
           position: "relative",
@@ -691,7 +692,7 @@ const renderProducts = (productsToShowParam) => {
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
       >
-  <div className="pcus-image-wrapper1" onClick={() => handleProductClick(p)} style={{ pointerEvents: "none" }}>
+  <div className="pcus-image-wrapper1" style={{ pointerEvents: "none" }}>
           <img
             src={imageToShow}
             alt={decodeHTML(p.name || p.slug)}
@@ -710,7 +711,7 @@ const renderProducts = (productsToShowParam) => {
           />
         </div>
         <div className="pcus-prd-info12">
-          <h2 className="pcus-prd-title1" onClick={() => handleProductClick(p)}>{decodeHTML(p.name || p.slug)}</h2>
+          <h2 className="pcus-prd-title1">{decodeHTML(p.name || p.slug)}</h2>
           <div className="pcus-prd-dummy-reviews" style={{ display: "flex", alignItems: "center", margin: "0px 5px" }}>
             {/* API products may not have rating/reviews/sold, so show 0 or blank if missing */}
             <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(Number(p.rating) || 0)}{"☆".repeat(5 - (Number(p.rating) || 0))}</div>
