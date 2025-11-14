@@ -256,6 +256,7 @@ const ProductCategory = () => {
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [showingStaticOnly, setShowingStaticOnly] = useState(false);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false); // Track if first batch loaded
+  const [isBackgroundLoading, setIsBackgroundLoading] = useState(false); // Track background fetch
   // No need for apiLoaded state anymore
   // For 'Recommended', hasMoreProducts should consider both API and static products
   const getTotalProducts = () => {
@@ -352,60 +353,68 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
         setShowingStaticOnly(false);
         setInitialLoadComplete(true); // Mark initial load as complete - no more blinking
         
-        // Stage 2: Load remaining products in background
-        setTimeout(async () => {
-          try {
-            let page = 2; // Start from page 2
-            
-            // Fetch pages and update UI every 5 products for progressive loading
-            while (true) {
-              const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&_fields=id,name,price,regular_price,sale_price,images,categories,slug`;
-              console.log(`📡 Background fetching page ${page}...`);
+        // Stage 2: Load remaining products in background (only if not already loading)
+        if (!isBackgroundLoading) {
+          setIsBackgroundLoading(true);
+          setTimeout(async () => {
+            try {
+              let page = 2; // Start from page 2
+              let currentProducts = [...validQuickData];
               
-              const res = await fetch(url);
-              const data = await res.json();
-              
-              if (!Array.isArray(data) || !data.length) {
-                console.log('⚠️ No more products found');
-                break;
+              // Fetch pages and update UI every batch for progressive loading
+              while (true) {
+                const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&_fields=id,name,price,regular_price,sale_price,images,categories,slug`;
+                console.log(`📡 Background fetching page ${page}...`);
+                
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (!Array.isArray(data) || !data.length) {
+                  console.log('⚠️ No more products found');
+                  break;
+                }
+                
+                console.log(`✅ Fetched page ${page}, products: ${data.length}`);
+                
+                // Filter valid products from this page
+                const validPageProducts = data.filter(p => {
+                  const hasImage = p.images && p.images.length > 0 && p.images[0]?.src;
+                  const hasPrice = p.price && parseFloat(p.price) > 0;
+                  const hasSalePrice = !p.sale_price || parseFloat(p.sale_price) > 0;
+                  return hasImage && hasPrice && hasSalePrice;
+                });
+                
+                // Append to current products
+                currentProducts = [...currentProducts, ...validPageProducts];
+                const limited = currentProducts.slice(0, MAX_PRODUCTS);
+                
+                // Update cache only (don't update state to prevent re-renders)
+                apiProductCache[categoryId] = limited;
+                
+                if (data.length < PRODUCT_FETCH_LIMIT) break;
+                page++;
+                
+                // Check if we've reached max
+                if (limited.length >= MAX_PRODUCTS) break;
+                
+                // Small delay between batches for smooth UX
+                await new Promise(resolve => setTimeout(resolve, 50));
               }
               
-              console.log(`✅ Fetched page ${page}, products: ${data.length}`);
-              
-              // Filter valid products from this page
-              const validPageProducts = data.filter(p => {
-                const hasImage = p.images && p.images.length > 0 && p.images[0]?.src;
-                const hasPrice = p.price && parseFloat(p.price) > 0;
-                const hasSalePrice = !p.sale_price || parseFloat(p.sale_price) > 0;
-                return hasImage && hasPrice && hasSalePrice;
-              });
-              
-              // Get current products and append new ones
-              setAllProducts(prev => {
-                const combined = [...prev, ...validPageProducts];
-                const limited = combined.slice(0, MAX_PRODUCTS);
-                apiProductCache[categoryId] = limited;
-                return limited;
-              });
-              
-              if (data.length < PRODUCT_FETCH_LIMIT) break;
-              page++;
-              
-              // Check if we've reached max
-              if (apiProductCache[categoryId]?.length >= MAX_PRODUCTS) break;
-              
-              // Small delay between batches for smooth UX
-              await new Promise(resolve => setTimeout(resolve, 50));
+              // Final update after all products loaded
+              const finalLimited = currentProducts.slice(0, MAX_PRODUCTS);
+              apiProductCache[categoryId] = finalLimited;
+              setAllProducts([...finalLimited]);
+              console.log('🎯 Background loading complete:', finalLimited.length);
+            } catch (bgErr) {
+              console.error('❌ Background fetch error:', bgErr);
+            } finally {
+              // Remove from loading set when done
+              loadingCategories.delete(categoryId);
+              setIsBackgroundLoading(false);
             }
-            
-            console.log('🎯 Background loading complete:', apiProductCache[categoryId]?.length || 0);
-          } catch (bgErr) {
-            console.error('❌ Background fetch error:', bgErr);
-          } finally {
-            // Remove from loading set when done
-            loadingCategories.delete(categoryId);
-          }
-        }, 100);
+          }, 100);
+        }
       } else {
         console.log('❌ No products found for category:', categoryId);
         apiProductCache[categoryId] = [];
@@ -590,12 +599,12 @@ const renderProducts = (productsToShowParam) => {
           key={p.id}
           className="pcus-prd-card static-product-card"
           onClick={() => handleProductClick(p)}
-          style={{ cursor: "pointer", position: "relative" }}
+          style={{ cursor: "pointer", position: "relative", minHeight: "380px", display: "flex", flexDirection: "column" }}
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
         >
           <div style={{ position: "absolute", top: "8px", right: "8px", backgroundColor: "#ff6207", color: "#fff", fontSize: "10px", fontWeight: "bold", padding: "2px 6px", borderRadius: "4px", zIndex: 2 }}>Fast Moving</div>
-          <div className="pcus-image-wrapper" style={{ position: "relative", pointerEvents: "none" }}>
+          <div className="pcus-image-wrapper" style={{ position: "relative", pointerEvents: "none", minHeight: "200px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <img
               src={imageToShow}
               alt={decodeHTML(p.name)}
@@ -652,11 +661,11 @@ const renderProducts = (productsToShowParam) => {
       <div
         key={p.id}
         className="pcus-prd-card"
-        style={{ cursor: "pointer", position: "relative" }}
+        style={{ cursor: "pointer", position: "relative", minHeight: "380px", display: "flex", flexDirection: "column" }}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
       >
-  <div className="pcus-image-wrapper1" onClick={() => handleProductClick(p)} style={{ pointerEvents: "none" }}>
+  <div className="pcus-image-wrapper1" onClick={() => handleProductClick(p)} style={{ pointerEvents: "none", minHeight: "200px", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <img
             src={imageToShow}
             alt={decodeHTML(p.name || p.slug)}
