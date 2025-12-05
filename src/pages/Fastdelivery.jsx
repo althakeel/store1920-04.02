@@ -28,7 +28,7 @@ const staticProducts = [
     path: "/products/neck-face-massager",
     rating: 5,
     reviews: 48,
-    sold: 139
+    sold: 102
   },
   
     {
@@ -41,7 +41,7 @@ const staticProducts = [
     path: "/products/48V-cordless-drill-set–high-power-precision-potal-control",
     rating: 5,
     reviews: 48,
-    sold: 139
+    sold: 119
   },
 
   //  {
@@ -66,7 +66,7 @@ const staticProducts = [
     path: "/products/boxing-machine",
     rating: 5,
     reviews: 48,
-    sold: 139
+    sold: 152
   },
   {
     id: "Mini Portable Smart Projector",
