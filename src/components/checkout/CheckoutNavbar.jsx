@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../assets/styles/checkout/CheckoutNavbar.css';
-import LogoMain from '../../assets/images/Logo/logo-national-day.png'
+import LogoMain from '../../assets/images/Logo/Logo.png'
 
 
 const messages = [

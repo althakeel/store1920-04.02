@@ -12,7 +12,7 @@ import CoinWidget from './CoinWidget';
 import { useCart } from '../contexts/CartContext';
 import { useTheme } from '../contexts/ThemeContext'; 
 import { useAuth } from '../contexts/AuthContext';
-import LogoMain from '../assets/images/Logo/logo-national-day.png';
+import LogoMain from '../assets/images/Logo/Logo.png';
 
 import Dirham from '../assets/images/language/aed (1).png';
 import Dollor from '../assets/images/language/dollor.png';
@@ -243,7 +243,7 @@ const messages = [
   };
 
   // const backgroundColor = currentTheme?.navbarBg || '#CCA000';
-  const backgroundColor ='#6D8494';
+  const backgroundColor ='#231D8D';
 
   const sitelogo = LogoMain;
   const isDark = chroma(backgroundColor).luminance() < 0.5;

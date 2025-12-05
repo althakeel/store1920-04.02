@@ -23,6 +23,10 @@ import Product9 from '../../../assets/images/staticproducts/Steamer/1.webp'
 import Product6 from '../../../assets/images/staticproducts/Peeler/1.webp'
 import Product12 from '../../../assets/images/staticproducts/minproject/1.webp'
 // import Product8 from '../../../assets/images/staticproducts/'
+import Product13 from '../../../assets/images/staticproducts/Boxing Machine/1.webp'
+import Product14 from '../../../assets/images/staticproducts/CCTV Camera/1.webp'
+import Product15 from '../../../assets/images/staticproducts/drill-machine/2.webp'
+import Product16 from '../../../assets/images/staticproducts/wrinkle-remover/1.webp'
 
 
 const PAGE_SIZE = 10;
@@ -80,6 +84,65 @@ const shuffleArray = (array) => {
 
 // Static Products with categories property
 const staticProducts = [
+
+   {
+    id: "600013",
+    name: "neck-face-massager ",
+    price: "69.90",
+    regular_price: "149.90",
+    sale_price: "69.90",
+    images: [{ src: Product16 }],
+    slug: "neck-face-massager",
+    path: "/products/neck-face-massager",
+    rating: 4,
+    reviews: 18,
+    sold: 120,
+    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+  },
+
+  {
+    id: "600012",
+    name: "Drill Machine",
+    price: "69.90",
+    regular_price: "149.90",
+    sale_price: "69.90",
+    images: [{ src: Product15 }],
+    slug: "drill-machine",
+    path: "/products/drill-machine",
+    rating: 4,
+    reviews: 18,
+    sold: 120,
+    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+  },
+   {
+    id: "600011",
+    name: "CCTV Camera",
+    price: "69.90",
+    regular_price: "149.90",
+    sale_price: "69.90",
+    images: [{ src: Product14 }],
+    slug: "cctv-camera",
+    path: "/products/cctv-camera",
+    rating: 4,
+    reviews: 18,
+    sold: 120,
+    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+  },
+  
+   {
+    id: "600010",
+    name: "Boxing Machine",
+    price: "69.90",
+    regular_price: "149.90",
+    sale_price: "69.90",
+    images: [{ src: Product13 }],
+    slug: "boxing-machine",
+    path: "/products/boxing-machine",
+    rating: 4,
+    reviews: 18,
+    sold: 120,
+    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+  },
   {
     id: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual",
     name: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual",

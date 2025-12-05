@@ -132,6 +132,8 @@ import Product161 from "../assets/images/staticproducts/Peeler/12.webp";
 
 
 
+
+
 // 21.11.25
 
 import Product170 from '../assets/images/staticproducts/minproject/1.webp'  
@@ -142,6 +144,57 @@ import Product174 from '../assets/images/staticproducts/minproject/5.webp'
 import Product175 from '../assets/images/staticproducts/minproject/6.webp'
 import Product176 from '../assets/images/staticproducts/minproject/7.webp'
 import Product177 from '../assets/images/staticproducts/minproject/8.webp'
+
+// boxing machine 
+import Product178 from "../assets/images/staticproducts/Boxing Machine/1.webp";
+import Product179 from "../assets/images/staticproducts/Boxing Machine/3.webp";
+import Product180 from "../assets/images/staticproducts/Boxing Machine/4.webp";
+import Product181 from "../assets/images/staticproducts/Boxing Machine/5.webp";
+import Product182 from "../assets/images/staticproducts/Boxing Machine/6.webp";
+import Product183 from "../assets/images/staticproducts/Boxing Machine/7.webp";
+import Product184 from "../assets/images/staticproducts/Boxing Machine/8.webp";
+import Product185 from "../assets/images/staticproducts/Boxing Machine/9.webp";
+import Product186 from "../assets/images/staticproducts/Boxing Machine/10.webp";
+// cctv
+
+import Product187 from "../assets/images/staticproducts/CCTV Camera/1.webp";
+import Product188 from "../assets/images/staticproducts/CCTV Camera/2.webp";
+import Product189 from "../assets/images/staticproducts/CCTV Camera/3.webp";
+import Product190 from "../assets/images/staticproducts/CCTV Camera/4.webp";
+import Product191 from "../assets/images/staticproducts/CCTV Camera/5.webp";
+import Product192 from "../assets/images/staticproducts/CCTV Camera/6.webp";
+import Product193 from "../assets/images/staticproducts/CCTV Camera/7.webp";
+import Product194 from "../assets/images/staticproducts/CCTV Camera/8.webp";
+import Product195 from "../assets/images/staticproducts/CCTV Camera/9.webp";
+import Product196 from "../assets/images/staticproducts/CCTV Camera/10.webp";
+// drill machine
+import Product197 from "../assets/images/staticproducts/drill-machine/1.webp";
+import Product198 from "../assets/images/staticproducts/drill-machine/2.webp";
+import Product199 from "../assets/images/staticproducts/drill-machine/3.webp";
+import Product200 from "../assets/images/staticproducts/drill-machine/4.webp";
+import Product201 from "../assets/images/staticproducts/drill-machine/5.webp";
+import Product202 from "../assets/images/staticproducts/drill-machine/6.webp";
+import Product203 from "../assets/images/staticproducts/drill-machine/7.webp";
+import Product204 from "../assets/images/staticproducts/drill-machine/8.webp";
+import Product205 from "../assets/images/staticproducts/drill-machine/9.webp";
+// wrinkle remover
+import Product206 from "../assets/images/staticproducts/wrinkle-remover/1.webp";
+import Product207 from "../assets/images/staticproducts/wrinkle-remover/2.webp";
+import Product208 from "../assets/images/staticproducts/wrinkle-remover/3.webp";
+import Product209 from "../assets/images/staticproducts/wrinkle-remover/4.webp";
+import Product210 from "../assets/images/staticproducts/wrinkle-remover/5.webp";
+import Product211 from "../assets/images/staticproducts/wrinkle-remover/6.webp";
+import Product212 from "../assets/images/staticproducts/wrinkle-remover/7.webp";
+import Product213 from "../assets/images/staticproducts/wrinkle-remover/8.webp";
+import Product214 from "../assets/images/staticproducts/wrinkle-remover/9.webp";
+import Product215 from "../assets/images/staticproducts/wrinkle-remover/10.webp";
+import Product216 from "../assets/images/staticproducts/wrinkle-remover/11.webp";
+import Product217 from "../assets/images/staticproducts/wrinkle-remover/12.webp";
+
+
+
+
+
 
 
 const staticProducts = [
@@ -1912,7 +1965,7 @@ const staticProducts = [
     subdesc1: "Android TV 11.0 with Netflix, Prime Video & YouTube",
     subdesc2: "Dual-Band WiFi6 + Bluetooth 5.0",
     subdesc3: "180° Rotatable Projection",
-    subdesc4: " 360° Surround Sound",
+    subdesc4: " 360° Surround Sound & LED Lights",
 
     image: Product171,
     thumb1: Product170,
@@ -2067,7 +2120,1056 @@ const staticProducts = [
     ],
   },
 
- 
+  //---boxing machine product 
+
+  {
+  id: 526861, // isko listing wali id se sync rakhna acha hai
+  name: "Music Boxing Machine – Smart Boxing Trainer",
+  slug: "boxing-machine", // URL: /products/boxing-machine
+  price: 89.9,
+  salePrice: 89.9,
+  regularPrice: 199.0,
+
+  description:
+    "Punch to the beat, burn calories, and sharpen your reflexes with the Smart Bluetooth Boxing Machine — perfect for fitness, stress relief, kids, and pro training",
+  shortdesc:
+    "Smart wall-mounted boxing trainer with 9 modes, 9 speed levels, Bluetooth music sync and LED scoring.",
+
+  subdesc: "9 Training Modes",
+  subdesc1: "9 Speed Levels",
+  subdesc2: "Bluetooth Music Sync",
+  subdesc3: "Shock-Absorbing Punch Pads",
+  subdesc4: "Wall-Mounted, No Drilling Needed",
+  subdesc5: "Gloves Included",
+
+  // main images
+  image: Product178,
+  thumb1: Product179,
+  thumb2: Product180,
+  thumb3: Product181,
+  thumb4: Product182,
+  thumb5: Product183,
+  thumb6: Product184,
+  thumb7: Product185,
+  thumb8: Product186,
+
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 526874,
+      name: "Music Boxing Machine",
+      label: "Buy 1 for only 99.90 AED",
+      discount: 0,
+      slug: "boxing-machine",
+      price: 99.90,
+      originalPrice: 120,
+      image: Product178,
+    },
+    {
+      type: "Bundle of 2",
+      id: 526873,
+      name: "Music Boxing Machine",
+      label: "Buy 2 & Get 15% Off",
+      discount: 15,
+      price: 180.0, // example: 89.9 * 2 * 0.85
+      originalPrice: 200,
+      note: "Perfect for home + office / kids room",
+      mostPopular: true,
+      image: Product179,
+      slug: "boxing-machine",
+    },
+    {
+      type: "Bundle of 3",
+      id: 526887,
+      name: "Music Boxing Machine",
+      label: "Buy 3 & Get 15% Off",
+      discount: 15,
+      price: 225.0, // example: 89.9 * 2 * 0.85
+      originalPrice: 250,
+      note: "Perfect for home + office / kids room",
+      mostPopular: false,
+      image: Product179,
+      slug: "boxing-machine",
+    },
+  ],
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Problem + Solution + Features
+  section2contentTitle: "Turn Your Wall Into a Smart Boxing Trainer",
+  section2contentDesc:
+    "Train faster, improve reflexes, burn calories, and punch to the rhythm of your favorite music — all with the Smart Bluetooth Boxing Machine. Perfect for fitness, stress relief, kids, and professional boxing practice.",
+  section2list: [
+    "9 Training Modes — Focus on reflexes, speed, cardio, or coordination",
+    "9 Adjustable Speeds — From beginner-friendly to pro-level",
+    "Bluetooth Music Sync – punch to the beat of your favorite songs",
+    "High-Quality Speaker — Immersive training atmosphere",
+    "Shock-Absorbing Punch Pads — Soft, safe, and injury-free",
+    "LED Score Display — Track accuracy and speed instantly",
+    "Easy Wall Mount — No drilling required; uses strong adhesive & Velcro",
+    "Includes Gloves — Protect your hands during intense sessions",
+  ],
+  section2contentPoints: [
+    "Cash on Delivery Available",
+    "Fast Delivery Across UAE",
+    "Gloves Included in the Box",
+    "Wall-Mounted, Space-Saving Design",
+  ],
+  section2image: Product180,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "From Stress Relief to Full-Body Training – Fitness Just Became Fun",
+  section3image: Product181,
+  section3points: [
+    "Home Fitness Mode – burn calories & tone your body",
+    "Kids’ Energy Burner – safe, fun alternative to screen time",
+    "Office Stress Relief – 5-minute punch break to reset your mind",
+    "Pro Training – reaction time & speed improvement for boxers",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "Loved by Fitness Lovers, Gamers & Families",
+  sectionProgressSubtitle: "",
+  sectionProgress: [
+    {
+      title: "Feel Workouts Become More Fun",
+      desc: "Users report higher motivation vs. normal home workouts.",
+      percent: 96,
+    },
+    {
+      title: "Improved Reflex & Reaction Time",
+      desc: "LED targets + speed levels help train timing and accuracy.",
+      percent: 92,
+    },
+    {
+      title: "Stress Relief & Mood Boost",
+      desc: "Punching to music helps release daily stress.",
+      percent: 89,
+    },
+    {
+      title: "Kids Move More, Screen Time Less",
+      desc: "Parents use it as a fun exercise tool at home.",
+      percent: 94,
+    },
+  ],
+
+  // 🔹 Comparison table – smart boxing vs punching bag
+  comparisonData: {
+    title: "Smarter Than a Regular Punching Bag",
+    description:
+      "Unlike traditional punching bags, the Music Boxing Machine tracks your score, syncs with music and lights, and fits easily on your wall with no floor space required.",
+    headers: ["Feature", "Smart Boxing Machine", "Regular Punching Bag"],
+    rows: [
+      { feature: "9 Speed Levels", lumineux: true, others: false },
+      { feature: "LED Score Display", lumineux: true, others: false },
+      { feature: "Bluetooth Music Sync", lumineux: true, others: false },
+      { feature: "Wall-Mounted (Space Saving)", lumineux: true, others: false },
+      { feature: "Shock Absorption & Noise Reduction", lumineux: true, others: false },
+      { feature: "Gloves Included", lumineux: true, others: false },
+      { feature: "Gloves Included", lumineux: true, others: false },
+    ],
+  },
+
+  section5image: Product182,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free for 30 Days",
+  Guranteedesc:
+    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "Is it suitable for beginners?",
+  fAQ1A:
+    "Yes! Speed starts at beginner level and increases gradually, so both beginners and pros can use it.",
+  Faq2Q: "Can children use it?",
+  fAQ2A:
+    " Absolutely — safe, padded, shock-absorbing design.",
+  Faq3Q: "Does it require drilling?",
+  fAQ3A:
+    "No. Comes with strong adhesive + Velcro for easy wall mounting.",
+  Faq4Q: "Can I use my own gloves?",
+  fAQ4A:
+    "Yes, you can use your own gloves, but a pair is included",
+  Faq5Q: "Is it loud? Will it disturb neighbors?",
+  fAQ5A:
+    "No — nano-foam absorbs sound, making it quiet enough for apartments.",
+
+  // 🔹 Reviews
+  reviewsTitle: "See Why Users Love It",
+  reviewsRating: 4.9,
+  reviews: [
+    {
+      text: "Best fitness purchase this year! The music sync makes it super fun.",
+      author: "Ahmed R.",
+      stars: 5,
+    },
+    {
+      text: "My son uses it daily! Finally something that gets him off the iPad.",
+      author: "Lina A.",
+      stars: 5,
+    },
+    {
+      text: "As a boxer, this improved my reflexes immediately. Amazing for speed training.",
+      author: "Mark D.",
+      stars: 5,
+    },
+  ],
+},
+
+
+  // ... cctv Camera product
+
+//    {
+//   id: 526861, // isko listing wali id se sync rakhna acha hai
+//   name: "CCTV Camera – ",
+//   slug: "cctv-camera", // URL: /products/cctv-camera
+//   price: 89.9,
+//   salePrice: 89.9,
+//   regularPrice: 199.0,
+
+//   description:
+//     "Punch to the beat, burn calories, and sharpen your reflexes with the Smart Bluetooth Boxing Machine — perfect for fitness, stress relief, kids, and pro training",
+//   shortdesc:
+//     "Smart wall-mounted boxing trainer with 9 modes, 9 speed levels, Bluetooth music sync and LED scoring.",
+
+//   subdesc: "9 Training Modes",
+//   subdesc1: "9 Speed Levels",
+//   subdesc2: "Bluetooth Music Sync",
+//   subdesc3: "Shock-Absorbing Punch Pads",
+//   subdesc4: "Wall-Mounted, No Drilling Needed",
+//   subdesc5: "Gloves Included",
+
+//   // main images
+//   image: Product187,
+//   thumb1: Product188,
+//   thumb2: Product189,
+//   thumb3: Product190,
+//   thumb4: Product191,
+//   thumb5: Product192,
+//   thumb6: Product193,
+//   thumb7: Product194,
+//   thumb8: Product195,
+
+
+//   // 🔹 Bundle / pricing section (top right)
+//   bundles: [
+//     {
+//       type: "Buy 1",
+//       id: 526874,
+//       name: "Music Boxing Machine",
+//       label: "Buy 1 for only 99.90 AED",
+//       discount: 0,
+//       slug: "boxing-machine",
+//       price: 99.90,
+//       originalPrice: 120,
+//       image: Product187,
+//     },
+//     {
+//       type: "Bundle of 2",
+//       id: 526873,
+//       name: "Music Boxing Machine",
+//       label: "Buy 2 & Get 15% Off",
+//       discount: 15,
+//       price: 180.0, // example: 89.9 * 2 * 0.85
+//       originalPrice: 200,
+//       note: "Perfect for home + office / kids room",
+//       mostPopular: true,
+//       image: Product188,
+//       slug: "boxing-machine",
+//     },
+//   ],
+//   BundleTitle: "BUNDLE AND SAVE MORE!",
+
+//   // 🔹 Section 2 – Problem + Solution + Features
+//   section2contentTitle: "Turn Your Wall Into a Smart Boxing Trainer",
+//   section2contentDesc:
+//     "Train faster, improve reflexes, burn calories, and punch to the rhythm of your favorite music — all with the Smart Bluetooth Boxing Machine. Perfect for fitness, stress relief, kids, and professional boxing practice.",
+//   section2list: [
+//     "9 Training Modes — Focus on reflexes, speed, cardio, or coordination",
+//     "9 Adjustable Speeds — From beginner-friendly to pro-level",
+//     "Bluetooth Music Sync – punch to the beat of your favorite songs",
+//     "High-Quality Speaker — Immersive training atmosphere",
+//     "Shock-Absorbing Punch Pads — Soft, safe, and injury-free",
+//     "LED Score Display — Track accuracy and speed instantly",
+//     "Easy Wall Mount — No drilling required; uses strong adhesive & Velcro",
+//     "Includes Gloves — Protect your hands during intense sessions",
+//   ],
+//   section2contentPoints: [
+//     "Cash on Delivery Available",
+//     "Fast Delivery Across UAE",
+//     "Gloves Included in the Box",
+//     "Wall-Mounted, Space-Saving Design",
+//   ],
+//   section2image: Product189,
+
+//   // 🔹 Section 3 – Use cases / lifestyle
+//   section3title: "From Stress Relief to Full-Body Training – Fitness Just Became Fun",
+//   section3image: Product190,
+//   section3points: [
+//     "Home Fitness Mode – burn calories & tone your body",
+//     "Kids’ Energy Burner – safe, fun alternative to screen time",
+//     "Office Stress Relief – 5-minute punch break to reset your mind",
+//     "Pro Training – reaction time & speed improvement for boxers",
+//   ],
+
+//   // 🔹 Progress / stats bar
+//   sectionProgressTitle: "Loved by Fitness Lovers, Gamers & Families",
+//   sectionProgressSubtitle: "",
+//   sectionProgress: [
+//     {
+//       title: "Feel Workouts Become More Fun",
+//       desc: "Users report higher motivation vs. normal home workouts.",
+//       percent: 96,
+//     },
+//     {
+//       title: "Improved Reflex & Reaction Time",
+//       desc: "LED targets + speed levels help train timing and accuracy.",
+//       percent: 92,
+//     },
+//     {
+//       title: "Stress Relief & Mood Boost",
+//       desc: "Punching to music helps release daily stress.",
+//       percent: 89,
+//     },
+//     {
+//       title: "Kids Move More, Screen Time Less",
+//       desc: "Parents use it as a fun exercise tool at home.",
+//       percent: 94,
+//     },
+//   ],
+
+//   // 🔹 Comparison table – smart boxing vs punching bag
+//   comparisonData: {
+//     title: "Smarter Than a Regular Punching Bag",
+//     description:
+//       "Unlike traditional punching bags, the Music Boxing Machine tracks your score, syncs with music and lights, and fits easily on your wall with no floor space required.",
+//     headers: ["Feature", "Smart Boxing Machine", "Regular Punching Bag"],
+//     rows: [
+//       { feature: "9 Speed Levels", lumineux: true, others: false },
+//       { feature: "LED Score Display", lumineux: true, others: false },
+//       { feature: "Bluetooth Music Sync", lumineux: true, others: false },
+//       { feature: "Wall-Mounted (Space Saving)", lumineux: true, others: false },
+//       { feature: "Shock Absorption & Noise Reduction", lumineux: true, others: false },
+//       { feature: "Gloves Included", lumineux: true, others: false },
+//       { feature: "Gloves Included", lumineux: true, others: false },
+//     ],
+//   },
+
+//   section5image: Product191,
+
+//   // 🔹 Guarantee
+//   Guaranteetitle: "Try It Risk-Free for 30 Days",
+//   Guranteedesc:
+//     "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+//   // 🔹 FAQs
+//   Faq1Q: "Is it suitable for beginners?",
+//   fAQ1A:
+//     "Yes! Speed starts at beginner level and increases gradually, so both beginners and pros can use it.",
+//   Faq2Q: "Can children use it?",
+//   fAQ2A:
+//     " Absolutely — safe, padded, shock-absorbing design.",
+//   Faq3Q: "Does it require drilling?",
+//   fAQ3A:
+//     "No. Comes with strong adhesive + Velcro for easy wall mounting.",
+//   Faq4Q: "Can I use my own gloves?",
+//   fAQ4A:
+//     "Yes, you can use your own gloves, but a pair is included",
+//   Faq5Q: "Is it loud? Will it disturb neighbors?",
+//   fAQ5A:
+//     "No — nano-foam absorbs sound, making it quiet enough for apartments.",
+
+//   // 🔹 Reviews
+//   reviewsTitle: "See Why Users Love It",
+//   reviewsRating: 4.9,
+//   reviews: [
+//     {
+//       text: "Best fitness purchase this year! The music sync makes it super fun.",
+//       author: "Ahmed R.",
+//       stars: 5,
+//     },
+//     {
+//       text: "My son uses it daily! Finally something that gets him off the iPad.",
+//       author: "Lina A.",
+//       stars: 5,
+//     },
+//     {
+//       text: "As a boxer, this improved my reflexes immediately. Amazing for speed training.",
+//       author: "Mark D.",
+//       stars: 5,
+//     },
+//   ],
+// },
+// ... Drill machine product
+
+  {
+  id: 526892, // listing ki id se sync
+  name: "48V Cordless Drill Set – High Power, Precision & Total Control",
+  slug: "48V-cordless-drill-set–high-power-precision-potal-control", // URL: /products/drill-machine
+
+  // ✅ Price according to content (AED 99.90)
+  price: 99.9,
+  salePrice: 99.9,
+  regularPrice: 199.0,
+
+  // ✅ Hero description + shortdesc
+  description:
+    "Power through wood, metal, plastic, and any home project with a lightweight 48V drill designed for strength, precision, and all-day comfort.",
+  shortdesc:
+    "48V cordless drill with 25+1 torque settings, 2 variable speeds, LED light and a complete 30-piece accessory kit — perfect for every DIY job.",
+
+  // ✅ Trust badges -> subdesc lines
+  subdesc: "48V High Performance",
+  subdesc1: "25+1 Torque Settings",
+  subdesc2: "2 Variable Speeds (0–500 / 0–1400 RPM)",
+  subdesc3: "Rechargeable Lithium Battery",
+  subdesc4: "30-Piece Accessory Kit Included",
+  subdesc5: "1-Year Warranty",
+
+  // ✅ Images same as before
+  image: Product197,
+  thumb1: Product198,
+  thumb2: Product199,
+  thumb3: Product200,
+  thumb4: Product201,
+  thumb5: Product202,
+  thumb6: Product203,
+  thumb7: Product204,
+  thumb8: Product205,
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 526904,
+      name: "48V Cordless Drill Set",
+      label: "Buy 1 for only 99.90 AED",
+      discount: 0,
+      slug: "48V-cordless-drill-set–high-power-precision-potal-control",
+      price: 99.9,
+      originalPrice: 120,
+      image: Product197,
+    },
+    {
+      type: "Bundle of 2",
+      id: 526905,
+      name: "48V Cordless Drill Set",
+      label: "Buy 2 & Save More – Perfect for home + workshop",
+      discount: 15,
+      price: 180.0, // tum apne hisaab se change bhi kar sakte ho
+      originalPrice: 200,
+      note: "Ideal for gifting or keeping one at home and one at work",
+      mostPopular: true,
+      image: Product198,
+      slug: "48V-cordless-drill-set–high-power-precision-potal-control",
+    },
+    {
+      type: "Bundle of 3",
+      id: 526906,
+      name: "48V Cordless Drill Set",
+      label: "Buy 3 & Save More – Perfect for home + workshop",
+      discount: 15,
+      price: 225.0, // tum apne hisaab se change bhi kar sakte ho
+      originalPrice: 250,
+      note: "Ideal for gifting or keeping one at home and one at work",
+      mostPopular: false,
+      image: Product198,
+      slug: "48V-cordless-drill-set–high-power-precision-potal-control",
+    },
+  ],
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Features / hero explanation
+  section2contentTitle: "The Only Cordless Drill You Need for Every DIY Job",
+  section2contentDesc:
+    "From furniture assembly to shelves, repairs and craft projects — the 48V Cordless Drill Set gives you the perfect balance of power, precision and control.",
+  section2list: [
+    "48V Motor Power – drill through wood, plastic & metal with ease",
+    "25+1 Torque Settings – prevent stripped screws and maximize control",
+    "2 Variable Speeds (0–500 / 0–1400 RPM) for drilling & screwdriving",
+    "3/8\" Keyless Metal Chuck – quick, tool-free bit changes",
+    "Ergonomic Anti-Slip Grip – comfortable one-handed operation",
+    "Built-in LED Work Light – perfect in dark corners & tight spaces",
+    "Lightweight & Compact – easy for beginners and pros",
+    "Durable Build – designed to last in tough conditions",
+  ],
+  section2contentPoints: [
+    "Delivery in 2–3 Days Across UAE",
+    "Cash on Delivery Available",
+    "1-Year Warranty",
+    "Complete 30-Piece Accessory Kit Included",
+  ],
+  section2image: Product200,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "Your Go-To Drill for Every Home Project",
+  section3image: Product199,
+  section3points: [
+    "Home Repairs – shelves, frames, brackets, appliances",
+    "Woodworking – craft projects and furniture builds",
+    "Light Metal Work – drilling and fastening on metal",
+    "Screwdriving – fast, smooth screw insertion and removal",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "Trusted by DIYers, Homeowners & Professionals",
+  sectionProgressSubtitle: "",
+  sectionProgress: [
+    {
+      title: "Say It Replaced Multiple Tools",
+      desc: "One drill + full kit handles most DIY tasks.",
+      percent: 95,
+    },
+    {
+      title: "Love the Power & Control",
+      desc: "48V motor + 25+1 torque settings make work easier.",
+      percent: 93,
+    },
+    {
+      title: "Notice Long Battery Performance",
+      desc: "2 rechargeable batteries keep you working longer.",
+      percent: 90,
+    },
+    {
+      title: "Recommend It for Home & Workshop",
+      desc: "Great for both beginners and experienced users.",
+      percent: 94,
+    },
+  ],
+
+  // 🔹 Comparison table – 48V drill vs cheap drills
+  comparisonData: {
+    title: "Why Choose the 48V Cordless Drill Set?",
+    description:
+      "Cheap drills stall, overheat and run out of battery fast. This 48V Cordless Drill is built for real-world DIY and pro work.",
+    headers: ["Feature", "48V Cordless Drill Set", "Cheap/Basic Drill"],
+    rows: [
+      { feature: "48V High-Performance Motor", lumineux: true, others: false },
+      { feature: "25+1 Torque Settings", lumineux: true, others: false },
+      { feature: "2 Variable Speeds", lumineux: true, others: false },
+      { feature: "LED Work Light", lumineux: true, others: false },
+      { feature: "30-Piece Accessory Kit Included", lumineux: true, others: false },
+      { feature: "2 Rechargeable Batteries", lumineux: true, others: false },
+    ],
+  },
+
+  section5image: Product205,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Worry-Free 1-Year Warranty",
+  Guranteedesc:
+    "If anything goes wrong with your drill under normal use, we’ll repair or replace it free of charge. Your purchase is 100% risk-free.",
+
+  // 🔹 FAQs (from your content)
+  Faq1Q: "Can it drill concrete?",
+  fAQ1A:
+    "No, it is ideal for wood, plastic, metal, and general DIY tasks. For heavy concrete drilling you need a hammer drill.",
+  Faq2Q: "Does it include the charger?",
+  fAQ2A: "Yes — a fast charger is included in the kit.",
+  Faq3Q: "How long does the battery last?",
+  fAQ3A:
+    "Up to several hours depending on usage and material. You also get a second battery to swap and keep working.",
+  Faq4Q: "Is it suitable for beginners?",
+  fAQ4A:
+    "Absolutely — it’s lightweight, well-balanced, and easy to control even if it’s your first drill.",
+  Faq5Q: "How powerful is the drill?",
+  fAQ5A:
+    "It’s a 48V drill with strong torque, designed for home repairs, DIY projects, and light professional tasks.",
+
+  // 🔹 Reviews (from your testimonials)
+  reviewsTitle: "Customer Reviews",
+  reviewsRating: 4.9,
+  reviews: [
+    {
+      text: "Very powerful drill for its size. I use it for furniture and shelving — works perfectly!",
+      author: "Ahmed M.",
+      stars: 5,
+    },
+    {
+      text: "The torque settings make screwdriving so smooth. Worth every dirham.",
+      author: "Jason T.",
+      stars: 5,
+    },
+    {
+      text: "Great value! Comes with everything you need. Battery life is excellent.",
+      author: "Noura H.",
+      stars: 5,
+    },
+  ],
+
+  // 🔹 Full long copy – as-is (optional, if you already render product.longCopy)
+  longCopy: `
+48V Cordless Drill Set – High Power, Precision & Total Control
+Price: AED 99.90
+ 🚚 Delivery in 2–3 Days Across UAE
+ 💵 Cash on Delivery Available
+
+⭐ HERO SECTION
+Headline:
+The Only Cordless Drill You Need for Every DIY Job 🔧⚡
+Subheadline:
+Power through wood, metal, plastic, and any home project with a lightweight 48V drill designed for strength, precision, and all-day comfort.
+CTA Buttons:
+👉 Buy Now – AED 99.90
+ 👉 See It in Action
+Trust Badges:
+✅ 48V High Performance
+ ✅ 25+1 Torque Settings
+ ✅ 2 Variable Speeds
+ ✅ Rechargeable Lithium Battery
+ ✅ Complete 30-Piece Accessory Kit
+ ✅ 1-Year Warranty
+
+😫 PAIN POINT SECTION — THE PROBLEM
+Heading:
+Struggling With Weak Tools, Dead Batteries & Hard-to-Use Drills?
+Copy:
+Cheap drills often stall, overheat, or lose power midway.
+ They can’t handle tougher materials, making simple DIY work frustrating and slow.
+Pain Points:
+🚫 Not enough power for thicker materials
+ 🚫 Batteries die quickly or need constant recharging
+ 🚫 Heavy & uncomfortable to hold
+ 🚫 Limited torque settings → stripped screws
+ 🚫 Hard to switch drill bits or adjust speeds
+
+🌟 SOLUTION SECTION — MEET THE 48V CORDLESS DRILL SET
+Heading:
+Professional Power & Precision Packed Into a Lightweight Drill
+Copy:
+The 48V Cordless Drill Set gives you the perfect balance of speed, torque, and control for all home, workshop, and DIY projects.
+Feature Highlights:
+✨ 48V Motor Power – Drill through wood, plastic & metal with ease
+ ✨ 25+1 Torque Settings – Prevent stripping screws + maximize control
+ ✨ 2 Variable Speeds (0–500 / 0–1400 RPM) – For drilling & screwdriving
+ ✨ 3/8” Keyless Metal Chuck – Quick, tool-free bit changes
+ ✨ Ergonomic Anti-Slip Grip – Comfortable one-handed operation
+ ✨ LED Work Light – Perfect visibility in dark corners
+ ✨ Lightweight & Compact – Easy for anyone to use
+ ✨ Durable Build – Designed to last in harsh conditions
+
+🏠 LIFESTYLE TRANSFORMATION SECTION
+Heading:
+Your Go-To Drill for Every Home Project
+Copy:
+From assembling furniture to drilling shelves, fixing appliances or doing professional craft work — this drill replaces multiple tools and makes every job faster and easier.
+Mini Stats:
+🔧 30+ Accessories Included
+ 🔋 2 Rechargeable Batteries (1.5Ah each)
+ ⏱ Full Charge in Just 2 Hours
+ 🏡 Perfect for Beginners & Professionals
+
+🔄 USE-CASE SECTION
+Heading:
+One Drill. Endless Possibilities.
+Subheading:
+Built for home repairs, DIY projects, and pro-level tasks.
+Use Cases:
+🏠 Home Repairs – Shelves, frames, brackets, appliances
+ 🪵 Woodworking – Craft projects, furniture builds
+ 🔩 Metal Work – Light metal drilling & fastening
+ 🪛 Screwdriving – Fast, smooth screw insertion/removal
+ 🪜 Maintenance & Installation – Curtain rods, TV mounts (non-concrete)
+
+🔋 BATTERY & PERFORMANCE SECTION
+Heading:
+Long-Lasting Power With Fast Charging
+Copy:
+The 48V 1.5Ah lithium battery provides strong, consistent power.
+ Switch between two included batteries to work nonstop.
+Highlights:
+⚡ 2 Rechargeable Batteries Included
+ ⏱ Full Charge in 2 Hours
+ 🔋 Battery Indicator Lights
+ 💡 LED Worklight for dark spaces
+
+🧰 WHAT'S INCLUDED (FULL KIT)
+You get an all-in-one toolkit ready for any job:
+✔ 1 × 48V Cordless Drill
+ ✔ 2 × 1.5Ah Batteries
+ ✔ 1 × Fast Charger
+ ✔ 3 × Metal HSS Drill Bits
+ ✔ 3 × Wood Drill Bits
+ ✔ 10 × Screwdriver Bits
+ ✔ 6 × Long Bits
+ ✔ 9 × Sockets
+ ✔ 1 × Extension Rod
+ ✔ 1 × Flexible Shaft
+ ✔ 1 × User Manual
+🔥 Equivalent to a full toolbox — included for AED 99.90 only.
+
+💬 TESTIMONIALS
+⭐⭐⭐⭐⭐
+“Very powerful drill for its size. I use it for furniture and shelving — works perfectly!” — Ahmed M.
+⭐⭐⭐⭐⭐
+“The torque settings make screwdriving so smooth. Worth every dirham.” — Jason T.
+⭐⭐⭐⭐⭐
+“Great value! Comes with everything you need. Battery life is excellent.” — Noura H.
+
+🛡️ GUARANTEE
+Heading:
+Worry-Free 1-Year Warranty
+Copy:
+If anything goes wrong, we’ll replace or repair it for free.
+ Your purchase is 100% risk-free.
+
+❓ FAQ SECTION
+Q: Can it drill concrete?
+ A: No, it is ideal for wood, plastic, metal, and general DIY tasks.
+Q: Does it include the charger?
+ A: Yes — a fast charger is included.
+Q: How long does the battery last?
+ A: Up to several hours depending on usage.
+Q: Suitable for beginners?
+ A: Absolutely — lightweight and easy to control.
+Q: How powerful is the drill?
+ A: 48V with up to 280 in-lbs torque.
+
+🛒 FINAL CTA SECTION
+Heading:
+Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
+🚚 Fast UAE Delivery
+ 💵 Cash on Delivery
+ ✨ 1-Year Warranty
+👉 Buy Now — Limited Stock!
+`,
+},
+
+// wrinkle remover product
+{
+  id: 526912, // sync with listing id
+  name: "Neck Face Massager",
+  slug: "neck-face-massager", // URL: /products/neck-face-massager
+
+  // ✅ Price
+  price: 79.99,
+  salePrice: 79.99,
+  regularPrice: 199.0,
+
+  // ✅ Hero description + shortdesc (taken from your content)
+  description:
+    "Experience spa-level anti-aging therapy at home with a 7-color LED massager that lifts sagging skin, reduces wrinkles, firms the jawline, and boosts collagen — in just minutes a day.",
+  shortdesc:
+    "7-color LED neck and face massager with heat lifting, EMS microcurrent, 10,000 sonic vibrations/min and 4 intensity levels to lift, sculpt and rejuvenate your face and neck in minutes a day.",
+
+  // ✅ Trust badges -> subdesc lines (from “Trust Badges”)
+  subdesc: "7 LED Color Light Therapy",
+  subdesc1: "45°C Heat Lifting Technology",
+  subdesc2: "EMS Microcurrent Sculpting",
+  subdesc3: "10,000 Sonic Vibrations/min",
+  subdesc4: "4 Intensity Levels",
+  subdesc5: "Suitable for Face, Neck, Jawline, and Shoulders",
+
+  // ✅ Images (same as before)
+  image: Product206,
+  thumb1: Product207,
+  thumb2: Product207,
+  thumb3: Product209,
+  thumb4: Product211,
+  thumb5: Product212,
+  thumb6: Product213,
+  thumb7: Product214,
+  thumb8: Product215,
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 526927,
+      name: "Neck Face Massager",
+      label: "Buy 1 for only AED 79.99",
+      discount: 0,
+      slug: "neck-face-massager",
+      price: 79.99,
+      originalPrice: 120,
+      image: Product206,
+    },
+    {
+      type: "Bundle of 2",
+      id: 526926,
+      name: "Neck Face Massager",
+      label: "Buy 2 & Save More – Perfect for gifting or couples",
+      discount: 15,
+      price: 142.0, // you can adjust these later
+      originalPrice: 165,
+      note: "Great for home use and as a gift",
+      mostPopular: true,
+      image: Product207,
+      slug: "neck-face-massager",
+    },
+    {
+      type: "Bundle of 3",
+      id: 526925,
+      name: "Neck Face Massager",
+      label: "Buy 3 & Save More – Family beauty bundle",
+      discount: 15,
+      price: 178.0, // adjustable
+      originalPrice: 240,
+      note: "Ideal for family or multiple rooms",
+      mostPopular: false,
+      image: Product209,
+      slug: "neck-face-massager",
+    },
+  ],
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Features / hero explanation (from HERO + SOLUTION)
+  section2contentTitle: "Lift, Sculpt & Rejuvenate Your Face & Neck — Naturally",
+  section2contentDesc:
+    "Experience spa-level anti-aging therapy at home with a 7-color LED massager that lifts sagging skin, reduces wrinkles, firms the jawline, and boosts collagen — in just minutes a day.",
+  section2list: [
+    "7 LED Color Modes – Each light targets a specific skin concern",
+    "45°C Thermal Lifting – Boosts collagen & tightens skin",
+    "EMS Microcurrent – Lifts facial muscles & defines jawline",
+    "10,000 Sonic Vibrations/min – Smooths wrinkles & boosts blood flow",
+    "4 Intensity Levels – Gentle to strong, personalized care",
+    "Improves Product Absorption – Works perfectly with serums & creams",
+    "Ergonomic Dolphin Head – Fits jaw, neck, cheeks & shoulders perfectly",
+  ],
+  section2contentPoints: [
+    "Targets sagging skin, fine lines and a tired-looking jawline",
+    "Helps reduce neck wrinkles and double-chin lines over time",
+    "Boosts collagen and skin firmness with EMS + heat",
+    "Perfect for at-home anti-aging routines",
+  ],
+  section2image: Product207,
+
+  // 🔹 LED Color Therapy breakdown (can be used in a dedicated section)
+  ledColors: [
+    "Red Light – Anti-aging, collagen boost",
+    "Blue Light – Calms irritation & breakouts",
+    "Green Light – Smooths fine lines",
+    "Purple Light – Lymphatic drainage, reduces swelling",
+    "Yellow Light – Brightens skin tone, reduces pigmentation",
+    "Cyan Light – Relieves tension, reduces sensitivity",
+    "White Light – Accelerates skin healing & renewal",
+  ],
+
+  // 🔹 Section 3 – Lifestyle / use areas (from LIFESTYLE + USE-CASE)
+  section3title: "Get a Lifted, Sculpted, Youthful Glow — From Home",
+  section3image: Product211,
+  section3points: [
+    "Eye Area – dark circles and puffiness",
+    "Forehead – fine lines and wrinkles",
+    "Cheeks & Jawline – sculpting and lifting",
+    "Neck (Swan Neck Effect) – tightening loose skin",
+    "Shoulders & Lymph Nodes – drainage and relaxation",
+  ],
+
+  // 🔹 Progress / stats bar (using your “Mini Stats” ideas)
+  sectionProgressTitle: "Visible Lifting, Tightening and Glow Over Time",
+  sectionProgressSubtitle: "",
+  sectionProgress: [
+    {
+      title: "Visible tightening in 2–4 weeks",
+      desc: "",
+      percent: 94,
+    },
+    {
+      title: "Safe for all skin types",
+      desc: "",
+      percent: 96,
+    },
+    {
+      title: "Perfect for at-home anti-aging routines",
+      desc: "",
+      percent: 92,
+    },
+    {
+      title: "Targets face, neck, jawline and shoulders",
+      desc: "",
+      percent: 95,
+    },
+  ],
+
+  // 🔹 Comparison table – device vs creams/salon
+  comparisonData: {
+    title: "Why Choose the Neck Face Massager?",
+    description:
+      "Most creams only work on the surface and salon facials are expensive with temporary results. This device combines LED, EMS, heat and sonic vibration to target deeper layers of your skin.",
+    headers: ["Feature", "Neck Face Massager", "Creams / Salon Visits"],
+    rows: [
+      { feature: "7 LED Color Light Therapy", lumineux: true, others: false },
+      { feature: "EMS Microcurrent Sculpting", lumineux: true, others: false },
+      { feature: "45°C Heat Lifting Technology", lumineux: true, others: false },
+      { feature: "10,000 Sonic Vibrations/min", lumineux: true, others: false },
+      { feature: "At-home daily use", lumineux: true, others: false },
+      { feature: "One-time purchase", lumineux: true, others: false },
+    ],
+  },
+
+  section5image: Product210,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free — 30-Day Guarantee",
+  Guranteedesc:
+    "If you don’t feel your skin becoming tighter, brighter, and smoother — return it for a full refund. No questions asked.",
+
+  // 🔹 FAQs (from your FAQ section)
+  Faq1Q: "How often should I use it?",
+  fAQ1A: "5–10 minutes daily for best results.",
+  Faq2Q: "Is it safe for sensitive skin?",
+  fAQ2A: "Yes — LED and microcurrents are gentle and adjustable.",
+  Faq3Q: "Should I use it with skincare?",
+  fAQ3A: "Yes! Works best with serum, moisturizer, or oil.",
+  Faq4Q: "Does it help with double chin?",
+  fAQ4A: "Yes — EMS targets jawline muscles for a sculpting effect.",
+  Faq5Q: "Is it rechargeable?",
+  fAQ5A: "Yes — comes with USB charging cable.",
+
+  // 🔹 Reviews (from your testimonials)
+  reviewsTitle: "Customer Reviews",
+  reviewsRating: 4.9,
+  reviews: [
+    {
+      text: "My jawline looks so much sharper. I use it every night with my serum!",
+      author: "Sara K.",
+      stars: 5,
+    },
+    {
+      text: "Helped my neck wrinkles more than any cream I tried.",
+      author: "Amira M.",
+      stars: 5,
+    },
+    {
+      text: "Love the LED lights! My skin feels firmer and brighter.",
+      author: "Fatima A.",
+      stars: 5,
+    },
+  ],
+
+  // 🔹 Full long copy – your content kept as-is, just with price filled
+  longCopy: `
+Neck Face Massager
+
+⭐ HERO SECTION
+Headline:
+✨ Lift, Sculpt & Rejuvenate Your Face & Neck — Naturally
+Subheadline:
+Experience spa-level anti-aging therapy at home with a 7-color LED massager that lifts sagging skin, reduces wrinkles, firms the jawline, and boosts collagen — in just minutes a day.
+CTA Buttons:
+👉 Buy Now – AED 79.99
+💡 See It in Action
+Trust Badges:
+✅ 7 LED Color Light Therapy
+✅ 45°C Heat Lifting Technology
+✅ EMS Microcurrent Sculpting
+✅ 10,000 Sonic Vibrations/min
+✅ 4 Intensity Levels
+✅ Suitable for Face, Neck, Jawline, and Shoulders
+
+😫 PAIN POINT SECTION — THE PROBLEM
+Heading:
+Tired of Sagging Skin, Fine Lines & a Tired-Looking Jawline?
+Copy:
+Aging, stress, and screen time weaken the neck and facial muscles — leading to wrinkles, dull skin, sagging cheeks, and double-chin lines.
+Most creams only work on the surface…
+but your skin needs deep stimulation to truly tighten and lift.
+Pain Points:
+🚫 Visible neck wrinkles
+🚫 Sagging jawline or “double chin”
+🚫 Dull, uneven skin tone
+🚫 Poor absorption of skincare products
+🚫 Expensive salon facials with temporary results
+
+🌟 SOLUTION SECTION — THE ALL-IN-ONE SCULPTING TOOL
+Heading:
+Lift, Tighten & Glow — With 7-in-1 LED & EMS Technology
+Copy:
+This advanced beauty device combines light therapy, EMS microcurrents, heat lifting, and sonic vibration to target the deepest layers of your skin.
+The result?
+A firmer, smoother, younger-looking face & neck — naturally.
+Feature Highlights:
+✨ 7 LED Color Modes – Each light targets a specific skin concern
+🔥 45°C Thermal Lifting – Boosts collagen & tightens skin
+⚡ EMS Microcurrent – Lifts facial muscles & defines jawline
+💎 10,000 Sonic Vibrations/min – Smooths wrinkles & boosts blood flow
+🎚 4 Intensity Levels – Gentle to strong, personalized care
+💧 Improves Product Absorption – Works perfectly with serums & creams
+🕊 Ergonomic Dolphin Head – Fits jaw, neck, cheeks & shoulders perfectly
+
+🧬 LED COLOR THERAPY BREAKDOWN
+🔴 Red Light – Anti-aging, collagen boost
+🔵 Blue Light – Calms irritation & breakouts
+🟢 Green Light – Smooths fine lines
+🟣 Purple Light – Lymphatic drainage, reduces swelling
+🟡 Yellow Light – Brightens skin tone, reduces pigmentation
+🌊 Cyan Light – Relieves tension, reduces sensitivity
+⚪ White Light – Accelerates skin healing & renewal
+
+🏠 LIFESTYLE TRANSFORMATION SECTION
+Heading:
+Get a Lifted, Sculpted, Youthful Glow — From Home
+Visual Suggestion:
+Before → sagging neck, dull tone
+After → lifted jawline, radiant skin
+Copy:
+Use just 5–10 minutes daily to tighten, lift, brighten and rejuvenate your entire face and neck. No appointments. No downtime. No expensive salon visits.
+Mini Stats:
+🌟 Visible tightening in 2–4 weeks
+💆‍♀️ Safe for all skin types
+🎀 Perfect for at-home anti-aging routines
+
+🔄 USE-CASE SECTION
+Heading:
+One Device, Total Beauty Care
+Subheading:
+Targets every part of your face and neck for complete rejuvenation.
+Use Cases:
+👁 Eye Area – Dark circles & puffiness
+💆‍♀️ Forehead – Fine lines & wrinkles
+👃 Cheeks & Jawline – Sculpting & lifting
+🦢 Neck (Swan Neck Effect) – Tightening loose skin
+💁‍♀️ Shoulders & Lymph Nodes – Drainage & relaxation
+
+🔥 PERFORMANCE & TECHNOLOGY SECTION
+Heading:
+Advanced EMS + Heat = Faster, Deeper Skin Results
+Copy:
+The microcurrent waves activate facial muscles, while the heat helps collagen rebuild faster — giving dramatic tightening and lifting effects over time.
+Mini Highlights:
+⚡ EMS activates deep facial muscles
+🔥 Heat boosts collagen production
+💎 Sonic vibration smooths fine lines
+✨ Reduces wrinkles, sagging & dullness
+
+💬 TESTIMONIALS
+⭐⭐⭐⭐⭐
+“My jawline looks so much sharper. I use it every night with my serum!” — Sara K.
+⭐⭐⭐⭐⭐
+“Helped my neck wrinkles more than any cream I tried.” — Amira M.
+⭐⭐⭐⭐⭐
+“Love the LED lights! My skin feels firmer and brighter.” — Fatima A.
+
+🛡️ GUARANTEE SECTION
+Heading:
+Try It Risk-Free — 30-Day Guarantee
+Copy:
+If you don’t feel your skin becoming tighter, brighter, and smoother — return it for a full refund. No questions asked.
+
+❓ FAQ SECTION
+Q: How often should I use it?
+A: 5–10 minutes daily for best results.
+Q: Is it safe for sensitive skin?
+A: Yes — LED and microcurrents are gentle and adjustable.
+Q: Should I use it with skincare?
+A: Yes! Works best with serum, moisturizer, or oil.
+Q: Does it help with double chin?
+A: Yes — EMS targets jawline muscles for a sculpting effect.
+Q: Is it rechargeable?
+A: Yes — comes with USB charging cable.
+
+Price AED 79.99
+`,
+}
+
+
+
 ];
+
+
+ 
+
 
 export default staticProducts;

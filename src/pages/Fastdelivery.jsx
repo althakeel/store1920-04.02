@@ -10,9 +10,65 @@ import Product8 from '../assets/images/staticproducts/AIR BLOWER MINI/9.webp'
 import Product9 from '../assets/images/staticproducts/Steamer/1.webp'
 import Product10 from '../assets/images/staticproducts/Peeler/1.webp'
 import Product11 from '../assets/images/staticproducts/minproject/4.webp'
+import Product12 from '../assets/images/staticproducts/Boxing Machine/1.webp'
+import Product13 from '../assets/images/staticproducts/CCTV Camera/1.webp'
+import Product14 from '../assets/images/staticproducts/drill-machine/2.webp'
+import Product15 from '../assets/images/staticproducts/wrinkle-remover/1.webp'
 
 const staticProducts = [
+   
+
+     {
+    id: "neck-face-massager",
+    name: "Neck Face Massager",
+    price: "100",
+    regular_price: "120.  ",
+    sale_price: "99.90",
+    images: [{ src: Product15 }],
+    path: "/products/neck-face-massager",
+    rating: 5,
+    reviews: 48,
+    sold: 139
+  },
+  
     {
+    id: "48V-cordless-drill-set–high-power-precision-&-potal-control",
+    name: "48V Cordless Drill Set – High Power, Precision & Total Control",
+    price: "100",
+    regular_price: "120.  ",
+    sale_price: "99.90",
+    images: [{ src: Product14 }],
+    path: "/products/48V-cordless-drill-set–high-power-precision-potal-control",
+    rating: 5,
+    reviews: 48,
+    sold: 139
+  },
+
+  //  {
+  //   id: "cctv-camera",
+  //   name: "CCTV",
+  //   price: "99.90",
+  //   regular_price: "120.  ",
+  //   sale_price: "99.90",
+  //   images: [{ src: Product13 }],
+  //   path: "/products/cctv-camera",
+  //   rating: 5,
+  //   reviews: 48,
+  //   sold: 139
+  // },
+  {
+    id: "Boxing machine",
+    name: "Music Boxing Machine – Smart Boxing Trainer",
+    price: "99.90",
+    regular_price: "120.  ",
+    sale_price: "99.90",
+    images: [{ src: Product12 }],
+    path: "/products/boxing-machine",
+    rating: 5,
+    reviews: 48,
+    sold: 139
+  },
+  {
     id: "Mini Portable Smart Projector",
     name: "Mini Portable Smart Projector",
     price: "159.00",
