@@ -13,7 +13,7 @@ import Product11 from '../assets/images/staticproducts/minproject/4.webp'
 import Product12 from '../assets/images/staticproducts/Boxing Machine/1.webp'
 import Product13 from '../assets/images/staticproducts/CCTV Camera/1.webp'
 import Product14 from '../assets/images/staticproducts/drill-machine/2.webp'
-import Product15 from '../assets/images/staticproducts/wrinkle-remover/1.webp'
+import Product15 from '../assets/images/staticproducts/wrinkle-remover/10.webp'
 
 const staticProducts = [
    

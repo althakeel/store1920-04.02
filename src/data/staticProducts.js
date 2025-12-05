@@ -2862,7 +2862,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
   subdesc5: "Suitable for Face, Neck, Jawline, and Shoulders",
 
   // ✅ Images (same as before)
-  image: Product206,
+  image: Product215,
   thumb1: Product207,
   thumb2: Product207,
   thumb3: Product209,
