@@ -227,7 +227,31 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
         </div>
 
         {/* Tamara Official Widget */}
-    
+      <div className="payment-method-item" style={{ width: '100%' }}>
+          <input
+            type="radio"
+            id="tamara"
+            name="payment-method"
+            checked={selectedMethod === 'tamara'}
+            onChange={() => onMethodSelect('tamara', 'Tamara', TamaraIcon)}
+          />
+          <label htmlFor="tamara" className="payment-method-label" style={{ width: '100%' }}>
+            <div className="payment-method-content" style={{ width: '100%' }}>
+              <div
+                className="tamara-installment-plan-widget"
+                data-lang="en"
+                data-currency="AED"
+                data-price={(Number(subtotal) || 0).toFixed(2)}
+                data-number-of-installments="4"
+                data-disable-installment="false"
+                data-installment-minimum-amount="99"
+                data-installment-maximum-amount="3000"
+                data-installment-available-amount="99"
+                style={{ width: '100%', marginTop: '4px' }}
+              ></div>
+            </div>
+          </label>
+        </div>
 
         {/* Cash on Delivery */}
         {hasOnlyStaticProducts && !hasNonStaticProducts && staticProductIds.length > 0 && (

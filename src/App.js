@@ -72,6 +72,9 @@ import SoundAlert from './assets/sound/alertsound.mp3';
 import LogoIcon from './assets/images/logo.webp';
 import AdsImage from './assets/images/ads/ads.webp'
 import NewUserBonusPopup from './components/common/newpopup';
+import TamaraSuccess from './pages/tamara-success';
+import TamaraFailure from './pages/tamara-failure';
+import TamaraCancel from './pages/tamara-cancel';
 
 
 const AppContent = () => {
@@ -364,7 +367,10 @@ const AppContent = () => {
                     <Route path="fast-delivery" element={<Fastdelivery />} />
                     <Route path="/payment-success" element={<PaymobSuccess />} />
                     <Route path="/paymob-checkout" element={<PaymobCheckoutPage />} />
-                        <Route path="/adscheckout" element={<CustomCheckout />} />
+                    <Route path="/adscheckout" element={<CustomCheckout />} />
+                    <Route path="/tamara-success" element={<TamaraSuccess />} />
+                    <Route path="/tamara-failure" element={<TamaraFailure />} />
+                    <Route path="/tamara-cancel" element={<TamaraCancel />} />
 
                   </Routes>
                 </main>
