@@ -4,7 +4,6 @@ import Logo3 from '../assets/images/theme/Orange@6x.png';
 import Logo4 from '../assets/images/theme/Purple 2@6x.png';
 import Logo5 from '../assets/images/theme/banner/HAlloween Logo V1.png';
 import Logo6 from '../assets/images/theme/Asset 1@4x.png';
-import Logo7 from '../assets/images/theme/theme6/Purple@6x (2).png'
 import Logo8 from '../assets/images/theme/theme6/Main-08-12-25.webp'
 import banner1 from '../assets/images/theme/banner/Banners Yellow.webp';
 import banner2 from '../assets/images/theme/banner/Banners-Sky-blue.webp';
@@ -12,8 +11,6 @@ import banner3 from '../assets/images/theme/banner/Banners-orange-2.webp';
 import banner4 from '../assets/images/theme/banner/Banners-purple-2.webp';
 import banner5 from '../assets/images/theme/banner/Banners Halloween 2.webp';
 import banner6 from '../assets/images/theme/banner/Bannersmorron.webp';
-import Banner7 from '../assets/images/theme/theme6/Main.webp';
-import Banner8 from '../assets/images/theme/theme6/Main-08-12-25.webp'; 
 import Banner9 from '../assets/images/theme/theme6/Main-08-12-25.webp'; 
 
 export const themes = {
@@ -24,16 +21,6 @@ export const themes = {
     bannerBg: '#0E9672',
     lightningBanner: {
       backgroundColor: '#0E9672',
-      textColor: '#000000'
-    }
-  },
-  2: {
-    logo: Logo7,
-    navbarBg: '#042232',
-    bannerKey: Banner7,
-    bannerBg: '#E6F6FF',
-    lightningBanner: {
-      backgroundColor: '#1082c4ff',
       textColor: '#000000'
     }
   },
