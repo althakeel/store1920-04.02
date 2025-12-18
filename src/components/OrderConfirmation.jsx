@@ -61,7 +61,7 @@ export default function OrderConfirmation() {
         <div className="order-header">
           <div className="success-icon">✓</div>
           <h1 className="thank-you-title">Thank you</h1>
-          <p className="thank-you-subtitle">Thank you. Your order has been received.</p>
+          <p className="thank-you-subtitle">Thank you. Your order has been received.ddd</p>
           
           <button className="order-btn" onClick={() => navigate('/orders')}>
             Order no.
