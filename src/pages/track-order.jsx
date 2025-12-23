@@ -374,30 +374,27 @@ const TrackDeepOrder = () => {
                 </>
               )}
 
-            <button
-              onClick={() => (window.location.href = "mailto:support@store1920.com")}
-              style={{
-                padding: "10px 14px",
-                background: "#fff",
-                color: "#1976d2",
-                border: "2px solid #1976d2",
-                borderRadius: 6,
-                fontSize: 14,
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                whiteSpace: "nowrap",
-                flex: 1,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#e3f2fd";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#fff";
-              }}
-            >
-              Contact Support
-            </button>
+<button
+  onClick={() =>
+    window.open(
+      "https://wa.me/9718007861920?text=Hello%20Store1920%20Support,%20I%20need%20help%20with%20my%20order.",
+      "_blank"
+    )
+  }
+  style={{
+    width: "100%",
+    padding: 12,
+    background: "linear-gradient(90deg, #757575, #424242)",
+    color: "#fff",
+    border: "none",
+    borderRadius: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  Contact Support
+</button>
           </div>
 
           {errorMsg && (
