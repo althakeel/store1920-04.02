@@ -202,7 +202,7 @@ const staticProducts = [
     id: 494574,
     name: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual Battery – High Power Cleaning Machine for Cars, Bikes & Home",
     slug: "68v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
-    price: 69.9,
+    price: 89.00,
     description:
       "Make Every Wash Easy – 68V Cordless Car & Home Pressure Washer",
     shortdesc:
@@ -232,7 +232,7 @@ const staticProducts = [
         id: 494574,
         productName: "68V Cordless Portable Car Wash Pressur",
         discount: 0,
-        price: 69.9,
+        price: 89.00,
         originalPrice: 89.9,
         image: Product1,
       },
@@ -241,8 +241,8 @@ const staticProducts = [
         id: 523374,
         productName: "68V Cordless Portable Car Wash Pressur",
         discount: 10,
-        price: 125.8,
-        originalPrice: 139.8,
+        price: 158.00,
+        originalPrice: 189.8,
         note: "Perfect for you & a friend",
         mostPopular: true,
         image: Product3,
@@ -252,7 +252,7 @@ const staticProducts = [
         id: 523376,
         productName: "68V Cordless Portable Car Wash Pressur",
         discount: 25,
-        price: 157.2,
+        price: 196.00,
         originalPrice: 209.7,
         note: "Get 25% OFF",
         image: Product3,
@@ -397,7 +397,7 @@ const staticProducts = [
     id: 522826,
     name: "Twin Size Air Mattress with Built-in Rechargeable Pump – 16 Self-Inflating Blow Up Bed for Home, Camping & Guests",
     slug: "twin-size-air-mattress-with-built-in-rechargeable-pump-16-self-inflating-blow-up-bed-for-home-camping-guests",
-    price: 139,
+    price: 174.00,
     description: "Sleep Comfortably, Anywhere, Anytime",
     shortdesc:
       " Experience the perfect balance of support and convenience with the Single -Size Air Mattress. Whether for guests at home, camping trips, or outdoor adventures — enjoy restful sleep with the touch of a button.",
@@ -425,9 +425,9 @@ const staticProducts = [
         type: "Air Bed Single ",
         id: 525034,
         name: "twin-size-air-matt",
-        label: "Buy 1 for Only 139 AED",
+        label: "Buy 1 for Only 174 AED",
         discount: 54, // (300 - 139) / 300 * 100 = 53.67% ≈ 54%
-        price: 139, // total after discount
+        price: 174.00, // total after discount
         originalPrice: 300, // original single-item price
         image: Product24,
         note: "Dimensions: 190 cm (L) × 100 cm (W) × 40 cm (H)",
@@ -437,8 +437,8 @@ const staticProducts = [
         id: 525035,
         name: "twin-size-air-matt",
         label: "Dimensions: 190 cm (L) × 100 cm (W) × 40 cm (H)",
-        discount: 58, // (600 - 250.2) / 600 * 100 = 58.3% ≈ 58%
-        price: 199, // total after discount
+        discount: 35, // (600 - 250.2) / 600 * 100 = 58.3% ≈ 58%
+        price: 248.00, // total after discount
         originalPrice: 690, // 300 * 2
         note: "Dimensions: 200 cm (L) × 150 cm (W) × 40 cm (H)",
         mostPopular: true,
@@ -623,7 +623,7 @@ const staticProducts = [
     id: 522827,
     name: "Electric Paint Sprayer",
     slug: "850w-electric-paint-sprayer-uae",
-    price: 89,
+    price: 113.00,
     description: "Paint Like a Pro – Anywhere, Anytime",
     shortdesc:
       "Transform your DIY projects with the 850W Electric Paint Sprayer. Whether it’s walls, furniture, fences, or your car — enjoy a flawless, even finish with ease. ",
@@ -654,7 +654,7 @@ const staticProducts = [
         name: "Electric Paint Sprayer",
         label: "Buy 1 for Only 85 AED",
         discount: 0,
-        price: 89.99,
+        price: 113.00,
         originalPrice: 250,
         image: Product41,
       },
@@ -664,7 +664,7 @@ const staticProducts = [
         name: "Electric Paint Sprayer",
         label: "Buy 2 & Get 10% Off",
         discount: 10,
-        price: 169,
+        price: 212.00,
         originalPrice: 500,
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -676,7 +676,7 @@ const staticProducts = [
         name: "Electric Paint Sprayer",
         label: "Buy 3 & Get 20% Off",
         discount: 20,
-        price: 225,
+        price: 282.00,
         originalPrice: 750,
         note: "Best Value",
         image: Product24,
@@ -836,7 +836,7 @@ const staticProducts = [
     id: 523089,
     name: "TrimPro™ 21V Cordless Electric Pruning Shears",
     slug: "trimpro-21v-cordless-electric-pruning-shears",
-    price: 109.9,
+    price: 138.00,
     description: "Paint Like a Pro – Anywhere, Anytime",
     shortdesc:
       "Save time and effort with our upgraded electric pruning shears. Built for gardeners, orchard owners, and farm workers who need sharp, powerful, and safe tools. ",
@@ -872,9 +872,9 @@ const staticProducts = [
         type: "Buy 1",
         id: 523089,
         name: "TrimPro™ 21V Cordless Electric",
-        label: "Buy 1 for Only 109.9 AED",
+        label: "Buy 1 for Only 138 AED",
         discount: 0,
-        price: 109.9,
+        price: 138.00,
         originalPrice: 280,
         image: Product53,
       },
@@ -884,7 +884,7 @@ const staticProducts = [
         name: "TrimPro™ 21V Cordless Electric",
         label: "Buy 2 & Get 15% Off",
         discount: 15,
-        price: 185.0, // 109.9 * 2 * 0.85 ≈ 186.42
+        price: 231.50, // 109.9 * 2 * 0.85 ≈ 186.42
         originalPrice: 560, // 109.9 * 2
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -896,7 +896,7 @@ const staticProducts = [
         name: "TrimPro™ 21V Cordless Electric",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
-        price: 245.0, // 109.9 * 3 * 0.75 ≈ 247.43
+        price: 306.50, // 109.9 * 3 * 0.75 ≈ 247.43
         originalPrice: 1140, // 109.9 * 3
         note: "Best Value",
         image: Product68,
@@ -1005,7 +1005,7 @@ const staticProducts = [
     id: 523106,
     name: "GameBox 64 Retro Console – 20,000+ Preloaded Games with 4K HDMI & Wireless Controllers",
     slug: "gamebox-64-retro-console-20000-preloaded-games-4k-hdmi-wireless-controllers",
-    price: 69.99,
+    price: 88.00,
     description: "Turn Your TV into the Ultimate Retro Gaming Console",
     shortdesc:
       " 20,000+ classic games | 64GB storage | Plug & Play | Stunning 4K visuals ",
@@ -1033,9 +1033,9 @@ const staticProducts = [
         type: "Buy 1",
         id: 523106,
         name: "GameBox 64 Retro Console",
-        label: "Buy 1 for Only 69.9 AED",
+        label: "Buy 1 for Only 88 AED",
         discount: 0,
-        price: 69.99,
+        price: 88.00,
         originalPrice: 89.99,
         image: Product73,
       },
@@ -1045,7 +1045,7 @@ const staticProducts = [
         name: "GameBox 64 Retro Console",
         label: "Buy 2 & Get 15% Off",
         discount: 15,
-        price: 119, // ≈ 118.83 AED
+        price: 149.50, // ≈ 118.83 AED
         originalPrice: +(69.9 * 2).toFixed(2), // 139.8 AED
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -1057,7 +1057,7 @@ const staticProducts = [
         name: "GameBox 64 Retro Console",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
-        price: 159.0, // ≈ 157.28 AED
+        price: 198.00, // ≈ 157.28 AED
         originalPrice: +(69.9 * 3).toFixed(2),
         note: "Best Value",
         image: Product82,
@@ -1315,7 +1315,7 @@ const staticProducts = [
     id: 523106,
     name: "Cordless 2-in-1 Leaf Blower & Vacuum",
     slug: "cordless-2-in-1-leaf-blower-vacuum",
-    price: 55.9,
+    price: 70.00,
     description:
       "17000 RPM |Single Battery Powered | Wireless | Lightweight & Portable",
     shortdesc: "Blow, Vacuum, and Clean — All with One Tool",
@@ -1345,7 +1345,7 @@ const staticProducts = [
         name: "Cordless 2-in-1 Leaf Blower & Vacuum",
         label: "Buy 1 for Only 69.9 AED",
         discount: 0,
-        price: 55.9,
+        price: 69.9,
         originalPrice: 189,
         image: Product96,
       },
@@ -1355,7 +1355,7 @@ const staticProducts = [
         name: "Cordless 2-in-1 Leaf Blower & Vacuum",
         label: "Buy 2 & Get 15% Off",
         discount: 15,
-        price: 95, // 15% off on 2 items
+        price: 118.50, // 15% off on 2 items
         originalPrice: 378, // 139.80 AED
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -1367,7 +1367,7 @@ const staticProducts = [
         name: "Cordless 2-in-1 Leaf Blower & Vacuum",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
-        price: 125, // 25% off on 3 items
+        price: 156.50, // 25% off on 3 items
         originalPrice: 567, // 269.70 AED
         note: "Best Value",
         image: Product93,
@@ -1480,7 +1480,7 @@ const staticProducts = [
     id: 523759,
     name: "Turbo Cordless Leaf Blower – 21V Power for Every Task",
     slug: "turbo-cordless-leaf-blower-21v-power-for-every-task",
-    price: 49.99,
+    price: 62.50,
     description:
       "Lightweight | Powerful Turbine Motor | Dual Battery Option | Adjustable Speed",
     shortdesc:
@@ -1512,7 +1512,7 @@ const staticProducts = [
         name: "Turbo Cordless Leaf Blower – 21V Power for Every Task - Single Battery",
         label: "Ideal for quick cleanups & small areas.",
         discount: 27,
-        price: 49.9,
+        price: 62.50,
         originalPrice: 99.98,
         image: Products118,
       },
@@ -1523,7 +1523,7 @@ const staticProducts = [
         label:
           "Extended runtime for large spaces & heavy use. Each battery is 21V large-capacity lithium, offering efficient, long-lasting power.",
         discount: 38,
-        price: 59.99,
+        price: 75.50,
         originalPrice: 129.0,
         note: "",
         mostPopular: true,
@@ -1638,7 +1638,7 @@ const staticProducts = [
     id: 523794,
     name: "Steam Cleaner DF-A001 – Japan Technology",
     slug: "steam-cleaner-df-a001-japan-technology",
-    price: 89.9,
+    price: 112.50,
     description:
       "Powerful 1000W | Multi-Surface Cleaning | Portable & Chemical-Free",
     shortdesc:
@@ -1667,9 +1667,9 @@ const staticProducts = [
         type: "Buy 1",
         id: 523794,
         name: "Steam Cleaner DF-A001 – Japan Technology",
-        label: "Buy 1 for Only 89.9 AED",
+        label: "Buy 1 for Only 112.50 AED",
         discount: 0,
-        price: 89.9,
+        price: 112.50,
         originalPrice: 89.9,
         image: Product136,
       },
@@ -1679,7 +1679,7 @@ const staticProducts = [
         name: "Steam Cleaner DF-A001 – Japan Technology",
         label: "Buy 2 & Get 10% Off",
         discount: 10,
-        price: 160.0, // 10% off on total 179.8
+        price: 200.00, // 10% off on total 179.8
         originalPrice: 179.8,
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -1691,7 +1691,7 @@ const staticProducts = [
         name: "Steam Cleaner DF-A001 – Japan Technology",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
-        price: 200.0, // 25% off on total 269.7
+        price: 250.00, // 25% off on total 269.7
         originalPrice: 269.7,
         note: "Best Value",
         image: Product142,
@@ -1784,7 +1784,7 @@ const staticProducts = [
     id: 523794,
     name: "Electric Grape & Garlic Peeling Machine",
     slug: "electric-grape-garlic-peeling-machine",
-    price: 89.0,
+    price: 112.00,
     description:
       "USB Rechargeable | Multi-Food Prep | Fast & Hygienic | Kitchen Essential",
     shortdesc:
@@ -1815,9 +1815,9 @@ const staticProducts = [
         type: "Buy 1",
         id: 523986,
         name: "Electric Grape & Garlic Peeling Machine",
-        label: "Buy 1 for Only 89.9 AED",
+        label: "Buy 1 for Only 112.00 AED",
         discount: 0,
-        price: 89.0,
+        price: 112.00,
         originalPrice: 100,
         image: Product153,
       },
@@ -1827,7 +1827,7 @@ const staticProducts = [
         name: "Electric Grape & Garlic Peeling Machine",
         label: "Buy 2 & Get 10% Off",
         discount: 10,
-        price: 160.0, // 10% off on total 179.8
+        price: 200.00, // 10% off on total 179.8
         originalPrice: 200,
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -1839,7 +1839,7 @@ const staticProducts = [
         name: "Electric Grape & Garlic Peeling Machiney",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
-        price: 202.0,
+        price: 252.00,
         originalPrice: 300,
         note: "Best Value",
         image: Product155,
@@ -1956,7 +1956,7 @@ const staticProducts = [
     id: 526257, //
     name: "Mini Portable Smart Projector",
     slug: "mini-portable-smart-projector",
-    price: 159.0,
+    price: 198.00,
     description:
       "Bring the Cinema Home — Anytime, Anywhere 🎥",
     shortdesc:
@@ -1983,7 +1983,7 @@ const staticProducts = [
         name: "Mini Portable Smart Projector",
         label: "Buy 1 for Only 159 AED",
         discount: 0,
-        price: 159.0,
+        price: 198.00,
         originalPrice: 349,
         image: Product177,
       },
@@ -1993,7 +1993,7 @@ const staticProducts = [
         name: "Mini Portable Smart Projector",
         label: "Buy 2 & Get 15% Off",
         discount: 10,
-        price: 270.0, // 15% off on total 318
+        price: 337.50, // 15% off on total 318
         originalPrice: 699,
         note: "Perfect for you & a friend",
         mostPopular: true,
@@ -2005,7 +2005,7 @@ const staticProducts = [
         name: "Mini Portable Smart Projector",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
-        price:357.50 ,
+        price:446.00 ,
         originalPrice: 1048,
         note: "Best Value",
         image: Product175,
@@ -2126,8 +2126,8 @@ const staticProducts = [
   id: 526861, // isko listing wali id se sync rakhna acha hai
   name: "Music Boxing Machine – Smart Boxing Trainer",
   slug: "boxing-machine", // URL: /products/boxing-machine
-  price: 89.9,
-  salePrice: 89.9,
+  price: 124.00,
+  salePrice: 124.00,
   regularPrice: 199.0,
 
   description:
@@ -2163,7 +2163,7 @@ const staticProducts = [
       label: "Buy 1 for only 99.90 AED",
       discount: 0,
       slug: "boxing-machine",
-      price: 99.90,
+      price: 124.00,
       originalPrice: 120,
       image: Product178,
     },
@@ -2173,8 +2173,8 @@ const staticProducts = [
       name: "Music Boxing Machine",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
-      price: 180.0, // example: 89.9 * 2 * 0.85
-      originalPrice: 200,
+      price: 225.00, // example: 89.9 * 2 * 0.85
+      originalPrice: 290,
       note: "Perfect for home + office / kids room",
       mostPopular: true,
       image: Product179,
@@ -2186,8 +2186,8 @@ const staticProducts = [
       name: "Music Boxing Machine",
       label: "Buy 3 & Get 15% Off",
       discount: 15,
-      price: 225.0, // example: 89.9 * 2 * 0.85
-      originalPrice: 250,
+      price: 281.0, // example: 89.9 * 2 * 0.85
+      originalPrice: 370,
       note: "Perfect for home + office / kids room",
       mostPopular: false,
       image: Product179,
@@ -2509,8 +2509,8 @@ const staticProducts = [
   slug: "48V-cordless-drill-set–high-power-precision-potal-control", // URL: /products/drill-machine
 
   // ✅ Price according to content (AED 99.90)
-  price: 99.9,
-  salePrice: 99.9,
+  price: 124.00,
+  salePrice: 124.00,
   regularPrice: 199.0,
 
   // ✅ Hero description + shortdesc
@@ -2547,7 +2547,7 @@ const staticProducts = [
       label: "Buy 1 for only 99.90 AED",
       discount: 0,
       slug: "48V-cordless-drill-set–high-power-precision-potal-control",
-      price: 99.9,
+      price: 124.00,
       originalPrice: 120,
       image: Product197,
     },
@@ -2557,8 +2557,8 @@ const staticProducts = [
       name: "48V Cordless Drill Set",
       label: "Buy 2 & Save More – Perfect for home + workshop",
       discount: 15,
-      price: 180.0, // tum apne hisaab se change bhi kar sakte ho
-      originalPrice: 200,
+      price: 225.00, // tum apne hisaab se change bhi kar sakte ho
+      originalPrice: 290,
       note: "Ideal for gifting or keeping one at home and one at work",
       mostPopular: true,
       image: Product198,
@@ -2570,8 +2570,8 @@ const staticProducts = [
       name: "48V Cordless Drill Set",
       label: "Buy 3 & Save More – Perfect for home + workshop",
       discount: 15,
-      price: 225.0, // tum apne hisaab se change bhi kar sakte ho
-      originalPrice: 250,
+      price: 281.0, // tum apne hisaab se change bhi kar sakte ho
+      originalPrice: 370,
       note: "Ideal for gifting or keeping one at home and one at work",
       mostPopular: false,
       image: Product198,
@@ -2843,8 +2843,8 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
   slug: "neck-face-massager", // URL: /products/neck-face-massager
 
   // ✅ Price
-  price: 79.99,
-  salePrice: 79.99,
+  price: 99.99,
+  salePrice: 99.99,
   regularPrice: 199.0,
 
   // ✅ Hero description + shortdesc (taken from your content)
@@ -2881,7 +2881,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
       label: "Buy 1 for only AED 79.99",
       discount: 0,
       slug: "neck-face-massager",
-      price: 79.99,
+      price: 99.99,
       originalPrice: 120,
       image: Product206,
     },
@@ -2891,7 +2891,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
       name: "Neck Face Massager",
       label: "Buy 2 & Save More – Perfect for gifting or couples",
       discount: 15,
-      price: 142.0, // you can adjust these later
+      price: 177.00, // you can adjust these later
       originalPrice: 165,
       note: "Great for home use and as a gift",
       mostPopular: true,
@@ -2904,7 +2904,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
       name: "Neck Face Massager",
       label: "Buy 3 & Save More – Family beauty bundle",
       discount: 15,
-      price: 178.0, // adjustable
+      price: 222.0, // adjustable
       originalPrice: 240,
       note: "Ideal for family or multiple rooms",
       mostPopular: false,
