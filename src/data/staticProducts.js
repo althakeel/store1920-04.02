@@ -177,6 +177,7 @@ import Product202 from "../assets/images/staticproducts/drill-machine/6.webp";
 import Product203 from "../assets/images/staticproducts/drill-machine/7.webp";
 import Product204 from "../assets/images/staticproducts/drill-machine/8.webp";
 import Product205 from "../assets/images/staticproducts/drill-machine/9.webp";
+import Product218 from "../assets/images/staticproducts/drill-machine/12.png";
 // wrinkle remover
 import Product206 from "../assets/images/staticproducts/wrinkle-remover/1.webp";
 import Product207 from "../assets/images/staticproducts/wrinkle-remover/2.webp";
@@ -190,6 +191,7 @@ import Product214 from "../assets/images/staticproducts/wrinkle-remover/9.webp";
 import Product215 from "../assets/images/staticproducts/wrinkle-remover/10.webp";
 import Product216 from "../assets/images/staticproducts/wrinkle-remover/11.webp";
 import Product217 from "../assets/images/staticproducts/wrinkle-remover/12.webp";
+
 
 
 
@@ -2509,8 +2511,8 @@ const staticProducts = [
   slug: "drill-kit-with-2-battery–ultimate-cordless-power-tool-set", // URL: /products/drill-machine
 
   // ✅ Price according to content (AED 99.90)
-  price: 124.00,
-  salePrice: 124.00,
+  price: 109.00,
+  salePrice: 109.00,
   regularPrice: 199.0,
 
   // ✅ Hero description + shortdesc
@@ -2529,7 +2531,7 @@ const staticProducts = [
 
   // ✅ Images same as before
   image: Product197,
-  thumb1: Product198,
+  thumb1: Product218,
   thumb2: Product199,
   thumb3: Product200,
   thumb4: Product201,
