@@ -177,6 +177,7 @@ import Product202 from "../assets/images/staticproducts/drill-machine/6.webp";
 import Product203 from "../assets/images/staticproducts/drill-machine/7.webp";
 import Product204 from "../assets/images/staticproducts/drill-machine/8.webp";
 import Product205 from "../assets/images/staticproducts/drill-machine/9.webp";
+import Product218 from "../assets/images/staticproducts/drill-machine/12.png";
 // wrinkle remover
 import Product206 from "../assets/images/staticproducts/wrinkle-remover/1.webp";
 import Product207 from "../assets/images/staticproducts/wrinkle-remover/2.webp";
@@ -190,6 +191,7 @@ import Product214 from "../assets/images/staticproducts/wrinkle-remover/9.webp";
 import Product215 from "../assets/images/staticproducts/wrinkle-remover/10.webp";
 import Product216 from "../assets/images/staticproducts/wrinkle-remover/11.webp";
 import Product217 from "../assets/images/staticproducts/wrinkle-remover/12.webp";
+
 
 
 
@@ -2505,31 +2507,31 @@ const staticProducts = [
 
   {
   id: 526892, // listing ki id se sync
-  name: "48V Cordless Drill Set – High Power, Precision & Total Control",
-  slug: "48V-cordless-drill-set–high-power-precision-potal-control", // URL: /products/drill-machine
+  name: "Drill Kit with 2 Battery – Ultimate Cordless Power Tool Set",
+  slug: "drill-kit-with-2-battery–ultimate-cordless-power-tool-set", // URL: /products/drill-machine
 
   // ✅ Price according to content (AED 99.90)
-  price: 124.00,
-  salePrice: 124.00,
+  price: 109.00,
+  salePrice: 109.00,
   regularPrice: 199.0,
 
   // ✅ Hero description + shortdesc
   description:
-    "Power through wood, metal, plastic, and any home project with a lightweight 48V drill designed for strength, precision, and all-day comfort.",
+    "Power through wood, metal, plastic, and any home project with a lightweight 12V drill designed for strength, precision, and all-day comfort.",
   shortdesc:
-    "48V cordless drill with 25+1 torque settings, 2 variable speeds, LED light and a complete 30-piece accessory kit — perfect for every DIY job.",
+    "12V cordless drill with 25+1 torque settings, 2 variable speeds, LED light and a complete 30-piece accessory kit — perfect for every DIY job.",
 
   // ✅ Trust badges -> subdesc lines
-  subdesc: "48V High Performance",
-  subdesc1: "25+1 Torque Settings",
-  subdesc2: "2 Variable Speeds (0–500 / 0–1400 RPM)",
-  subdesc3: "Rechargeable Lithium Battery",
-  subdesc4: "30-Piece Accessory Kit Included",
-  subdesc5: "1-Year Warranty",
+  subdesc: "Cordless Drill (12V)",
+  subdesc1: "2 Rechargeable Lithium‑ion Batteries",
+  subdesc2: "Fast Charger Adapter",
+  subdesc3: "24‑Piece Drill & Screwdriver Bit Set",
+  subdesc4: "Flexible Driver Extension",
+  subdesc5: "Durable Carry Case",
 
   // ✅ Images same as before
   image: Product197,
-  thumb1: Product198,
+  thumb1: Product218,
   thumb2: Product199,
   thumb3: Product200,
   thumb4: Product201,
@@ -2543,39 +2545,39 @@ const staticProducts = [
     {
       type: "Buy 1",
       id: 526904,
-      name: "48V Cordless Drill Set",
+      name: "12V Cordless Drill Set",
       label: "Buy 1 for only 99.90 AED",
       discount: 0,
-      slug: "48V-cordless-drill-set–high-power-precision-potal-control",
-      price: 124.00,
+      slug: "12V-cordless-drill-set–high-power-precision-potal-control",
+      price: 109.90,
       originalPrice: 120,
       image: Product197,
     },
     {
       type: "Bundle of 2",
       id: 526905,
-      name: "48V Cordless Drill Set",
+      name: "12V Cordless Drill Set",
       label: "Buy 2 & Save More – Perfect for home + workshop",
       discount: 15,
-      price: 225.00, // tum apne hisaab se change bhi kar sakte ho
+      price: 199.90, // tum apne hisaab se change bhi kar sakte ho
       originalPrice: 290,
       note: "Ideal for gifting or keeping one at home and one at work",
       mostPopular: true,
       image: Product198,
-      slug: "48V-cordless-drill-set–high-power-precision-potal-control",
+      slug: "12V-cordless-drill-set–high-power-precision-potal-control",
     },
     {
       type: "Bundle of 3",
       id: 526906,
-      name: "48V Cordless Drill Set",
+      name: "12V Cordless Drill Set",
       label: "Buy 3 & Save More – Perfect for home + workshop",
       discount: 15,
-      price: 281.0, // tum apne hisaab se change bhi kar sakte ho
+      price: 269.90, // tum apne hisaab se change bhi kar sakte ho
       originalPrice: 370,
       note: "Ideal for gifting or keeping one at home and one at work",
       mostPopular: false,
       image: Product198,
-      slug: "48V-cordless-drill-set–high-power-precision-potal-control",
+      slug: "12V-cordless-drill-set–high-power-precision-potal-control",
     },
   ],
   BundleTitle: "BUNDLE AND SAVE MORE!",
@@ -2583,16 +2585,17 @@ const staticProducts = [
   // 🔹 Section 2 – Features / hero explanation
   section2contentTitle: "The Only Cordless Drill You Need for Every DIY Job",
   section2contentDesc:
-    "From furniture assembly to shelves, repairs and craft projects — the 48V Cordless Drill Set gives you the perfect balance of power, precision and control.",
+    "From furniture assembly to shelves, repairs and craft projects — the 12V Cordless Drill Set gives you the perfect balance of power, precision and control.",
   section2list: [
-    "48V Motor Power – drill through wood, plastic & metal with ease",
-    "25+1 Torque Settings – prevent stripped screws and maximize control",
-    "2 Variable Speeds (0–500 / 0–1400 RPM) for drilling & screwdriving",
-    "3/8\" Keyless Metal Chuck – quick, tool-free bit changes",
-    "Ergonomic Anti-Slip Grip – comfortable one-handed operation",
-    "Built-in LED Work Light – perfect in dark corners & tight spaces",
-    "Lightweight & Compact – easy for beginners and pros",
-    "Durable Build – designed to last in tough conditions",
+    "Robust cordless drill with adjustable torque settings",
+    "Excellent drilling power for wood, metal, plastic, and everyday repairs",
+    "Comes with 2 rechargeable batteries — more work, fewer interruptions",
+    "Ideal for job sites and long projects",
+    "24 versatile bits for drilling, fastening, and screw driving",
+    "Flexible extension for hard‑to‑reach areas",
+    "Lightweight and balanced design",
+    "Comfortable grip for prolonged use",
+    "Compact case keeps everything secure and easy to transport",
   ],
   section2contentPoints: [
     "Delivery in 2–3 Days Across UAE",
@@ -2623,7 +2626,7 @@ const staticProducts = [
     },
     {
       title: "Love the Power & Control",
-      desc: "48V motor + 25+1 torque settings make work easier.",
+      desc: "12V motor + 25+1 torque settings make work easier.",
       percent: 93,
     },
     {
@@ -2638,14 +2641,14 @@ const staticProducts = [
     },
   ],
 
-  // 🔹 Comparison table – 48V drill vs cheap drills
+  // 🔹 Comparison table – 12V drill vs cheap drills
   comparisonData: {
-    title: "Why Choose the 48V Cordless Drill Set?",
+    title: "Why Choose the 12V Cordless Drill Set?",
     description:
-      "Cheap drills stall, overheat and run out of battery fast. This 48V Cordless Drill is built for real-world DIY and pro work.",
-    headers: ["Feature", "48V Cordless Drill Set", "Cheap/Basic Drill"],
+      "Cheap drills stall, overheat and run out of battery fast. This 12V Cordless Drill is built for real-world DIY and pro work.",
+    headers: ["Feature", "12V Cordless Drill Set", "Cheap/Basic Drill"],
     rows: [
-      { feature: "48V High-Performance Motor", lumineux: true, others: false },
+      { feature: "12V High-Performance Motor", lumineux: true, others: false },
       { feature: "25+1 Torque Settings", lumineux: true, others: false },
       { feature: "2 Variable Speeds", lumineux: true, others: false },
       { feature: "LED Work Light", lumineux: true, others: false },
@@ -2675,7 +2678,7 @@ const staticProducts = [
     "Absolutely — it’s lightweight, well-balanced, and easy to control even if it’s your first drill.",
   Faq5Q: "How powerful is the drill?",
   fAQ5A:
-    "It’s a 48V drill with strong torque, designed for home repairs, DIY projects, and light professional tasks.",
+    "It’s a 12V drill with strong torque, designed for home repairs, DIY projects, and light professional tasks.",
 
   // 🔹 Reviews (from your testimonials)
   reviewsTitle: "Customer Reviews",
@@ -2700,7 +2703,7 @@ const staticProducts = [
 
   // 🔹 Full long copy – as-is (optional, if you already render product.longCopy)
   longCopy: `
-48V Cordless Drill Set – High Power, Precision & Total Control
+Drill Kit with 2 Battery – Ultimate Cordless Power Tool Set
 Price: AED 99.90
  🚚 Delivery in 2–3 Days Across UAE
  💵 Cash on Delivery Available
@@ -2709,12 +2712,12 @@ Price: AED 99.90
 Headline:
 The Only Cordless Drill You Need for Every DIY Job 🔧⚡
 Subheadline:
-Power through wood, metal, plastic, and any home project with a lightweight 48V drill designed for strength, precision, and all-day comfort.
+Power through wood, metal, plastic, and any home project with a lightweight 12V drill designed for strength, precision, and all-day comfort.
 CTA Buttons:
 👉 Buy Now – AED 99.90
  👉 See It in Action
 Trust Badges:
-✅ 48V High Performance
+✅ 12V High Performance
  ✅ 25+1 Torque Settings
  ✅ 2 Variable Speeds
  ✅ Rechargeable Lithium Battery
@@ -2734,13 +2737,13 @@ Pain Points:
  🚫 Limited torque settings → stripped screws
  🚫 Hard to switch drill bits or adjust speeds
 
-🌟 SOLUTION SECTION — MEET THE 48V CORDLESS DRILL SET
+🌟 SOLUTION SECTION — MEET THE 12V CORDLESS DRILL SET
 Heading:
 Professional Power & Precision Packed Into a Lightweight Drill
 Copy:
-The 48V Cordless Drill Set gives you the perfect balance of speed, torque, and control for all home, workshop, and DIY projects.
+The 12V Cordless Drill Set gives you the perfect balance of speed, torque, and control for all home, workshop, and DIY projects.
 Feature Highlights:
-✨ 48V Motor Power – Drill through wood, plastic & metal with ease
+✨ 12V Motor Power – Drill through wood, plastic & metal with ease
  ✨ 25+1 Torque Settings – Prevent stripping screws + maximize control
  ✨ 2 Variable Speeds (0–500 / 0–1400 RPM) – For drilling & screwdriving
  ✨ 3/8” Keyless Metal Chuck – Quick, tool-free bit changes
@@ -2776,7 +2779,7 @@ Use Cases:
 Heading:
 Long-Lasting Power With Fast Charging
 Copy:
-The 48V 1.5Ah lithium battery provides strong, consistent power.
+The 12V 1.5Ah lithium battery provides strong, consistent power.
  Switch between two included batteries to work nonstop.
 Highlights:
 ⚡ 2 Rechargeable Batteries Included
@@ -2786,7 +2789,7 @@ Highlights:
 
 🧰 WHAT'S INCLUDED (FULL KIT)
 You get an all-in-one toolkit ready for any job:
-✔ 1 × 48V Cordless Drill
+✔ 1 × 12V Cordless Drill
  ✔ 2 × 1.5Ah Batteries
  ✔ 1 × Fast Charger
  ✔ 3 × Metal HSS Drill Bits
@@ -2824,7 +2827,7 @@ Q: How long does the battery last?
 Q: Suitable for beginners?
  A: Absolutely — lightweight and easy to control.
 Q: How powerful is the drill?
- A: 48V with up to 280 in-lbs torque.
+ A: 12V with up to 280 in-lbs torque.
 
 🛒 FINAL CTA SECTION
 Heading:

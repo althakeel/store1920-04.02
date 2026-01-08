@@ -32,13 +32,14 @@ const staticProducts = [
   },
   
     {
-    id: "48V-cordless-drill-set–high-power-precision-&-potal-control",
-    name: "48V Cordless Drill Set – High Power, Precision & Total Control",
-    price: "100",
+    id: "drill-kit-with-2-battery–ultimate-cordless-power-tool-set",
+    name: "Drill Kit with 2 Battery – Ultimate Cordless Power Tool Set",
+    price: "109.00",
     regular_price: "150.  ",
-    sale_price: "124.00",
+    sale_price: "109.00",
     images: [{ src: Product14 }],
-    path: "/products/48V-cordless-drill-set–high-power-precision-potal-control",
+    
+    path: "/products/drill-kit-with-2-battery–ultimate-cordless-power-tool-set",
     rating: 5,
     reviews: 48,
     sold: 119
