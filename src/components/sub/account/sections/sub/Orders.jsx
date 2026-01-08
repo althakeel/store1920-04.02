@@ -214,10 +214,14 @@ const AllOrders = ({
     const reason = selectedReason === 'Other' ? otherReason : selectedReason;
     if (!reason) return toast.error('Please select or enter a reason');
     try {
-      const res = await axios.post('/wp-json/custom/v1/return-order/', {
+      const res = await axios.post('/wp-json/custom/v1/return-order', {
         order_id: returningOrder.id,
         reason,
-      });
+      },
+      {
+        withCredentials: true,
+      }
+    );
       if (res.data.success) {
         toast.success('Return request submitted!');
         setReturningOrder(null);
