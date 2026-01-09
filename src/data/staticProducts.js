@@ -1484,13 +1484,13 @@ const staticProducts = [
     slug: "turbo-cordless-leaf-blower-21v-power-for-every-task",
     price: 64.90,
     description:
-      "Lightweight | Powerful Turbine Motor | Dual Battery Option | Adjustable Speed",
+      "Lightweight | Powerful Turbine Motor | Dual Battery Option ",
     shortdesc:
       "Introducing the Turbo Cordless Leaf Blower — your all-in-one solution for cleaning driveways, patios, cars, and gardens.",
     subdesc: " Lightweight & easy to handle",
     subdesc1: "Available in Single or Dual Battery models",
     subdesc2: "Powerful turbine motor for maximum airflow",
-    subdesc3: " Adjustable speed for precision cleaning",
+    // subdesc3: " Adjustable speed for precision cleaning",
     subdesc4: "Ideal for homes, gardens & car drying",
 
     image: Products119,
@@ -1579,7 +1579,7 @@ const staticProducts = [
           lumineux: true,
           others: false,
         },
-        { feature: "Adjustable Airflow Speed", lumineux: true, others: false },
+       
         {
           feature: "Dual Battery Option Available",
           lumineux: true,
