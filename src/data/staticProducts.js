@@ -1315,13 +1315,13 @@ const staticProducts = [
 
   {
     id: 523106,
-    name: "Cordless 2-in-1 Leaf Blower & Vacuum",
+    name: "Cordless Leaf Blower",
     slug: "cordless-2-in-1-leaf-blower-vacuum",
     price: 70.00,
     description:
       "17000 RPM |Single Battery Powered | Wireless | Lightweight & Portable",
     shortdesc: "Blow, Vacuum, and Clean — All with One Tool",
-    subdesc: " 2-in-1 Blower & Vacuum function",
+    subdesc: "Blower function",
     subdesc1: " Up to 17000 RPM turbo power",
     subdesc2: "Lightweight (1.5kg) and ergonomic",
     subdesc3: " Long battery life (up to 40 minutes)",
@@ -1344,7 +1344,7 @@ const staticProducts = [
       {
         type: "Buy 1",
         id: 523404,
-        name: "Cordless 2-in-1 Leaf Blower & Vacuum",
+        name: "Cordless Leaf Blower ",
         label: "Buy 1 for Only 69.9 AED",
         discount: 0,
         price: 69.9,
@@ -1352,9 +1352,9 @@ const staticProducts = [
         image: Product96,
       },
       {
-        type: "Bundle eeof 2",
+        type: "Bundle of 2",
         id: 523417,
-        name: "Cordless 2-in-1 Leaf Blower & Vacuum",
+        name: "Cordless Leaf Blower ",
         label: "Buy 2 & Get 15% Off",
         discount: 15,
         price: 119.0, // 15% off on 2 items
@@ -1366,7 +1366,7 @@ const staticProducts = [
       {
         type: "Bundle of 3",
         id: 523418,
-        name: "Cordless 2-in-1 Leaf Blower & Vacuum",
+        name: "Cordless Leaf Blower",
         label: "Buy 3 & Get 25% Off",
         discount: 25,
         price: 156.00, // 25% off on 3 items
@@ -1417,7 +1417,7 @@ const staticProducts = [
       headers: ["Feature", "Our Leaf Blower™", "Others"],
       rows: [
         {
-          feature: "2-in-1 Blower & Vacuum Design",
+          feature: " Blower & Vacuum Design",
           lumineux: true,
           others: false,
         },

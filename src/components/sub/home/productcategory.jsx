@@ -215,7 +215,7 @@ const staticProducts = [
   },
   {
     id: "7",
-    name: "Cordless 2-in-1 Leaf Blower & Vacuum",
+    name: "Cordless Leaf Blower",
     price: "69.90",
     regular_price: "189.00",
     sale_price: "69.90",

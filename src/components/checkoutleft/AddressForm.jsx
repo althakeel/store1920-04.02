@@ -147,15 +147,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
         if (!value || value.trim() === '') return 'This field is required';
         break;
      
-      case 'phone_number':
-        if (!value || value.trim() === '') return 'Phone number is required';
-        // Accept exactly 7 digits for the phone number field
-        if (!/^[0-9]{9}$/.test(value)) return 'Mobile No must start with 5 (example: 501234567)';
-        break;
-      case 'email':
-        if (!value || !/\S+@\S+\.\S+/.test(value)) return 'Invalid email';
-        break;
-        case 'phone_number': {
+      case 'phone_number': {
         const digits = (value || "").toString().replace(/\D/g, "");
 
         if (!digits) return 'Phone number is required';
@@ -169,6 +161,10 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
 
         break;
       }
+      
+      case 'email':
+        if (!value || !/\S+@\S+\.\S+/.test(value)) return 'Invalid email';
+        break;
 
       default:
         return '';
@@ -215,39 +211,29 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
     if (isSubmitting) return; // Prevent double clicks
     setIsSubmitting(true);
 
-    // Validate phone: must be 7 digits (the last part)
-    // const phone = (formData.shipping.phone_number || '').toString().trim();
-  
+    const raw = formData.shipping.phone_number || "";
+    const phone = normalizePhoneForSave(raw);
 
-            const raw = formData.shipping.phone_number || "";
-            const phone = normalizePhoneForSave(raw);
+    console.log('🔍 Address Save - Phone Validation:', { raw, phone, length: phone.length });
 
-            if (!/^[5][0-9]{8}$/.test(phone)) {
-              alert("Please enter a valid UAE mobile number starting with 5 (e.g., 501234567).");
-              setFormErrors((prev) => ({ ...prev, phone_number: "Number must start with 5 and be 9 digits" }));
-              setIsSubmitting(false);
-              return;
-            }
-
-
-            const fullPhone = `+971${phone}`;
-
-    
-             console.log('Phone validation:', { phone, length: phone.length, test: /^[0-9]{9}$/.test(phone) });
-    
-    // Check if phone_number is exactly 7 digits
-    if (!phone || !/^[0-9]{9}$/.test(phone)) {
-      alert('Please enter a valid 7-digit phone number before submitting.');
-      setFormErrors((prev) => ({ ...prev, phone_number: 'Invalid or incomplete phone number' }));
+    if (!/^[5][0-9]{8}$/.test(phone)) {
+      alert("Please enter a valid UAE mobile number starting with 5 (e.g., 501234567).");
+      setFormErrors((prev) => ({ ...prev, phone_number: "Number must start with 5 and be 9 digits" }));
       setIsSubmitting(false);
       return;
     }
 
+    const fullPhone = `+971${phone}`;
+
+    // Validate required fields
     const errors = {};
-    const requiredFields = ['first_name', 'email', 'phone_number', 'street', 'state', 'city'];
+    const requiredFields = ['first_name', 'last_name', 'email', 'phone_number', 'street', 'state', 'city'];
     requiredFields.forEach((field) => {
       const errorMsg = validateField(field, formData.shipping[field]);
-      if (errorMsg) errors[field] = errorMsg;
+      if (errorMsg) {
+        errors[field] = errorMsg;
+        console.log(`❌ Validation Error - ${field}:`, errorMsg);
+      }
     });
 
     setFormErrors(errors);
@@ -258,15 +244,12 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
     }
 
     try {
+      console.log('💾 Saving address to localStorage...');
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
 
-      // Compose full phone number for backend
-      const fullPhone = `+971${phone}`;
-
-      // small delay to ensure phone input updates last digit
-      await new Promise((res) => setTimeout(res, 200));
-
-      await fetch('https://db.store1920.com/wp-json/abandoned-checkouts/v1/save', {
+      // Save to backend
+      console.log('📤 Sending address to backend...');
+      const response = await fetch('https://db.store1920.com/wp-json/abandoned-checkouts/v1/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -284,11 +267,21 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Backend error:', errorData);
+        throw new Error(errorData?.message || 'Failed to save address on backend');
+      }
+
+      const result = await response.json();
+      console.log('✅ Backend response:', result);
+
       // Directly submit to checkout (no OTP verification)
+      console.log('✅ Address saved successfully, submitting form...');
       onSubmit(formData);
     } catch (err) {
-      console.error('Error saving address:', err);
-      alert('Something went wrong while saving your address.');
+      console.error('❌ Error saving address:', err);
+      alert(`Error: ${err.message || 'Something went wrong while saving your address.'}`);
     } finally {
       setIsSubmitting(false);
     }
