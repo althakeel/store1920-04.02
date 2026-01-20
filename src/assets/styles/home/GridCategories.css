@@ -1,3 +1,18 @@
+@media (max-width: 768px) {
+  .gcx-banner {
+    min-height: 120px;
+    height: 32vw;
+    max-height: 220px;
+  }
+  .gcx-banner img {
+    height: 32vw;
+    min-height: 120px;
+    max-height: 220px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 12px;
+  }
+}
 /* --- Layout reset for precise sizing --- */
 *, *::before, *::after { box-sizing: border-box; }
 

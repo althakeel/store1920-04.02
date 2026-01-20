@@ -70,13 +70,14 @@ const parsePrice = (raw) => {
 // -----------------------------
 // CheckoutRight Component
 // -----------------------------
-export default function CheckoutRight({ cartItems, formData, createOrder, clearCart, orderId }) {
+export default function CheckoutRight({ cartItems, formData, createOrder, clearCart, orderId, showForm = false }) {
   const [alert, setAlert] = useState({ message: '', type: 'info' });
   const [hoverMessage, setHoverMessage] = useState('');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [coinDiscount, setCoinDiscount] = useState(0);
   const [showOrderConfirmed, setShowOrderConfirmed] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState(null);
   const [confirmedOrderTotal, setConfirmedOrderTotal] = useState(0);
   const [showPaymentSelector, setShowPaymentSelector] = useState(false);
@@ -93,6 +94,7 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
   const totalWithDelivery = subtotal;
   const amountToSend = Math.max(totalWithDelivery, 0.01);
   const hasCartItems = cartItems.some((item) => (parseInt(item.quantity, 10) || 0) > 0);
+  const isAddressFormOpen = !!(showForm || formData?.addressModalOpen);
 
   const requiredFields = [
     'first_name',
@@ -609,21 +611,23 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
         {getButtonLabel()}
       </button>
 
-      {/* Mobile: sticky button with total */}
-      <div className="mobileStickyButton">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginRight: '12px' }}>
-          <span style={{ fontSize: '12px', color: '#666', fontWeight: 500, marginBottom: '2px', marginLeft: '2px' }}>Total:</span>
-          <span className="mobileSubtotal" style={{ fontSize: '18px', fontWeight: 700, color: '#111' }}> AED {totalWithDelivery.toFixed(2)}</span>
+      {/* Mobile: sticky button with total, only after address is complete and not editing address/form or order popup */}
+      {isAddressComplete && !editingAddress && !isAddressFormOpen && !showOrderConfirmed && (
+        <div className="mobileStickyButton">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginRight: '12px' }}>
+            <span style={{ fontSize: '12px', color: '#666', fontWeight: 500, marginBottom: '2px', marginLeft: '2px' }}>Total:</span>
+            <span className="mobileSubtotal" style={{ fontSize: '18px', fontWeight: 700, color: '#111' }}> AED {totalWithDelivery.toFixed(2)}</span>
+          </div>
+          <button
+            className="placeOrderBtnCR"
+            onClick={handlePlaceOrder}
+            disabled={isPlacingOrder || !canPlaceOrder}
+            style={getButtonStyle()}
+          >
+            {getButtonLabel()}
+          </button>
         </div>
-        <button
-          className="placeOrderBtnCR"
-          onClick={handlePlaceOrder}
-          disabled={isPlacingOrder || !canPlaceOrder}
-          style={getButtonStyle()}
-        >
-          {getButtonLabel()}
-        </button>
-      </div>
+      )}
 
       <TrustSection />
     </aside>

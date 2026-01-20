@@ -22,10 +22,14 @@ export default function CheckoutLeft({
   orderId,
   formData,
   setFormData,
-  handlePlaceOrder,
-  createOrder
+  createOrder,
+  showForm: showFormProp,
+  setShowForm: setShowFormProp,
 }) {
-  const [showForm, setShowForm] = useState(false);
+  const [showFormState, setShowFormState] = useState(false);
+  const isControlled = typeof showFormProp === 'boolean';
+  const showForm = isControlled ? showFormProp : showFormState;
+  const setShowForm = isControlled && typeof setShowFormProp === 'function' ? setShowFormProp : setShowFormState;
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
@@ -99,6 +103,11 @@ export default function CheckoutLeft({
                        formData?.shipping?.last_name?.trim();
     if (!hasAddress) setShowForm(true);
   }, []);
+
+  // Keep a flag on formData so CheckoutRight can hide sticky bar when address modal is open
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, addressModalOpen: !!showForm }));
+  }, [showForm, setFormData]);
 
   // -------------------------------
   // Shipping method handling
@@ -300,11 +309,8 @@ export default function CheckoutLeft({
           saving={saving}
           error={error}
            cartItems={cartItems} 
-           
         />
       )}
-
-      {/* Success Toast */}
       {saveSuccess && <div className="addrf-toast">✅ Address saved successfully!</div>}
     </div>
   );
