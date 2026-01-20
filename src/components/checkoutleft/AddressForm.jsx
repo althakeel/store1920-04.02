@@ -64,6 +64,15 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
   const [markerPosition, setMarkerPosition] = useState(null);
   const [mapSelected, setMapSelected] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1024));
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isDesktop = viewportWidth >= 1000;
 
 
   // --- City/Area Google Places Autocomplete ---
@@ -319,8 +328,8 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
           background: '#fff',
           borderRadius: '16px',
           width: '94vw',
-          maxWidth: '520px',
-          maxHeight: '92vh',
+          maxWidth: isDesktop ? '960px' : '520px',
+          maxHeight: isDesktop ? '88vh' : '92vh',
           overflow: 'hidden',
           padding: 0,
           display: 'flex',
@@ -436,11 +445,11 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                   background: '#fafbfc',
                   borderRadius: 14,
                   boxShadow: '0 2px 12px #0001',
-                  padding: '18px 16px',
+                  padding: isDesktop ? '22px 20px' : '18px 16px',
                   display: mapSelected ? 'flex' : 'none',
                   flexDirection: 'column',
                   gap: 0,
-                  maxHeight: '72vh',
+                  maxHeight: isDesktop ? '78vh' : '72vh',
                   overflowY: 'auto',
                 }}
               >
@@ -476,8 +485,8 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                   </button> */}
                 </div>
                 {mapSelected && (
-                    <form onSubmit={saveAddress} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                    <form onSubmit={saveAddress} noValidate style={{ display: 'flex', flexDirection: 'column', gap: isDesktop ? '18px' : '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isDesktop ? 260 : 220}px, 1fr))`, gap: isDesktop ? '16px' : '14px' }}>
               {/* Delivery Type Selector at the top of the form */}
         
 
@@ -655,7 +664,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
 
             {error && <div style={{ color: 'red', fontWeight: 600 }}>{error}</div>}
 
-            <div style={{ display: 'flex', gap: 12, marginTop: 6, marginBottom: 6 }}>
+            <div style={{ display: 'flex', gap: isDesktop ? 16 : 12, marginTop: isDesktop ? 10 : 6, marginBottom: isDesktop ? 10 : 6 }}>
               <button
                 type="button"
                 onClick={onClose}
@@ -663,9 +672,9 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                   backgroundColor: '#fff',
                   color: '#1976d2',
                   border: '2px solid #1976d2',
-                  padding: '10px 16px',
-                  fontSize: '0.98rem',
-                  borderRadius: '6px',
+                  padding: isDesktop ? '12px 20px' : '10px 16px',
+                  fontSize: isDesktop ? '1.05rem' : '0.98rem',
+                  borderRadius: isDesktop ? '8px' : '6px',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
                   flex: 1,
@@ -679,10 +688,10 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                 style={{
                   backgroundColor: '#1976d2',
                   color: '#fff',
-                  padding: '10px 16px',
-                  fontSize: '0.98rem',
+                  padding: isDesktop ? '12px 20px' : '10px 16px',
+                  fontSize: isDesktop ? '1.05rem' : '0.98rem',
                   border: 'none',
-                  borderRadius: '6px',
+                  borderRadius: isDesktop ? '8px' : '6px',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
                   flex: 1,
