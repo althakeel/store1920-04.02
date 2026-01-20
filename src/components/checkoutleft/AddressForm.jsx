@@ -310,17 +310,17 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 1000,
-        padding: '24px',
+        padding: '16px',
       }}
     >
       <div
         style={{
           position: 'relative',
           background: '#fff',
-          borderRadius: '18px',
-          width: '96vw',
-          maxWidth: '950px',
-          maxHeight: '96vh',
+          borderRadius: '16px',
+          width: '94vw',
+          maxWidth: '520px',
+          maxHeight: '92vh',
           overflow: 'hidden',
           padding: 0,
           display: 'flex',
@@ -362,7 +362,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
             gap: 0,
           }}
         >
-          <h2 style={{ margin: '16px 0 0 0', fontSize: '1.5rem', fontWeight: 700, color: '#333', textAlign: 'center' }}>
+          <h2 style={{ margin: '12px 0 4px 0', fontSize: '1.25rem', fontWeight: 700, color: '#333', textAlign: 'center' }}>
             Edit Address
           </h2>
           <div
@@ -379,8 +379,8 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                 flexDirection: 'row',
                 gap: 0,
                 width: '100%',
-                minHeight: 500,
-                padding: '12px 16px 0 16px',
+                minHeight: 0,
+                padding: '10px 14px 0 14px',
                 boxSizing: 'border-box',
               }}
             >
@@ -432,15 +432,15 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
               <div
                 style={{
                   flex: 1.2,
-                  minWidth: 320,
+                  minWidth: 0,
                   background: '#fafbfc',
                   borderRadius: 14,
                   boxShadow: '0 2px 12px #0001',
-                  padding: '32px 28px',
+                  padding: '18px 16px',
                   display: mapSelected ? 'flex' : 'none',
                   flexDirection: 'column',
                   gap: 0,
-                  maxHeight: '76vh',
+                  maxHeight: '72vh',
                   overflowY: 'auto',
                 }}
               >
@@ -476,8 +476,8 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                   </button> */}
                 </div>
                 {mapSelected && (
-                    <form onSubmit={saveAddress} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '18px' }}>
+                    <form onSubmit={saveAddress} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
               {/* Delivery Type Selector at the top of the form */}
         
 
@@ -643,7 +643,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
               </label>
             </div>
 
-            <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.95rem' }}>
               <input
                 type="checkbox"
                 name="saveAsDefault"
@@ -655,7 +655,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
 
             {error && <div style={{ color: 'red', fontWeight: 600 }}>{error}</div>}
 
-            <div style={{ display: 'flex', gap: 16, marginTop: 8, marginBottom: 8 }}>
+            <div style={{ display: 'flex', gap: 12, marginTop: 6, marginBottom: 6 }}>
               <button
                 type="button"
                 onClick={onClose}
@@ -663,9 +663,9 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                   backgroundColor: '#fff',
                   color: '#1976d2',
                   border: '2px solid #1976d2',
-                  padding: '12px 22px',
-                  fontSize: '1.1rem',
-                  borderRadius: '8px',
+                  padding: '10px 16px',
+                  fontSize: '0.98rem',
+                  borderRadius: '6px',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
                   flex: 1,
@@ -679,10 +679,10 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                 style={{
                   backgroundColor: '#1976d2',
                   color: '#fff',
-                  padding: '12px 22px',
-                  fontSize: '1.1rem',
+                  padding: '10px 16px',
+                  fontSize: '0.98rem',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
                   flex: 1,

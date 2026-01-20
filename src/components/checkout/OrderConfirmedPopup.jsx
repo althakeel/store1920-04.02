@@ -62,7 +62,7 @@ const OrderConfirmedPopup = ({
         {!isCOD && (
           <div className="order-confirmed-offer">
             <p className="offer-text">
-              Enjoy an extra <span className="offer-highlight">{discountPercent}% OFF</span> when you choose prepaid payment.
+              Enjoy an extra <span className="offer-highlight">{discountPercent}% OFF</span> when you choose Online payment.
             </p>
           </div>
         )}
