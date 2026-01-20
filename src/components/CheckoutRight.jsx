@@ -575,23 +575,55 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
         type={alert.type}
         onClose={() => setAlert({ message: '', type: 'info' })}
       />
-      <h2>Order Summary</h2>
+      {/* Order Summary: only show when order confirmed popup is NOT open (desktop and mobile) */}
+      {!showOrderConfirmed && (
+        <>
+          <div className="orderSummaryResponsive desktop-only">
+            <h2
+              style={{
+                marginBottom: '12px',
+                fontSize: '18px',
+                fontWeight: 700,
+                color: '#222'
+              }}
+            >
+              Order Summary
+            </h2>
+            <CouponDiscount onApplyCoupon={() => {}} />
+            <div className="summaryRowCR" style={{ marginTop: '1rem' }}>
+              <span>Total:</span>
+              <strong>{`AED ${totalWithDelivery.toFixed(2)}`}</strong>
+            </div>
+          </div>
+          {/* Mobile order summary (if you have a mobile-only version, add the same !showOrderConfirmed check there) */}
+        </>
+      )}
 
-      <CouponDiscount onApplyCoupon={() => {}} />
-
-      <div className="summaryRowCR">
-        <span>Total:</span>
-        <span>AED {totalWithDelivery.toFixed(2)}</span>
-      </div>
-
+      {/* Desktop: normal button */}
       <button
-        className="placeOrderBtnCR"
+        className="placeOrderBtnCR desktopStickyButton"
         onClick={handlePlaceOrder}
         disabled={isPlacingOrder || !canPlaceOrder}
         style={getButtonStyle()}
       >
         {getButtonLabel()}
       </button>
+
+      {/* Mobile: sticky button with total */}
+      <div className="mobileStickyButton">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginRight: '12px' }}>
+          <span style={{ fontSize: '12px', color: '#666', fontWeight: 500, marginBottom: '2px', marginLeft: '2px' }}>Total:</span>
+          <span className="mobileSubtotal" style={{ fontSize: '18px', fontWeight: 700, color: '#111' }}> AED {totalWithDelivery.toFixed(2)}</span>
+        </div>
+        <button
+          className="placeOrderBtnCR"
+          onClick={handlePlaceOrder}
+          disabled={isPlacingOrder || !canPlaceOrder}
+          style={getButtonStyle()}
+        >
+          {getButtonLabel()}
+        </button>
+      </div>
 
       <TrustSection />
     </aside>

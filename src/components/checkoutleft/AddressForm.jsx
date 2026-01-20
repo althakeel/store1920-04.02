@@ -445,7 +445,17 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
-                  <div style={{ fontWeight: 700, color: '#444', fontSize: '1.1rem', letterSpacing: 0.2, flex: 1 }}>SHIPPING ADDRESS</div>
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div style={{
+                      width: '7px',
+                      height: '38px',
+                      borderRadius: '12px 0 0 12px',
+                      background: 'linear-gradient(180deg,#ff9800 60%,#ff5500 100%)',
+                      marginRight: '12px',
+                      boxShadow: '0 0 4px #ff980044',
+                    }}></div>
+                    <div style={{ fontWeight: 700, color: '#444', fontSize: '1.1rem', letterSpacing: 0.2, flex: 1 }}>SHIPPING ADDRESS</div>
+                  </div>
                   {/* <button
                     type="button"
                     onClick={() => setMapSelected(false)}

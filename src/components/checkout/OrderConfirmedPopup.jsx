@@ -71,10 +71,10 @@ const OrderConfirmedPopup = ({
         {!isCOD && (
           <div className="order-confirmed-payment-methods">
             <div className="payment-methods-icons">
-              <img src={VisaIcon} alt="Visa" className="method-icon" />
-              <img src={MasterIcon} alt="Mastercard" className="method-icon" />
-              <img src={TabbyIcon} alt="Tabby" className="method-icon" />
-              <img src={TamaraIcon} alt="Tamara" className="method-icon" />
+              <img src={VisaIcon} alt="Visa" className="method-icon" style={{ width: '48px', height: '32px', objectFit: 'contain' }} />
+              <img src={MasterIcon} alt="Mastercard" className="method-icon" style={{ width: '48px', height: '32px', objectFit: 'contain' }} />
+              <img src={TabbyIcon} alt="Tabby" className="method-icon" style={{ width: '48px', height: '32px', objectFit: 'contain' }} />
+              <img src={TamaraIcon} alt="Tamara" className="method-icon" style={{ width: '48px', height: '32px', objectFit: 'contain' }} />
             </div>
           </div>
         )}

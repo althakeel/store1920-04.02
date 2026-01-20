@@ -10,6 +10,8 @@ import ShippingMethods from '../components/checkout/ShippingMethods';
 import emptyAddressImg from '../assets/images/adress-not-found.png';
 import ProductsUnder20AED from './ProductsUnder20AED';
 import { useCart } from '../contexts/CartContext';
+import CouponDiscount from '../components/sub/account/CouponDiscount';
+
 
 const API_BASE = 'https://db.store1920.com/wp-json/custom/v1';
 
@@ -58,8 +60,24 @@ export default function CheckoutLeft({
 
   // -------------------------------
   // Delete address
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   // -------------------------------
   const handleDeleteAddress = () => {
+      {isMobile && !showForm && (
+        <div className="orderSummaryResponsive">
+          <h2>Order Summary</h2>
+          <CouponDiscount onApplyCoupon={() => {}} />
+          <div className="summaryRowCR">
+            <span>Total:</span>
+            <span>AED {subtotal?.toFixed(2)}</span>
+          </div>
+        </div>
+      )}
     const emptyAddress = {
       first_name: '', last_name: '', email: '', street: '', apartment: '',
       city: '', state: '', postal_code: '', country: '', phone_number: ''
@@ -166,6 +184,13 @@ export default function CheckoutLeft({
 
   return (
     <div className="checkout-left">
+      {/* Show Order Summary above address only on mobile */}
+      {isMobile && !showForm && !formData?.showOrderConfirmed && (
+        <div className="orderSummaryResponsive">
+          <h2>Order Summary</h2>
+          <CouponDiscount onApplyCoupon={() => {}} />
+        </div>
+      )}
       {/* Shipping Address Section */}
       <div className="shipping-container">
         <div className="section-block">
@@ -178,35 +203,44 @@ export default function CheckoutLeft({
             </h2>
 
             {formData?.shipping?.street ? (
-              <div className="saved-address-box">
-                <div className="saved-address-grid">
-                  <div className="saved-address-label">Name</div>
+              <div className="saved-address-box" style={{
+                background: '#fff',
+                borderRadius: '16px',
+                boxShadow: '0 2px 12px #0001',
+                padding: '14px 20px',
+                marginTop: '10px',
+                minWidth: '220px',
+                maxWidth: '440px',
+                display: 'flex',
+                alignItems: 'center',
+                border: '2.5px dashed #ff9800',
+              }}>
+                <div className="saved-address-grid" style={{ display: 'grid', gridTemplateColumns: '90px 10px 1fr', rowGap: '8px', columnGap: '0px', width: '100%' }}>
+                  <div className="saved-address-label" style={{ fontWeight: 600, color: '#444' }}>Name</div>
                   <div className="saved-address-colon">:</div>
-                  <div className="saved-address-value">{formData.shipping.first_name} {formData.shipping.last_name}</div>
+                  <div className="saved-address-value" style={{ color: '#222' }}>{formData.shipping.first_name} {formData.shipping.last_name}</div>
 
-                  <div className="saved-address-label">Address</div>
+                  <div className="saved-address-label" style={{ fontWeight: 600, color: '#444' }}>Address</div>
                   <div className="saved-address-colon">:</div>
-                  <div className="saved-address-value">
+                  <div className="saved-address-value" style={{ color: '#222' }}>
                     {formData.shipping.street}{formData.shipping.apartment ? `, ${formData.shipping.apartment}` : ''}
                   </div>
 
-                  <div className="saved-address-label">City</div>
+                  <div className="saved-address-label" style={{ fontWeight: 600, color: '#444' }}>City</div>
                   <div className="saved-address-colon">:</div>
-                  <div className="saved-address-value">{formData.shipping.city}</div>
+                  <div className="saved-address-value" style={{ color: '#222' }}>{formData.shipping.city}</div>
 
-                  <div className="saved-address-label">Phone</div>
+                  <div className="saved-address-label" style={{ fontWeight: 600, color: '#444' }}>Phone</div>
                   <div className="saved-address-colon">:</div>
-                  <div className="saved-address-value">
-                   +971{formData.shipping.phone_number}
-                  </div>
+                  <div className="saved-address-value" style={{ color: '#222' }}>+971{formData.shipping.phone_number}</div>
 
-                  <div className="saved-address-label">State</div>
+                  <div className="saved-address-label" style={{ fontWeight: 600, color: '#444' }}>State</div>
                   <div className="saved-address-colon">:</div>
-                  <div className="saved-address-value">{formData.shipping.state}</div>
+                  <div className="saved-address-value" style={{ color: '#222' }}>{formData.shipping.state}</div>
 
-                  <div className="saved-address-label">Country</div>
+                  <div className="saved-address-label" style={{ fontWeight: 600, color: '#444' }}>Country</div>
                   <div className="saved-address-colon">:</div>
-                  <div className="saved-address-value">United Arab Emirates</div>
+                  <div className="saved-address-value" style={{ color: '#222' }}>United Arab Emirates</div>
                 </div>
               </div>
             ) : !showForm && (
