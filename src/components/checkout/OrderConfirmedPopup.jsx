@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaBolt } from 'react-icons/fa';
 import '../../assets/styles/checkout/orderconfirmed.css';
 import TabbyIcon from '../../assets/images/Footer icons/3.webp';
 import TamaraIcon from '../../assets/images/Footer icons/6.webp';
@@ -85,6 +86,21 @@ const OrderConfirmedPopup = ({
               className="order-confirmed-pay-now"
               onClick={onPayNow}
               disabled={isLoading}
+              style={{
+                background: 'linear-gradient(90deg, #ff3c00, #ff5500)',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '1.1rem',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '16px 0',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                boxShadow: '0 2px 8px rgba(255,60,0,0.15)'
+              }}
             >
               {isLoading ? (
                 <>
@@ -93,8 +109,8 @@ const OrderConfirmedPopup = ({
                 </>
               ) : (
                 <>
-                  <span className="lightning-icon">⚡</span>
-                  PAY NOW
+                  <FaBolt style={{ color: '#ffe066', fontSize: '1.5em', marginRight: '4px' }} />
+                  PAY NOW WITH 5% OFF
                 </>
               )}
             </button>
