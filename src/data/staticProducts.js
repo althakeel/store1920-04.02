@@ -201,6 +201,12 @@ import Product224 from '../assets/images/staticproducts/massager/5.webp';
 import Product225 from '../assets/images/staticproducts/massager/6.webp';
 
 
+import Product229 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-2998.webp';
+import Product230 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-8120.webp';
+import Product231 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-8658.webp';
+import Product232 from '../assets/images/staticproducts/wirelesscharger//GNPTRIOWCGY-9183.webp';
+
+
 const staticProducts = [
   {
     id: 494574,
@@ -3359,6 +3365,200 @@ Price AED 79.99
     stars: 5,
   },
 ]
+
+},
+
+/// new rohith 22
+
+ {
+  id: 528708, // isko listing wali id se sync rakhna acha hai
+  name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
+  slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger", // URL: /products/boxing-machine
+  price: 149.00,
+  salePrice: 149.00,
+  regularPrice: 199.0,
+
+  description:
+    "Power your essentials — phone, watch, and earbuds — from one sleek station.",
+  shortdesc:
+    "Designed with cutting-edge N52 Super Magnet tech, the Power Trio delivers ultra-fast charging, powerful alignment, and ultimate convenience for everyday charging setups.",
+
+  subdesc: "Magnetic Fast Wireless Charger",
+  subdesc1: "Compatible with Phone + Watch + Earbuds",
+  subdesc2: "Pop-Up Auto-Rotation Stand",
+  subdesc3: "Type-C Input",
+  subdesc4: "4.5H Super Magnet Locking Time",
+  subdesc5: "Durable ABS Construction",
+
+  // main images
+  image: Product229,
+  thumb1: Product230,
+  thumb2: Product231,
+  thumb3: Product232,
+    thumb4: Product229,
+  
+
+
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 528708,
+      name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
+      label: "Buy 1 for only 149.00 AED",
+      discount: 0,
+      slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger",
+      price: 139.00,
+      originalPrice: 199,
+      image: Product229,
+    },
+    {
+      type: "Bundle of 2",
+      id: 528709,
+      name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
+      label: "Buy 2 & Get 15% Off",
+      discount: 15,
+      price: 267.90, // example: 89.9 * 2 * 0.85
+      originalPrice: 315,
+      note: "Deep Tissue, Cordless & Rechargeable",
+      mostPopular: true,
+      image: Product230,
+      slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger",
+    },
+    {
+      type: "Bundle of 3",
+      id: 528710,
+      name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
+      label: "Buy 3 & Get 15% Off",
+      discount: 20,
+      price: 366.90, // example: 89.9 * 2 * 0.85
+      originalPrice: 429,
+      note: "Deep Tissue, Cordless & Rechargeable",
+      mostPopular: false,
+      image: Product230,
+      slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger",
+    },
+  ],
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Problem + Solution + Features
+  section2contentTitle: "The Ultimate All-in-One Charging Solution",
+  section2contentDesc:
+    "Say goodbye to cluttered cables, slow charging speeds, and weak stands. The Green Lion Power Trio Wireless Charger was built to simplify your digital lifestyle. Its 3-in-1 capability ensures seamless power delivery across all your everyday devices — no need for separate chargers.",
+  section2list: [
+    " Magnetic phone pad",
+    "Watch dock",
+    "Earbuds base",
+ 
+
+  ],
+ 
+  section2image: Product230,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "From Stress Relief to Full-Body Training – Fitness Just Became Fun",
+  section3image: Product232,
+  section3points: [
+    "Home Fitness Mode – burn calories & tone your body",
+    "Kids’ Energy Burner – safe, fun alternative to screen time",
+    "Office Stress Relief – 5-minute punch break to reset your mind",
+    "Pro Training – reaction time & speed improvement for boxers",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "🏆 Why Customers Love It",
+  sectionProgressSubtitle: "",
+  sectionProgress: [
+    {
+      title: "Magnetic Lock-In Stability",
+      desc: "N52-grade magnets ensure strong contact",
+      percent: 94,
+    },
+    {
+      title: "Pop-Up Rotation",
+      desc: "Adjust angle for desk, nightstand, or video calls",
+      percent: 96,
+    },
+    {
+      title: " Fast & Efficient Charging",
+      desc: " 1800mAh support keeps power flowing fast",
+      percent: 95,
+    },
+    {
+      title: "Premium Finish",
+      desc: "ABS material adds durability and style",
+      percent: 98,
+    },
+  ],
+
+  // 🔹 Comparison table – smart boxing vs punching bag
+  comparisonData: {
+    title: "Why Choose Green Lion Power Trio?",
+    description:
+      "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
+    headers: ["Feature", "Green Lion Power Trio", "Basic Chargers "],
+    rows: [
+      { feature: "N52 Magnetic Technology", lumineux: true, others: false },
+      { feature: "3-in-1 Wireless Charging", lumineux: true, others: false },
+      { feature: "Auto-Rotating Pop-Up Design", lumineux: true, others: false },
+      { feature: "Fast 1800mAh Wireless Output", lumineux: true, others: false },
+      { feature: "Type-C Input Compatibility", lumineux: true, others: true },
+      { feature: "Premium ABS Durability", lumineux: true, others: false },
+    ],
+  },
+
+  section5image: Product231,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free for 30 Days",
+  Guranteedesc:
+    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "Can I use my case while charging?",
+  fAQ1A:"Yes — it works with most MagSafe and magnetic cases.",
+  Faq2Q: "Is this fast charging?",
+  fAQ2A:
+    " Yes — it supports 15W wireless fast charging across devices.",
+  Faq3Q: "Does it support Apple Watch?",
+  fAQ3A:
+    "Yes, it's fully compatible with Apple Watch Series 2–9 & Ultra",
+  Faq4Q: "Does it come with the power adapter?",
+  fAQ4A:
+    "A USB-C cable is included; adapter sold separately.",
+ 
+  // 🔹 Reviews
+  reviewsTitle: "See Why Users Love It",
+  reviewsRating: 4.9,
+reviews: [
+  {
+    text: "This completely cleaned up my desk. I charge my phone, Apple Watch, and AirPods at the same time with zero cable mess. The magnet is very strong and holds perfectly.",
+    author: "Leila S.",
+    stars: 5,
+  },
+  {
+    text: "Magnetic alignment is spot on and charging feels faster than my old wireless dock. The pop-up stand is super useful for video calls while charging.",
+    author: "Omar R.",
+    stars: 5,
+  },
+  {
+    text: "Build quality feels premium and sturdy. I use it daily at work and at home. One charger replacing three is a big win.",
+    author: "Aisha M.",
+    stars: 5,
+  },
+  {
+    text: "Works flawlessly with my iPhone, Galaxy Buds, and watch. Love how compact it is for travel yet powerful enough for daily use.",
+    author: "Daniel K.",
+    stars: 5,
+  },
+  {
+    text: "The N52 magnet is no joke — phone snaps right into place every time. Looks clean on my nightstand and charges reliably overnight.",
+    author: "Fatima A.",
+    stars: 5,
+  },
+]
+
 
 },
 
