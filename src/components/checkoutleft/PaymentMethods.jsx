@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../assets/styles/checkoutleft/paymentmethods.css';
+import PaymentConfirmationPopup from './PaymentConfirmationPopup';
 
 import circleEmpty from '../../assets/images/tabby/full.webp';
 import circleQuarter from '../../assets/images/tabby/quarter.webp';
@@ -26,6 +27,8 @@ import CashPayIcon from '../../assets/images/Footer icons/13.webp';
 import MasterCardIcon from '../../assets/images/Footer icons/16.webp';
 import VisaCardIcon from '../../assets/images/Footer icons/17.webp';
 import PayPalIcon from '../../assets/images/Footer icons/18.webp';
+import axios from 'axios';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Safely import staticProducts with fallback
 let staticProducts = [];
@@ -45,14 +48,53 @@ const TABBY_MERCHANT_CODE = 'Store1920';
 const TAMARA_PUBLIC_KEY = '610bc886-8883-42f4-9f61-4cf0ec45c02e';
 
 const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = [] }) => {
-  const [showCodPopup, setShowCodPopup] = React.useState(false);
+  const [showCodPopup, setShowCodPopup] = useState(false);
+  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+  const [confirmationMethod, setConfirmationMethod] = useState(null);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [walletBalance, setWalletBalance] = React.useState(null);
+  const [walletLoading, setWalletLoading] = React.useState(true);
+  const { user } = useAuth();
+  console.log('Auth user object:', user);
+console.log('Auth user ID:', user?.id);
+
 
   // Set Tabby as default if nothing is selected and subtotal > 0
-  React.useEffect(() => {
+  useEffect(() => {
     if (!selectedMethod && subtotal > 0) {
       onMethodSelect('tabby', 'Tabby', TabbyIcon);
     }
   }, [selectedMethod, subtotal, onMethodSelect]);
+
+  // Handle payment method selection with confirmation popup
+  const handlePaymentMethodSelect = (methodId, methodTitle, methodLogo = null) => {
+    // Show confirmation popup for card payment
+    if (methodId === 'card') {
+      setConfirmationMethod({ id: methodId, title: methodTitle, logo: methodLogo });
+      setShowPaymentConfirmation(true);
+    } else {
+      // For other methods, select directly
+      onMethodSelect(methodId, methodTitle, methodLogo);
+    }
+  };
+
+  // Handle confirmation popup close
+  const handleConfirmationClose = () => {
+    setShowPaymentConfirmation(false);
+    setConfirmationMethod(null);
+  };
+
+  // Handle confirmation popup confirm
+  const handleConfirmationConfirm = () => {
+    if (confirmationMethod) {
+      onMethodSelect(
+        confirmationMethod.id,
+        confirmationMethod.title,
+        confirmationMethod.logo
+      );
+      handleConfirmationClose();
+    }
+  };
 
   // Static product checks
   let staticProductIds = [];
@@ -78,9 +120,12 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
     cartItems.some(item => !staticProductIds.includes(item.id));
 
   const amount = Number(subtotal) || 0;
+  const canUseWallet =
+  Number(walletBalance || 0) >= amount &&
+  amount > 0;
   const tabbyInstallment = (amount / 4).toFixed(2);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const isCodAvailable = hasOnlyStaticProducts && !hasNonStaticProducts && staticProductIds.length > 0;
     if (selectedMethod === 'cod' && !isCodAvailable) {
       onMethodSelect('card', 'Credit/Debit Card', CardIcon);
@@ -145,6 +190,42 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
     }
   }, [subtotal]);
 
+
+useEffect(() => {
+  console.log('Wallet fetch triggered');
+  console.log('User ID used for wallet:', user?.id);
+  if (!user?.id) {
+    setWalletBalance(0);
+    setWalletLoading(false);
+    return;
+  }
+console.log("Fetching wallet for user:", user.id);
+  axios
+    .get('https://db.store1920.com/wp-json/custom/v3/wallet', {
+      params: {
+        user_id: user.id // 🔑 SAME AS Wallet.jsx
+      }
+    })
+    .then(res => {
+      if (res.data.success) {
+        setWalletBalance(Number(res.data.balance || 0));
+      } else {
+        setWalletBalance(0);
+      }
+    })
+    .catch(() => setWalletBalance(0))
+    .finally(() => setWalletLoading(false));
+
+}, [user]);
+
+
+console.log('Wallet balance:', walletBalance);
+console.log('Can use wallet:', canUseWallet);
+console.log('Wallet loading:', walletLoading);
+
+
+
+
   return (
     <div className="pm-wrapper">
       <h3>Payment methods</h3>
@@ -165,6 +246,17 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
         </div>
       )}
 
+      {/* Payment Confirmation Popup */}
+      <PaymentConfirmationPopup
+        isOpen={showPaymentConfirmation}
+        onClose={handleConfirmationClose}
+        onConfirm={handleConfirmationConfirm}
+        paymentMethod={confirmationMethod?.id || 'card'}
+        subtotal={subtotal}
+        discount={0}
+        isLoading={isConfirming}
+      />
+
       <div className="payment-methods-list">
 
         {/* Card Payment */}
@@ -174,7 +266,7 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
             id="card"
             name="payment-method"
             checked={selectedMethod === 'card'}
-            onChange={() => onMethodSelect('card', 'Credit/Debit Card', CardIcon)}
+            onChange={() => handlePaymentMethodSelect('card', 'Credit/Debit Card', CardIcon)}
           />
           <label htmlFor="card" className="payment-method-label">
             <div className="payment-method-content">
@@ -199,7 +291,7 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
             id="tabby"
             name="payment-method"
             checked={selectedMethod === 'tabby'}
-            onChange={() => onMethodSelect('tabby', 'Tabby', TabbyIcon)}
+            onChange={() => handlePaymentMethodSelect('tabby', 'Tabby', TabbyIcon)}
           />
           <label htmlFor="tabby" className="payment-method-label" style={{ width: '100%' }}>
             <div className="payment-method-content" style={{ width: '100%' }}>
@@ -233,7 +325,7 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
             id="tamara"
             name="payment-method"
             checked={selectedMethod === 'tamara'}
-            onChange={() => onMethodSelect('tamara', 'Tamara', TamaraIcon)}
+            onChange={() => handlePaymentMethodSelect('tamara', 'Tamara', TamaraIcon)}
           />
           <label htmlFor="tamara" className="payment-method-label" style={{ width: '100%' }}>
             <div className="payment-method-content" style={{ width: '100%' }}>
@@ -301,7 +393,40 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
               </span>
             </label>
           </div>
+          
         )}
+        {/* Wallet Payment */}
+    {!walletLoading && (
+
+    <div className="payment-method-item" style={{ opacity: canUseWallet ? 1 : 0.5 }}>
+    <input
+      type="radio"
+      id="wallet"
+      name="payment-method"
+      disabled={!canUseWallet}
+      checked={selectedMethod === 'wallet'}
+      onChange={() =>
+        onMethodSelect('wallet', 'Wallet Balance', { icon: 'wallet' })
+      }
+    />
+    <label htmlFor="wallet" className="payment-method-label">
+      <div className="payment-method-content">
+        <strong>Wallet Balance</strong>
+        <div style={{ fontSize: 13, color: '#555' }}>
+          Available: AED {walletBalance}
+        </div>
+
+        {!canUseWallet && (
+          <div style={{ fontSize: 12, color: '#d9534f' }}>
+            Insufficient wallet balance
+          </div>
+        )}
+      </div>
+    </label>
+  </div>
+)}
+
+
       </div>
     </div>
   );
