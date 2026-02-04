@@ -53,6 +53,7 @@ import StaticProductDetails from './pages/StaticProductDetails';
 import ProductRouteWrapper from './pages/ProductRouteWrapper '
 import CustomCheckout from './pages/adcheckout'
 import Fastdelivery from './pages/Fastdelivery';
+import Product_details from './pages/product_details';
 
 
 // Components

@@ -60,3 +60,146 @@ body {
   }
 }
 
+/* Product Description Content Styling */
+.product-description-content p {
+  margin: 0 0 16px 0;
+}
+
+.product-description-content p:last-child {
+  margin-bottom: 0;
+}
+
+.product-description-content h1,
+.product-description-content h2,
+.product-description-content h3,
+.product-description-content h4 {
+  margin: 24px 0 12px 0;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.product-description-content h1 {
+  font-size: 1.8rem;
+}
+
+.product-description-content h2 {
+  font-size: 1.5rem;
+}
+
+.product-description-content h3 {
+  font-size: 1.25rem;
+}
+
+.product-description-content h4 {
+  font-size: 1.1rem;
+}
+
+.product-description-content ul,
+.product-description-content ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.product-description-content li {
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+
+.product-description-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 16px 0;
+  display: block;
+}
+
+.product-description-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.product-description-content a:hover {
+  color: #1d4ed8;
+}
+
+.product-description-content strong,
+.product-description-content b {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.product-description-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  overflow-x: auto;
+  display: block;
+}
+
+.product-description-content table th,
+.product-description-content table td {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.product-description-content table th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+/* Mobile responsive for description */
+@media (max-width: 768px) {
+  .product-description-content {
+    font-size: 14px !important;
+  }
+
+  .product-description-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .product-description-content h2 {
+    font-size: 1.3rem;
+  }
+
+  .product-description-content h3 {
+    font-size: 1.15rem;
+  }
+
+  .product-description-content table {
+    font-size: 12px;
+  }
+
+  .product-description-content table th,
+  .product-description-content table td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-description-content {
+    font-size: 13px !important;
+    line-height: 1.7 !important;
+  }
+
+  .product-description-content h1 {
+    font-size: 1.3rem;
+  }
+
+  .product-description-content h2 {
+    font-size: 1.15rem;
+  }
+
+  .product-description-content h3 {
+    font-size: 1.05rem;
+  }
+
+  .product-description-content h4 {
+    font-size: 1rem;
+  }
+
+  .product-description-content ul,
+  .product-description-content ol {
+    padding-left: 20px;
+  }
+}

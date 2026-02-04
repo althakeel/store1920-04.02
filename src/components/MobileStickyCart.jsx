@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import QuantitySelector from './products/QuantitySelector';
 import ButtonSection from './products/ButtonSection';
 
 export default function MobileStickyCart({
@@ -49,25 +48,14 @@ export default function MobileStickyCart({
     flexWrap: 'wrap',
   };
 
-  // Optional: make quantity smaller on mobile
-  const quantityStyle = {
-    minWidth: '80px',
-  };
-
   const buttonWrapperStyle = {
     flexGrow: 1,
+    width: '100%',
   };
 
   return (
     <div style={footerStyle}>
       <div style={contentStyle}>
-        <div style={quantityStyle}>
-          <QuantitySelector
-            quantity={quantity}
-            setQuantity={setQuantity}
-            maxQuantity={maxQuantity}
-          />
-        </div>
         <div style={buttonWrapperStyle}>
           <ButtonSection
             product={product}

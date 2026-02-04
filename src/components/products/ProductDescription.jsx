@@ -1,5 +1,5 @@
 // ProductDescription.jsx
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../assets/styles/ProductDescription.css';
 
 function decodeHtml(html) {
@@ -19,16 +19,49 @@ function joinWithComma(items, key = 'id', display = 'name') {
 
 
 export default function ProductDescription({ product, selectedVariation }) {
-  if (!product) return null;
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isCollapsible, setIsCollapsible] = useState(false);
+  const descriptionRef = useRef(null);
 
-  const descriptionHtml = selectedVariation?.description || product.description || '';
-  const sku = selectedVariation?.sku || product.sku || '';
-  const categories = product.categories || [];
-  const tags = product.tags || [];
+  const descriptionHtml = selectedVariation?.description || product?.description || '';
+  const sku = selectedVariation?.sku || product?.sku || '';
+  const categories = product?.categories || [];
+  const tags = product?.tags || [];
   const attributes = selectedVariation?.attributes?.length
     ? selectedVariation.attributes
-    : product.attributes || [];
-  const media = selectedVariation?.images || product.images || [];
+    : product?.attributes || [];
+
+  const displayHtml = descriptionHtml;
+
+  useEffect(() => {
+    const node = descriptionRef.current;
+    if (!node) return;
+
+    const evaluate = () => {
+      const shouldCollapse = node.scrollHeight > 1920 || descriptionHtml.length > 2000;
+      setIsCollapsible(shouldCollapse);
+    };
+
+    evaluate();
+    const timer = setTimeout(evaluate, 500);
+
+    let resizeObserver;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => evaluate());
+      resizeObserver.observe(node);
+    } else {
+      const onResize = () => evaluate();
+      window.addEventListener('resize', onResize);
+      return () => window.removeEventListener('resize', onResize);
+    }
+
+    return () => {
+      if (resizeObserver) resizeObserver.disconnect();
+      clearTimeout(timer);
+    };
+  }, [descriptionHtml, isExpanded]);
+
+  if (!product) return null;
 
   return (
     <section className="product-description-section">
@@ -79,38 +112,21 @@ export default function ProductDescription({ product, selectedVariation }) {
 
       {/* 1️⃣ Description first */}
       <article
-        className="product-description-content"
-        dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+        ref={descriptionRef}
+        className={`product-description-content ${isCollapsible && !isExpanded ? 'collapsed' : 'expanded'}`}
+        dangerouslySetInnerHTML={{ __html: displayHtml }}
       />
 
-      {/* 2️⃣ Media below the description */}
-      {media.length > 0 && (
-        <section className="product-description-media">
-          {media.map((item, i) => {
-            if (item.src || item.url) {
-              return (
-                <img
-                  key={item.id || i}
-                  src={item.src || item.url}
-                  alt={item.alt || product.name || 'Product Image'}
-                  className="product-desc-image"
-                />
-              );
-            }
-            if (item.video) {
-              return (
-                <video
-                  key={item.id || i}
-                  src={item.video}
-                  controls
-                  className="product-desc-video"
-                />
-              );
-            }
-            return null;
-          })}
-        </section>
+      {isCollapsible && !isExpanded && (
+        <button
+          type="button"
+          className="product-description-more"
+          onClick={() => setIsExpanded(true)}
+        >
+          Show more
+        </button>
       )}
+
     </section>
   );
 }

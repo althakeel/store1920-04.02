@@ -1,44 +1,75 @@
 .share-dropdown {
   position: relative;
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+.share-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e1e1e1;
+  background: #fff;
   cursor: pointer;
+  padding: 0;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .share-icon {
-  font-size: 20px;
+  font-size: 16px;
   color: #555;
   transition: color 0.2s ease;
 }
 
-.share-dropdown:hover .share-icon {
+.share-icon-btn:hover {
+  border-color: #0071e3;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.share-dropdown.open .share-icon {
   color: #0071e3;
 }
 
 .share-list {
-  display: none;
   position: absolute;
   right: 0;
-  top: 28px;
+  top: 38px;
   background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 6px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 8px;
   z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  gap: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  gap: 8px;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
 }
 
-.share-dropdown:hover .share-list {
-  display: flex;
+.share-dropdown.open .share-list {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .share-list a {
   color: #555;
   font-size: 16px;
-  padding: 4px;
-  transition: color 0.2s;
+  padding: 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
 }
 
 .share-list a:hover {
   color: #0071e3;
+  background: #f3f7ff;
 }

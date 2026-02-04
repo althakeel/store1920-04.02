@@ -35,7 +35,7 @@ const ProductBadges = () => {
       >
         {badgeLabels[currentBadge] || currentBadge}
       </span>
-      <span style={{ color: '#555', fontSize: '12px' }}>from this seller</span>
+      {/* <span style={{ color: '#555', fontSize: '12px' }}>from this seller</span> */}
     </div>
   );
 };

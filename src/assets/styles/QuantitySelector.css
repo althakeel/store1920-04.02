@@ -1,58 +1,62 @@
 .quantity-selector-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
-  color: #333333;
+  font-size: 0.8rem;
+  color: #333;
   margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background: #fafafa;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .quantity-label {
   font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.7rem;
 }
 
 .quantity-select {
-  padding: 4px 25px;
-  font-size: 0.75rem;
-  border: 1.5px solid #ff7a00;
-  border-radius: 4px;
-  background-color: white;
+  width: 120px;
+  padding: 8px 36px 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
   cursor: pointer;
-  min-width: 60px;
+  min-width: 120px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff7a00" height="10" viewBox="0 0 24 24" width="10" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
   background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 10px;
+  background-position: right 12px center;
+  background-size: 12px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.quantity-select:focus {
+  outline: none;
+  border-color: #111;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+  background-color: #fff;
+}
+
+.stock-info-text {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #c0392b;
+  font-weight: 600;
 }
 @media (max-width: 768px) {
   .quantity-selector-container {
-    justify-content: center;
+    align-items: flex-start;
+    font-size: 0.78rem;
   }
-}
-
-.quantity-label {
-  font-weight: 600;
-}
-
-.quantity-select {
-  padding: 4px 25px;
-  font-size: 0.75rem;
-  border: 1.5px solid #ff7a00;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
-  min-width: 60px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff7a00" height="10" viewBox="0 0 24 24" width="10" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 10px;
-
-  overflow-y: auto;
 }

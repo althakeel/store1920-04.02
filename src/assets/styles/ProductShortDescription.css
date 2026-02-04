@@ -49,8 +49,87 @@
   color: inherit; /* keep link color same as surrounding text */
 }
 
-/* Optionally, add a hover effect */
+
 .product-short-description a:hover {
   text-decoration: underline;
-  color: #0073e6; /* or any accent color */
+  color: #0073e6; 
+}
+
+
+.product-short-description img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 12px 0;
+  display: block;
+}
+
+.product-short-description video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 12px 0;
+  display: block;
+}
+
+.product-short-description iframe {
+  max-width: 100%;
+  width: 100%;
+  min-height: 315px;
+  border-radius: 4px;
+  margin: 12px 0;
+  border: none;
+  display: block;
+}
+
+.product-short-description figure {
+  margin: 12px 0;
+  display: block;
+}
+
+.product-short-description figure img {
+  margin: 0;
+}
+
+.product-short-description figcaption {
+  font-size: 0.85em;
+  color: #6b6b6b;
+  text-align: center;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+
+.product-short-description object,
+.product-short-description embed {
+  max-width: 100%;
+  display: block;
+  margin: 12px 0;
+}
+
+/* Responsive video wrapper */
+.product-short-description .video-wrapper,
+.product-short-description .embed-responsive {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 ratio */
+  height: 0;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.product-short-description .video-wrapper iframe,
+.product-short-description .embed-responsive iframe,
+.product-short-description .video-wrapper video,
+.product-short-description .embed-responsive video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ensure all content is visible */
+.product-short-description * {
+  max-width: 100%;
+  box-sizing: border-box;
 }

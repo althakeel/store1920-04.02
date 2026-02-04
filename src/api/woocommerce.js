@@ -428,11 +428,11 @@ export const getProductsByCategories = async (categoryIds = [], page = 1, perPag
 };
 
 export const getProductBySlug = async (slug) => {
-  const data = await fetchAPI(`/products?slug=${slug}`);
+  const data = await fetchAPI(`/products?slug=${slug}&_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales`);
   return Array.isArray(data) && data.length > 0 ? data[0] : null;
 };
 
-export const getProductById = (id) => fetchAPI(`/products/${id}`);
+export const getProductById = (id) => fetchAPI(`/products/${id}?_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales`);
 export const searchProducts = (term) => fetchAPI(`/products?search=${encodeURIComponent(term)}`);
 export const getProductsByIds = (ids = []) => {
   if (!Array.isArray(ids) || !ids.length) return [];

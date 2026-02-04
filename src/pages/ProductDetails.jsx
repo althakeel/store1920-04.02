@@ -86,6 +86,18 @@ export default function ProductDetails() {
     staleTime: 1000 * 60 * 5,
   });
 
+  // Debug: Log product data and mainImageUrl changes
+  useEffect(() => {
+    if (product) {
+      console.log('📦 Product loaded:', product);
+      console.log('📝 Short Description:', product.short_description);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    console.log('📸 mainImageUrl changed to:', mainImageUrl);
+  }, [mainImageUrl]);
+
   // Fetch variations
   useEffect(() => {
     if (!product?.variations?.length) return setVariations([]);
@@ -104,17 +116,25 @@ export default function ProductDetails() {
     if (variations.length > 0 && !selectedVariation) setSelectedVariation(variations[0]);
   }, [variations, selectedVariation]);
 
-  // Set main image
+  // Set main image - only on initial product load
   useEffect(() => {
     if (!product?.images?.length) return;
     const firstValidImage = product.images.find(img => img?.src) || null;
-    if (firstValidImage && mainImageUrl !== firstValidImage.src) setMainImageUrl(firstValidImage.src);
-  }, [product, mainImageUrl]);
+    if (firstValidImage && !mainImageUrl) {
+      console.log('Setting initial main image:', firstValidImage.src);
+      setMainImageUrl(firstValidImage.src);
+    }
+  }, [product]);
 
   useEffect(() => {
     if (!selectedVariation) return;
-    if (selectedVariation.image?.src) setMainImageUrl(selectedVariation.image.src);
-    else if (product?.images?.[0]?.src) setMainImageUrl(product.images[0].src);
+    if (selectedVariation.image?.src) {
+      console.log('Variant image set:', selectedVariation.image.src);
+      setMainImageUrl(selectedVariation.image.src);
+    } else if (product?.images?.[0]?.src) {
+      console.log('Fallback to product image:', product.images[0].src);
+      setMainImageUrl(product.images[0].src);
+    }
   }, [selectedVariation, product]);
 
   // Gather variation images
@@ -204,18 +224,21 @@ export default function ProductDetails() {
           maxWidth: 1400,
           margin: '0 auto',
           padding: '20px',
-          gap: isMobile ? 0 : 5,
+          gap: isMobile ? 0 : 24,
+          alignItems: isMobile ? 'stretch' : 'flex-start',
         }}
       >
         {/* Left Column */}
         <div
           ref={leftColumnRef}
           style={{
-            flex: isMobile ? 'auto' : '1',
+            flex: isMobile ? 'auto' : '1 1 0',
+            width: isMobile ? '100%' : '50%',
+            minWidth: 0,
             boxSizing: 'border-box',
             maxHeight: isMobile ? 'auto' : '80vh',
             overflowY: isMobile ? 'visible' : 'auto',
-            paddingRight: isMobile ? 0 : 10,
+            paddingRight: 0,
             scrollbarWidth: isMobile ? 'auto' : 'none',
           }}
           className={isMobile ? '' : 'thin-scrollbar'}
@@ -230,7 +253,7 @@ export default function ProductDetails() {
           />
 
           {isMobile && (
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 20, marginBottom: 40 }}>
               <ProductInfo
                 product={product}
                 variations={variations}
@@ -241,7 +264,7 @@ export default function ProductDetails() {
             </div>
           )}
 
-          <div style={{ marginTop: 20 }}>
+          {/* <div style={{ marginTop: 20 }}>
             <div className="review-summary" aria-live="polite">
               <strong>
                 {reviews.length} review{reviews.length !== 1 ? 's' : ''}
@@ -252,25 +275,23 @@ export default function ProductDetails() {
                 <ReviewStars rating={Math.round(reviewSummary.avgRating)} />
               </span>
             </div>
-            <ProductDescription product={product} selectedVariation={selectedVariation} />
-          </div>
+          </div> */}
 
-          <div style={{ marginTop: 20 }}>
-            <Suspense fallback={<div>Loading reviews...</div>}>
-              <ProductReviewList
-                productId={product.id}
-                user={user}
-                onLogin={login}
-                reviews={reviews}
-                setReviews={setReviews}
-              />
-            </Suspense>
-          </div>
+          
         </div>
 
         {/* Right Column */}
         {!isMobile && (
-          <div style={{ flex: 1, position: 'sticky', top: 20, alignSelf: 'flex-start' }}>
+          <div
+            style={{
+              flex: '1 1 0',
+              width: '50%',
+              minWidth: 0,
+              position: 'sticky',
+              top: 20,
+              alignSelf: 'flex-start',
+            }}
+          >
             <ProductInfo
               product={product}
               variations={variations}
@@ -281,6 +302,66 @@ export default function ProductDetails() {
           </div>
         )}
       </div>
+
+      {/* Full Width Product Description */}
+      {product.description && (
+        <div style={{ 
+          maxWidth: 1400, 
+          margin: isMobile ? '50px auto 30px auto' : '30px auto', 
+          padding: '0 20px',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{
+            background: '#ffffff',
+            borderRadius: '8px',
+            border: '1px solid #e5e7eb',
+            padding: '24px',
+            boxSizing: 'border-box'
+          }}>
+            <h2 style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: '#1f2937',
+              margin: '0 0 20px 0',
+              paddingBottom: '12px',
+              borderBottom: '2px solid #f3f4f6'
+            }}>Product Description</h2>
+            <div 
+              style={{
+                fontSize: '15px',
+                lineHeight: '1.8',
+                color: '#374151',
+                wordWrap: 'break-word',
+                overflowWrap: 'break-word'
+              }}
+              className="product-description-content pi-description-content"
+              dangerouslySetInnerHTML={{ __html: product.description }}
+            />
+          </div>
+          <div
+  style={{
+    marginTop: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  }}
+>
+  <Suspense fallback={<div>Loading reviews...</div>}>
+    <ProductReviewList
+      productId={product.id}
+      user={user}
+      onLogin={login}
+      reviews={reviews}
+      setReviews={setReviews}
+    />
+  </Suspense>
+</div>
+
+        </div>
+      )}
+      
 
       {/* Related Products */}
       <div style={{ maxWidth: 1400, margin: '40px auto', padding: '0 10px' }}>

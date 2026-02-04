@@ -11,13 +11,22 @@ export default function ProductGallery({
   openModal,
   closeModal,
 }) {
+  console.log('ProductGallery rendered with images:', images, 'mainImageUrl:', mainImageUrl);
+  
   const [mainIndex, setMainIndex] = useState(0);
   const [mainLoading, setMainLoading] = useState(true);
   const modalThumbListRef = useRef(null);
   const [thumbsLoaded, setThumbsLoaded] = useState(false);
   const galleryRef = useRef(null);
+  const thumbnailListRef = useRef(null);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [isScrollLocked, setIsScrollLocked] = useState(true);
+  const isThumbDragging = useRef(false);
+  const thumbDragStartX = useRef(0);
+  const thumbScrollStart = useRef(0);
+  const [hasMainError, setHasMainError] = useState(false);
+  const lastMainSrcRef = useRef(null);
+  const mainImageRef = useRef(null);
 
   // Zoom and pan state for modal
   const [zoomScale, setZoomScale] = useState(1);
@@ -27,25 +36,40 @@ export default function ProductGallery({
   const lastDragPosition = useRef(null);
   const [visibleImages, setVisibleImages] = useState(images?.length ? [images[0]] : []);
 
-  // Sync mainIndex when mainImageUrl changes
-// Initialize main image when images change
+  // Sync mainIndex when mainImageUrl changes from parent
+  useEffect(() => {
+    if (!images || images.length === 0) return;
+    if (!mainImageUrl) return;
+    
+    console.log('Syncing mainImageUrl to mainIndex:', mainImageUrl);
+    const nextIndex = images.findIndex(img => img?.src === mainImageUrl);
+    console.log('Found index:', nextIndex, 'for url:', mainImageUrl);
+    
+    if (nextIndex >= 0 && nextIndex !== mainIndex) {
+      console.log('Setting mainIndex to:', nextIndex);
+      setMainIndex(nextIndex);
+      setMainLoading(true);
+      setHasMainError(false);
+    }
+  }, [mainImageUrl, images, mainIndex]);
 
-
-useEffect(() => {
-  if (!mainLoading && images.length > 1) {
-    // Delay adding other images slightly after main loads
-    const timer = setTimeout(() => {
-      setVisibleImages(images);
-    }, 200); // small delay to avoid blocking
-    return () => clearTimeout(timer);
-  }
-}, [mainLoading, images]);
+  // Initialize main image when images change
+  useEffect(() => {
+    if (!mainLoading && images.length > 1) {
+      // Delay adding other images slightly after main loads
+      const timer = setTimeout(() => {
+        setVisibleImages(images);
+      }, 200); // small delay to avoid blocking
+      return () => clearTimeout(timer);
+    }
+  }, [mainLoading, images]);
 
   // Reset loading and zoom state when mainIndex changes
   useEffect(() => {
     setMainLoading(true);
     setZoomScale(1);
     setZoomTranslate({ x: 0, y: 0 });
+    setHasMainError(false);
     if (modalThumbListRef.current) scrollModalThumbnails(mainIndex);
   }, [mainIndex]);
 
@@ -110,6 +134,35 @@ useEffect(() => {
     modalThumbListRef.current.scrollTo({ left: scrollPos, behavior: 'smooth' });
   };
 
+  const handleThumbnailWheel = (e) => {
+    if (!thumbnailListRef.current) return;
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      thumbnailListRef.current.scrollBy({ left: e.deltaY, behavior: 'auto' });
+    }
+  };
+
+  const handleThumbMouseDown = (e) => {
+    if (!thumbnailListRef.current) return;
+    isThumbDragging.current = true;
+    thumbDragStartX.current = e.pageX;
+    thumbScrollStart.current = thumbnailListRef.current.scrollLeft;
+    thumbnailListRef.current.style.cursor = 'grabbing';
+  };
+
+  const handleThumbMouseMove = (e) => {
+    if (!isThumbDragging.current || !thumbnailListRef.current) return;
+    e.preventDefault();
+    const dx = e.pageX - thumbDragStartX.current;
+    thumbnailListRef.current.scrollLeft = thumbScrollStart.current - dx;
+  };
+
+  const handleThumbMouseUp = () => {
+    if (!thumbnailListRef.current) return;
+    isThumbDragging.current = false;
+    thumbnailListRef.current.style.cursor = 'grab';
+  };
+
   // Navigation handlers
   const handlePrev = () => {
     const newIndex = mainIndex === 0 ? images.length - 1 : mainIndex - 1;
@@ -140,6 +193,15 @@ useEffect(() => {
   const scrollModalThumbsRight = e => {
     e.stopPropagation();
     modalThumbListRef.current?.scrollBy({ left: 100, behavior: 'smooth' });
+  };
+
+  const scrollThumbsLeft = e => {
+    e.stopPropagation();
+    thumbnailListRef.current?.scrollBy({ left: -120, behavior: 'smooth' });
+  };
+  const scrollThumbsRight = e => {
+    e.stopPropagation();
+    thumbnailListRef.current?.scrollBy({ left: 120, behavior: 'smooth' });
   };
 
   // Zoom/pan logic
@@ -188,6 +250,20 @@ useEffect(() => {
     document.body.style.overflow = activeModal === 'zoom' ? 'hidden' : '';
   }, [activeModal]);
 
+  const mainSrc = hasMainError
+    ? PlaceHolderImage
+    : (mainImageUrl || images[mainIndex]?.src || PlaceHolderImage);
+
+  useEffect(() => {
+    console.log('mainSrc changed:', mainSrc);
+    console.log('mainImageUrl:', mainImageUrl);
+    console.log('images[mainIndex]:', images[mainIndex]);
+    console.log('mainIndex:', mainIndex);
+    console.log('hasMainError:', hasMainError);
+    if (!mainSrc) return;
+    lastMainSrcRef.current = mainSrc;
+  }, [mainSrc, mainImageUrl, mainIndex, hasMainError, images]);
+
   if (!images || images.length === 0) {
     return (
       <div className="product-gallery no-images">
@@ -203,58 +279,89 @@ useEffect(() => {
       <div className="product-gallery-wrapper" ref={galleryRef}>
         {/* Thumbnail strip */}
         {thumbsLoaded && (
-          <div className="thumbnail-list" role="list">
-            {images.map((img, idx) => (
-              <button
-                key={img.id || idx}
-                className={`thumbnail-btn ${idx === mainIndex ? 'active' : ''}`}
-                onClick={() => {
-                  setMainImageUrl(img.src);
-                  setMainIndex(idx);
-                }}
-                type="button"
-                aria-label={`Thumbnail ${idx + 1}`}
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt || `Thumbnail ${idx + 1}`}
-                  className="thumbnail-image"
-                  loading="lazy"
-                  draggable={false}
-                />
-              </button>
-            ))}
+          <div className="thumbnail-strip">
+            <button
+              className="thumb-scroll thumb-scroll-left"
+              onClick={scrollThumbsLeft}
+              aria-label="Scroll thumbnails left"
+              type="button"
+            >
+              ‹
+            </button>
+            <div
+              className="thumbnail-list"
+              role="list"
+              ref={thumbnailListRef}
+              onWheel={handleThumbnailWheel}
+              onMouseDown={handleThumbMouseDown}
+              onMouseMove={handleThumbMouseMove}
+              onMouseUp={handleThumbMouseUp}
+              onMouseLeave={handleThumbMouseUp}
+            >
+              {images.map((img, idx) => (
+                <button
+                  key={img.id || idx}
+                  className={`thumbnail-btn ${idx === mainIndex ? 'active' : ''}`}
+                  onClick={() => {
+                    console.log('Thumbnail clicked:', img.src, 'index:', idx);
+                    setMainImageUrl(img.src);
+                    setMainIndex(idx);
+                    setMainLoading(true);
+                    setHasMainError(false);
+                  }}
+                  type="button"
+                  aria-label={`Thumbnail ${idx + 1}`}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Thumbnail ${idx + 1}`}
+                    className="thumbnail-image"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                </button>
+              ))}
+            </div>
+            <button
+              className="thumb-scroll thumb-scroll-right"
+              onClick={scrollThumbsRight}
+              aria-label="Scroll thumbnails right"
+              type="button"
+            >
+              ›
+            </button>
           </div>
         )}
 
         {/* Main image wrapper with inline skeleton */}
         <div
+          className="main-image-wrapper"
           style={{
             position: 'relative',
-            flexGrow: 1,
-            height: '560px',
-            borderRadius: '10px',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: mainLoading ? '#f0f0f0' : '#fff',
+            backgroundColor: '#fff',
           }}
         >
-         <img
-  src={visibleImages[mainIndex]?.src || PlaceHolderImage}
-  alt={visibleImages[mainIndex]?.alt || 'Product Image'}
-  draggable={false}
-  onLoad={() => setMainLoading(false)}
-  onClick={() => openModal('zoom')}
-  style={{
-    width: '100%',
-    height: '100%',
-    objectFit: 'contain',
-    transition: 'opacity 0.3s ease',
-    opacity: mainLoading ? 0 : 1,
-  }}
-/>
+          <img
+            ref={mainImageRef}
+            src={mainSrc}
+            alt={images[mainIndex]?.alt || 'Product Image'}
+            draggable={false}
+            onLoad={() => {
+              console.log('Image loaded:', mainSrc);
+              setMainLoading(false);
+            }}
+            onError={() => {
+              console.log('Image error:', mainSrc);
+              setHasMainError(true);
+              setMainLoading(false);
+            }}
+            onClick={() => openModal('zoom')}
+            className="main-image"
+            style={{
+              transition: 'opacity 0.3s ease',
+              opacity: 1,
+            }}
+          />
 
           <button
             className="arrow-btn arrow-left"
@@ -295,6 +402,7 @@ useEffect(() => {
               alt={images[mainIndex]?.alt || 'Zoomed Product Image'}
               draggable={false}
               ref={zoomedImageRef}
+              className="zoomed-image"
               style={{
                 transform: `translate(calc(-50% + ${zoomTranslate.x}px), calc(-50% + ${zoomTranslate.y}px)) scale(${zoomScale})`,
                 position: 'absolute',

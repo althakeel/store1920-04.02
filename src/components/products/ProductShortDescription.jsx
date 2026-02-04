@@ -2,7 +2,13 @@ import React from 'react';
 import '../../assets/styles/ProductShortDescription.css'
 
 export default function ProductShortDescription({ shortDescription }) {
-  if (!shortDescription) return null;
+  // Debug log
+  console.log('ProductShortDescription received:', shortDescription);
+  
+  if (!shortDescription || shortDescription.trim() === '') {
+    console.warn('No short description provided');
+    return null;
+  }
 
   return (
     <section className="product-short-description">

@@ -22,17 +22,17 @@
 
 /* Individual buttons */
 .add-to-cart-btn {
-  background-color: #ff7a00;
+  background-color: #06628d;
   color: #fff;
 }
 
 .go-to-cart-btn {
-  background-color: #f57c00;
+  background-color: #f50000;
   color: #fff;
 }
 
 .go-to-checkout-btn {
-  background-color: #4caf50;
+  background-color: #ff8800;
   color: #fff;
 }
 

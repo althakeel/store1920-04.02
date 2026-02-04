@@ -1,0 +1,47 @@
+.stock-status {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin: 10px 0;
+  display: inline-block;
+  text-align: center;
+}
+
+.stock-status.in-stock {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.stock-status.low-stock {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+  border: 1px solid #ff9800;
+}
+
+.stock-status.out-of-stock {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.stock-status.on-backorder {
+  background-color: rgba(245, 124, 0, 0.1);
+  color: #f57c00;
+  border: 1px solid #f57c00;
+}
+
+.stock-quantity-warning {
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .stock-status {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}

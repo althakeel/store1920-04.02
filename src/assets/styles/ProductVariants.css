@@ -6,74 +6,78 @@
 .variants-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .variant-attribute-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .variant-title {
-  font-weight: 500;
-  font-size: 0.85rem;
-  color: #333;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .variants-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 10px;
 }
 
 /* Variant buttons */
 .variant-btn {
-  flex: 1 1 55px; /* grow, shrink, base width */
-  min-width: 50px;
-  max-width: 80px;
-  padding: 5px 2px;
-  border: 0.5px solid #cfcfcf;
-  border-radius: 4px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
   background: #fff;
   cursor: pointer;
   text-align: center;
-  font-size: 0.15rem;
-  color: #333;
-  transition: all 0.2s ease-in-out;
+  color: #222;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .variant-btn:hover:not(.selected):not(.out-of-stock) {
-  border-color: #ffa84d;
+  border-color: #ff7a00;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .variant-btn.selected {
-  border-color: #000000;
-  font-weight: bold;
-    border: 2.5px solid #ff6309d7;
+  border-color: #ff7a00;
+  box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.18);
+  font-weight: 600;
 }
 
 .variant-btn.out-of-stock {
-  opacity: 0.4;
+  opacity: 0.45;
   pointer-events: none;
   border-style: dashed;
+  box-shadow: none;
 }
 
 /* Image inside button */
 .variant-image-wrapper {
   width: 100%;
   position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f7f7f7;
 }
 
 .variant-image {
   width: 100%;
-  height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 4px 4px 0 0;
-  margin-bottom: 4px;
+  display: block;
 }
 
 .variant-overlay {
@@ -89,38 +93,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px 4px 0 0;
+  border-radius: 8px;
   pointer-events: none;
 }
 
 /* Label */
 .variant-label {
   display: block;
-  max-width: 80px; /* adjust as needed */
+  width: 100%;
   text-align: center;
-  font-size: 10px;
+  font-size: 0.75rem;
   line-height: 1.2;
-  word-break: break-word; /* breaks long words */
-  white-space: normal; /* allows wrapping */
-  overflow-wrap: break-word; /* ensures wrapping works */
+  color: #444;
+  padding-top: 6px;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* ----------------------
    Tablet (max-width: 1024px)
    ---------------------- */
 @media (max-width: 1024px) {
-  .variant-btn {
-    flex: 1 1 80px;
-    min-width: 60px;
-    font-size: 0.5rem;
-  }
-
   .variant-title {
     font-size: 0.8rem;
   }
 
   .variants-list {
-    gap: 6px;
+    gap: 8px;
   }
 }
 
@@ -128,23 +128,18 @@
    Mobile (max-width: 768px)
    ---------------------- */
 @media (max-width: 768px) {
-  .variant-btn {
-    flex: 1 1 45%; /* roughly two buttons per row */
-    min-width: 45px;
-    font-size: 0.45rem;
-  }
-
   .variant-title {
     font-size: 0.75rem;
     margin-bottom: 4px;
   }
 
   .variant-label {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
 
   .variants-list {
-    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 8px;
   }
 }
 
@@ -152,17 +147,12 @@
    Extra small mobile (max-width: 480px)
    ---------------------- */
 @media (max-width: 480px) {
-  .variant-btn {
-    flex: 1 1 48%; /* two per row, small spacing */
-    min-width: 40px;
-    font-size: 0.4rem;
-  }
-
   .variant-label {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
 
   .variants-list {
-    gap: 4px;
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+    gap: 6px;
   }
 }

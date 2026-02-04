@@ -22,9 +22,18 @@ import MobileStickyCart from '../components/MobileStickyCart';
 export default function ProductInfo({ product, variations, selectedVariation, onVariationChange }) {
   const [quantity, setQuantity] = useState(1);
   const [hasItemDetails, setHasItemDetails] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const navigate = useNavigate();
   const { addToCart, setIsCartOpen } = useCart();
+  const isMobile = windowWidth <= 768;
+
+  // Window resize
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const isOutOfStock = selectedVariation?.stock_status === 'outofstock';
 
@@ -157,13 +166,15 @@ export default function ProductInfo({ product, variations, selectedVariation, on
   handleAddToCart={handleAddToCart}
 />
 
-      <ButtonSection
-        product={product}
-        selectedVariation={selectedVariation}
-        quantity={quantity}
-        isClearance={showClearance}
-        handleAddToCart={handleAddToCart}
-      />
+      {!isMobile && (
+        <ButtonSection
+          product={product}
+          selectedVariation={selectedVariation}
+          quantity={quantity}
+          isClearance={showClearance}
+          handleAddToCart={handleAddToCart}
+        />
+      )}
 
       {hasItemDetails && (
         <ItemDetailsTable
@@ -173,7 +184,7 @@ export default function ProductInfo({ product, variations, selectedVariation, on
         />
       )}
 
-      <OrderPerks />
+      {/* <OrderPerks /> */}
     </section>
   );
 }

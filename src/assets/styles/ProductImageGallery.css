@@ -1,0 +1,395 @@
+/* ProductImageGallery.css */
+
+.product-image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* Main Image Container */
+.main-image-container {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  min-height: 620px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: zoom-in;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin: 0;
+  padding: 0;
+}
+
+.main-image-container:hover {
+  background: #f5f5f5;
+  transition: background 0.3s ease;
+}
+
+.main-image-container.is-loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Image Loader */
+.image-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 2;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f0f0f0;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Zoom Info */
+.zoom-info {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Thumbnails Container */
+.thumbnails-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  position: relative;
+  padding: 0;
+}
+
+/* Thumbnails Wrapper (scrollable) */
+.thumbnails-wrapper {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+  scroll-behavior: smooth;
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.thumbnails-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thumbnail Item */
+.thumbnail-item {
+  flex: 0 0 auto;
+  width: 70px;
+  height: 70px;
+  padding: 0;
+  border: 3px solid #fff;
+  border-radius: 8px;
+  background: #f9f9f9;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail-item:hover {
+  border-color: #007bff;
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0, 123, 255, 0.2);
+}
+
+.thumbnail-item.active {
+  border-color: #007bff;
+  background: #e7f2ff;
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+}
+
+.thumbnail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Scroll Buttons */
+.scroll-button {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.scroll-button:hover {
+  background: #f5f5f5;
+  color: #007bff;
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.scroll-button:active {
+  transform: scale(0.95);
+}
+
+.scroll-left {
+  order: -1;
+}
+
+.scroll-right {
+  order: 1;
+}
+
+/* Image Counter */
+.image-counter {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+  padding-top: 4px;
+}
+
+/* Responsive Design */
+
+@media (max-width: 1024px) {
+  .product-image-gallery {
+    max-width: 100%;
+    gap: 12px;
+  }
+
+  .main-image-container {
+    border-radius: 8px;
+  }
+
+  .thumbnail-item {
+    width: 60px;
+    height: 60px;
+  }
+
+  .scroll-button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .image-counter {
+    font-size: 12px;
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .product-image-gallery {
+    max-width: 100%;
+    gap: 12px;
+  }
+
+  .main-image-container {
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .thumbnail-item {
+    width: 55px;
+    height: 55px;
+    border: 2px solid #fff;
+  }
+
+  .scroll-button {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .zoom-info {
+    font-size: 11px;
+    padding: 5px 10px;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .image-counter {
+    font-size: 11px;
+  }
+}
+
+/* Small Phones (600px and below) */
+@media (max-width: 600px) {
+  .product-image-gallery {
+    gap: 10px;
+  }
+
+  .main-image-container {
+    border-radius: 8px;
+    aspect-ratio: 1;
+  }
+
+  .thumbnail-item {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #fff;
+  }
+
+  .scroll-button {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .zoom-info {
+    font-size: 10px;
+    padding: 4px 8px;
+    bottom: 8px;
+    right: 8px;
+  }
+
+  .image-counter {
+    font-size: 10px;
+  }
+}
+
+/* Extra Small Phones (480px and below) */
+@media (max-width: 480px) {
+  .product-image-gallery {
+    gap: 10px;
+  }
+
+  .main-image-container {
+    border-radius: 6px;
+    aspect-ratio: 1;
+  }
+
+  .thumbnail-item {
+    width: 45px;
+    height: 45px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+  }
+
+  .thumbnail-item:hover {
+    transform: scale(1.03);
+  }
+
+  .scroll-button {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .zoom-info {
+    font-size: 9px;
+    padding: 3px 6px;
+    bottom: 6px;
+    right: 6px;
+  }
+
+  .image-counter {
+    font-size: 9px;
+  }
+}
+
+/* Very Small Phones (375px and below) */
+@media (max-width: 375px) {
+  .product-image-gallery {
+    gap: 8px;
+  }
+
+  .main-image-container {
+    border-radius: 6px;
+  }
+
+  .thumbnail-item {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #fff;
+  }
+
+  .scroll-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .zoom-info {
+    font-size: 8px;
+    padding: 2px 4px;
+    bottom: 4px;
+    right: 4px;
+  }
+
+  .image-counter {
+    font-size: 8px;
+  }
+}
