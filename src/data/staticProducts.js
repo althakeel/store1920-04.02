@@ -3600,7 +3600,7 @@ reviews: [
 
 
 {
-  id: 529508, // isko listing wali id se sync rakhna acha hai
+  id: 529508, 
   name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
   slug: "quran-magnet-speaker-built-in-surah-player", 
   price: 69.90,
@@ -3636,7 +3636,7 @@ reviews: [
       type: "Buy 1",
       id: 529508,
       name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
-      label: "Buy 1 for only 149.00 AED",
+      label: "Buy 1 for only 69.90 AED",
       discount: 0,
       slug: "quran-magnet-speaker-built-in-surah-player",
       price: 69.90,
@@ -3650,7 +3650,7 @@ reviews: [
       name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
-      price: 125.90, // example: 89.9 * 2 * 0.85
+      price: 125.90, 
       originalPrice: 285,
       mostPopular: true,
       note: "Great for couples or gifting.",
@@ -3663,7 +3663,7 @@ reviews: [
       name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
-      price: 171.90, // example: 89.9 * 2 * 0.85
+      price: 171.90, 
       originalPrice: 429,
     note: "Best value for families or gifts.",
       mostPopular: false,
@@ -3671,10 +3671,6 @@ reviews: [
       slug: "quran-magnet-speaker-built-in-surah-player",
     },
   ],
-
-
-
-
 
   BundleTitle: "BUNDLE AND SAVE MORE!",
 
