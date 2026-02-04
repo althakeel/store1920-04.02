@@ -207,6 +207,17 @@ import Product231 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOW
 import Product232 from '../assets/images/staticproducts/wirelesscharger//GNPTRIOWCGY-9183.webp';
 
 
+
+// Rohith  - quran products
+
+import Product240 from '../assets/images/staticproducts/quran/1.webp';
+import Product241 from '../assets/images/staticproducts/quran/2.webp';
+import Product242 from '../assets/images/staticproducts/quran/3.webp';
+import Product243 from '../assets/images/staticproducts/quran/4.webp';  
+import Product244 from '../assets/images/staticproducts/quran/5.webp';  
+import Product245 from '../assets/images/staticproducts/quran/6.webp';
+
+
 const staticProducts = [
   {
     id: 494574,
@@ -844,7 +855,7 @@ const staticProducts = [
 
   {
     id: 523089,
-    name: "TrimPro™ 21V Cordless Electric Pruning Shears",
+    name: "TrimPro™ 21V Cordless Electric Pruning Shears- Double battery",
     slug: "trimpro-21v-cordless-electric-pruning-shears",
     price: 119.90,
     description: "Paint Like a Pro – Anywhere, Anytime",
@@ -1349,39 +1360,28 @@ const staticProducts = [
     thumb9: Product101,
 
     bundles: [
-      {
-        type: "Buy 1",
-        id: 523404,
-        name: "Cordless Leaf Blower ",
-        label: "Buy 1 for Only 69.9 AED",
-        discount: 0,
-        price: 59.9,
-        originalPrice: 189,
-        image: Product96,
-      },
-      {
-        type: "Bundle of 2",
-        id: 523417,
-        name: "Cordless Leaf Blower ",
-        label: "Buy 2 & Get 15% Off",
-        discount: 15,
-        price: 107.90, // 15% off on 2 items
-        originalPrice: 378, // 139.80 AED
-        note: "Perfect for you & a friend",
-        mostPopular: true,
-        image: Product99,
-      },
-      {
-        type: "Bundle of 3",
-        id: 523418,
-        name: "Cordless Leaf Blower",
-        label: "Buy 3 & Get 25% Off",
-        discount: 18,
-        price: 146.90, // 25% off on 3 items
-        originalPrice: 567, // 269.70 AED
-        note: "Best Value",
-        image: Product93,
-      },
+     {
+        type: "Single Battery",
+        id: 523404,
+        name: "Cordless Leaf Blower ",
+        label: "Single Battery for Only 69.9 AED",
+        discount: 0,
+        price: 59.9,
+        originalPrice: 189,
+        image: Product96,
+      },
+      {
+        type: "Double Battery",
+        id: 523417,
+        name: "Cordless Leaf Blower ",
+        label: "Double Battery & Get 15% Off",
+        discount: 15,
+        price: 69.90, // 15% off on 2 items
+        originalPrice: 139, // 139.80 AED
+        note: "Perfect for you & a friend",
+        mostPopular: true,
+        image: Product99,
+      },
     ],
     BundleTitle: "BUNDLE AND SAVE MORE!",
 
@@ -3553,6 +3553,242 @@ reviews: [
 
 },
 
+
+//quran product - rohith
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+  id: 529508, // isko listing wali id se sync rakhna acha hai
+  name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+  slug: "quran-magnet-speaker-built-in-surah-player", // URL: /products/boxing-machine
+  price: 69.9,
+  salePrice: 69.9,
+  regularPrice: 150.99,
+
+  description:
+    " Screen-Free Daily Quran Recitation for Your Home",
+  shortdesc:
+    " Screen-Free Daily Quran Recitation for Your Home",
+
+  subdesc: "Complete Quran Preloaded – All 114 Surahs Included",
+  subdesc1: "One-Tap Playback (No Phone, No App Required)",
+  subdesc2: "Works Without Internet or Bluetooth",
+  subdesc3: "Magnetic Mount for Fridge & Metal Surfaces",
+  subdesc4: "Rechargeable Battery with Clear, Calm Audio",
+  subdesc5: "Ideal for Ramadan, Eid & Daily Remembrance",
+
+  // main images
+  image: Product240,
+  thumb1: Product241,
+  thumb2: Product242,
+  thumb3: Product243,
+    thumb4: Product244,
+    thumb5: Product245,
+  
+
+
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 529508,
+      name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+      label: "Buy 1 for only 149.00 AED",
+      discount: 0,
+      slug: "quran-magnet-speaker-built-in-surah-player",
+      price: 69.90,
+        note: "Ideal for personal daily listening.",
+      originalPrice: 150.99,
+      image: Product241,
+    },
+    {
+      type: "Bundle of 2",
+      id: 529509,
+      name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+      label: "Buy 2 & Get 15% Off",
+      discount: 15,
+      price: 125.90, // example: 89.9 * 2 * 0.85
+      originalPrice: 285,
+      note: "",
+      mostPopular: true,
+      note: "Great for couples or gifting.",
+      image: Product245,
+      slug: "quran-magnet-speaker-built-in-surah-player",
+    },
+    {
+      type: "Bundle of 3",
+      id: 529510,
+      name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+      label: "Buy 3 & Get 20% Off",
+      discount: 20,
+      price: 171.90, // example: 89.9 * 2 * 0.85
+      originalPrice: 429,
+    note: "Best value for families or gifts.",
+      mostPopular: false,
+      image: Product244,
+      slug: "quran-magnet-speaker-built-in-surah-player",
+    },
+  ],
+
+
+
+
+
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Problem + Solution + Features
+  section2contentTitle: "Listen to the Entire Quran — Anytime, Without Distractions",
+  section2contentDesc:
+    "Staying connected to the Quran shouldn’t require apps, Wi-Fi, or screen time. This Quran Magnet Speaker comes preloaded with the complete Quran — all 114 Surahs, allowing you to listen anytime with a single tap.Placed where you see it every day, it naturally encourages consistent remembrance and brings peace into your home.",
+  section2list: [
+    "Full Quran recitation available anytime",
+    "Encourages daily listening without effort",
+    "Perfect for kitchens, bedrooms, or offices",
+    "Simple enough for kids and elders",
+ 
+
+  ],
+
+
+
+ 
+  section2image: Product242,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "Full Quran Access — Effortlessly Integrated Into Your Home",
+  section3image: Product243,
+  section3points: [
+    "Complete Quran Preloaded",
+    "Screen-Free Listening",
+    "Magnetic Mount",
+    "Rechargeable & Portable",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "Join the Movement",
+  sectionProgressSubtitle: "Metrics",
+  sectionProgress: [
+    {
+      title: "Daily Quran Listening",
+      desc: " Families listen more consistently when the full Quran is easily accessible.",
+      percent: 96,
+    },
+    {
+      title: "Ease of Use",
+      desc: "One-tap access to all Surahs, no setup required",
+      percent: 94,
+    },
+    {
+      title: " Gift Satisfaction",
+      desc: " Highly rated as a meaningful Islamic gift.",
+      percent: 91,
+    },
+    // {
+    //   title: "Premium Finish",
+    //   desc: "ABS material adds durability and style",
+    //   percent: 98,
+    // },
+  ],
+
+  // 🔹 Comparison table – smart boxing vs punching bag
+  comparisonData: {
+    title: "Why Choose Green Lion Power Trio?",
+    description:
+      "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
+    headers: ["Feature", "Quran Magnet Speaker", "Phone / Bluetooth Speaker "],
+    rows: [
+      { feature: "Full Quran (All Surahs)", lumineux: true, others: false },
+      { feature: "Works Without Internet", lumineux: true, others: false },
+      { feature: "No Distractions", lumineux: true, others: false },
+      { feature: "One-Tap Simplicity", lumineux: true, others: false },
+      { feature: "Kid & Elder Friendly", lumineux: true, others: false },
+    ]
+  },
+
+  section5image: Product245,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free for 30 Days",
+  Guranteedesc:
+    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "Does it include the full Quran or only selected Surahs?",
+  fAQ1A:"Yes, the entire Quran (all 114 Surahs) is preloaded.",
+  Faq2Q: "Can I use it without internet or Bluetooth?",
+  fAQ2A:
+    " Yes, it works completely offline.",
+  Faq3Q: " Is it easy for elders and children?",
+  fAQ3A:
+    " Absolutely — one button controls playback.",
+ 
+  // 🔹 Reviews
+  reviewsTitle: "Trusted by Muslim Families for Daily Quran Listening",
+  reviewsRating: 4.9,
+reviews: [
+  {
+    text: "Having the full Quran available at any time makes daily listening so easy.",
+    author: "Leila S.",
+    stars: 5,
+  },
+  {
+    text: "My parents love it because they can play any Surah without a phone.”",
+    author: "Omar R.",
+    stars: 5,
+  },
+  {
+    text: "A beautiful gift. The full Quran being included makes it very special.",
+    author: "Aisha M.",
+    stars: 5,
+  },
+  
+]
+
+
+},
 
 
 ];

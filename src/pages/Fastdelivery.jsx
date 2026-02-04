@@ -16,6 +16,7 @@ import Product14 from '../assets/images/staticproducts/drill-machine/2.webp'
 import Product15 from '../assets/images/staticproducts/wrinkle-remover/10.webp'
 import Product16 from '../assets/images/staticproducts/massager/3.webp'
 import product17 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-2998.webp'
+import Product18 from '../assets/images/staticproducts/quran/1.webp';
 
 const staticProducts = [
    
@@ -211,6 +212,20 @@ const staticProducts = [
     sale_price: "149.00",
     images: [{ src: product17 }],
     path: "/products//green-lion-power-trio-3-in-1-magnetic-wireless-charger",
+    rating: 5,
+    reviews: 165,
+    sold: 195,
+  },
+
+  ,
+   {
+    id: "13",
+    name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+    price: "69.90",
+    regular_price: "199.00",
+    sale_price: "69.90",
+    images: [{ src: Product18 }],
+    path: "/products/quran-magnet-speaker-built-in-surah-player",
     rating: 5,
     reviews: 165,
     sold: 195,
