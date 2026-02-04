@@ -82,6 +82,11 @@ const shuffleArray = (array) => {
   return arr;
 };
 
+// Shuffle API products (not static products)
+const shuffleAPIProducts = (products) => {
+  return shuffleArray(products);
+};
+
 
 // Static Products with categories property
 const staticProducts = [
@@ -337,6 +342,8 @@ const ProductCategory = () => {
   const [initialLoadComplete, setInitialLoadComplete] = useState(false); // Track if first batch loaded
   const [isBackgroundLoading, setIsBackgroundLoading] = useState(false); // Track background fetch
   const [productLoadAnimation, setProductLoadAnimation] = useState({}); // Track which products to animate
+  const [shuffleTrigger, setShuffleTrigger] = useState(0); // Trigger shuffle
+  const shuffleIntervalRef = useRef(null);
   // No need for apiLoaded state anymore
   // For 'Recommended', hasMoreProducts should consider both API and static products
   const getTotalProducts = () => {
@@ -392,7 +399,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
       
       // Move clicked products to top
       const clickedProducts = cached.filter(p => clickedProductIds.has(p.id));
-      const unclickedProducts = cached.filter(p => !clickedProductIds.has(p.id));
+      const unclickedProducts = shuffleAPIProducts(cached.filter(p => !clickedProductIds.has(p.id)));
       const reordered = [...clickedProducts, ...unclickedProducts];
       
       setAllProducts(reordered);
@@ -428,7 +435,9 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
           return hasImage && hasPrice && hasSalePrice;
         });
         
-        setAllProducts(validQuickData);
+        // Shuffle the quick loaded products for variety
+        const shuffledQuickData = shuffleAPIProducts(validQuickData);
+        setAllProducts(shuffledQuickData);
         setLoadingProducts(false);
         setShowingStaticOnly(false);
         setInitialLoadComplete(true); // Mark initial load as complete - no more blinking
@@ -439,7 +448,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
           setTimeout(async () => {
             try {
               let page = 2; // Start from page 2
-              let currentProducts = [...validQuickData];
+              let currentProducts = [...shuffledQuickData];
               
               // Fetch pages and update UI every batch for progressive loading
               while (true) {
@@ -498,11 +507,12 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
                 await new Promise(resolve => setTimeout(resolve, 200));
               }
               
-              // Final update after all products loaded
+              // Final update after all products loaded with shuffle
               const finalLimited = currentProducts.slice(0, MAX_PRODUCTS);
-              apiProductCache[categoryId] = finalLimited;
-              setAllProducts([...finalLimited]);
-              console.log('🎯 Background loading complete:', finalLimited.length);
+              const shuffledFinal = shuffleAPIProducts(finalLimited);
+              apiProductCache[categoryId] = shuffledFinal;
+              setAllProducts([...shuffledFinal]);
+              console.log('🎯 Background loading complete:', shuffledFinal.length);
             } catch (bgErr) {
               console.error('❌ Background fetch error:', bgErr);
             } finally {
@@ -538,6 +548,34 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
       fetchProducts(selectedCategoryId);
     }
   }, [selectedCategoryId, fetchProducts]);
+
+  // Shuffle products every 15 minutes
+  useEffect(() => {
+    // Clear existing interval
+    if (shuffleIntervalRef.current) {
+      clearInterval(shuffleIntervalRef.current);
+    }
+
+    // Set new interval for 15 minutes (900000 ms)
+    shuffleIntervalRef.current = setInterval(() => {
+      console.log('🔀 Auto-shuffling products after 15 minutes');
+      setAllProducts(prev => {
+        if (prev.length === 0) return prev;
+        return shuffleAPIProducts([...prev]);
+      });
+      // Update cache with shuffled products
+      if (apiProductCache[selectedCategoryId]) {
+        apiProductCache[selectedCategoryId] = shuffleAPIProducts([...apiProductCache[selectedCategoryId]]);
+      }
+    }, 900000); // 15 minutes
+
+    // Cleanup interval on unmount
+    return () => {
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current);
+      }
+    };
+  }, [selectedCategoryId]);
 
   // Arrow visibility for categories scroll
   const updateArrowVisibility = useCallback(() => {
