@@ -225,9 +225,11 @@ useEffect(() => {
        const details = await Promise.all(
   contextCartItems.map(async (item) => {
     const prod = await fetchWithAuth(`products/${item.id}`);
+    // Use the cart item's price if available (from bundle selection), otherwise use WooCommerce price
+    const finalPrice = item.price ? parseFloat(item.price) : parseFloat(prod.price) || 0;
     return {
       ...item,
-      price: parseFloat(prod.price) || 0,
+      price: finalPrice,
       inStock: prod.stock_quantity > 0,
       name: prod.name,
     };

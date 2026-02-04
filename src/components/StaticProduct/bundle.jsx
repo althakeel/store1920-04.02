@@ -37,8 +37,13 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
       fixedPrice = 159.0;
     }
 
+    // Add price validation for Quran speaker and other products
+    if ((!fixedPrice || fixedPrice === 0) && bundle.price) {
+      fixedPrice = bundle.price;
+    }
+
     const bundleToCart = {
-      id: bundle.wooId || bundle.id || 0,
+      id: product?.wooId || product?.id || bundle.wooId || bundle.id || 0,
       name: bundle.type,
       price: fixedPrice,
       originalPrice: bundle.originalPrice,

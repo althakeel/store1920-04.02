@@ -3632,7 +3632,8 @@ reviews: [
 
   // 🔹 Bundle / pricing section (top right)
   bundles: [
-    {
+    
+      {
       type: "Buy 1",
       id: 529508,
       name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
