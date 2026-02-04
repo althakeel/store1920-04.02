@@ -3602,9 +3602,9 @@ reviews: [
 {
   id: 529508, // isko listing wali id se sync rakhna acha hai
   name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
-  slug: "quran-magnet-speaker-built-in-surah-player", // URL: /products/boxing-machine
-  price: 69.9,
-  salePrice: 69.9,
+  slug: "quran-magnet-speaker-built-in-surah-player", 
+  price: 69.90,
+  salePrice: 69.90,
   regularPrice: 150.99,
 
   description:
@@ -3652,7 +3652,6 @@ reviews: [
       discount: 15,
       price: 125.90, // example: 89.9 * 2 * 0.85
       originalPrice: 285,
-      note: "",
       mostPopular: true,
       note: "Great for couples or gifting.",
       image: Product245,
