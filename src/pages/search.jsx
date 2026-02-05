@@ -25,7 +25,8 @@ const Search = () => {
         } else {
           data = await searchProducts(searchTerm);
         }
-        setResults(data || []);
+        // Ensure data is always an array
+        setResults(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
         setResults([]);

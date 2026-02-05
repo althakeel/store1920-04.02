@@ -122,8 +122,8 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
             (!price || parseFloat(price) <= 0) &&
             (hasStockInfo && (stockOutByQuantity || stockOutByFlag));
 
-          // Check if this item supports COD
-          const isCodAvailable = staticProductIds.includes(item.id);
+          // Check if this item supports COD (either from static list OR WordPress backend setting)
+          const isCodAvailable = staticProductIds.includes(item.id) || item.cod_available === true;
 
           return (
             <div
