@@ -55,6 +55,11 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = 
   const [walletBalance, setWalletBalance] = React.useState(null);
   const [walletLoading, setWalletLoading] = React.useState(true);
   const { user } = useAuth();
+  
+  // Log cartItems received
+  useEffect(() => {
+    console.log('📦 PaymentMethods received cartItems:', cartItems);
+  }, [cartItems]);
   console.log('Auth user object:', user);
 console.log('Auth user ID:', user?.id);
 
@@ -119,6 +124,27 @@ console.log('Auth user ID:', user?.id);
     staticProductIds.length > 0 &&
     cartItems.some(item => !staticProductIds.includes(item.id));
 
+  // Check if all cart items have COD enabled (from WordPress backend setting)
+  const allItemsSupportCOD = 
+    cartItems.length > 0 &&
+    cartItems.every(item => item.cod_available === true);
+
+  // COD is available if EITHER:
+  // 1. All items are in static products list (existing logic), OR
+  // 2. All items have cod_available = true (new WordPress setting)
+  const isCodAvailableForCart = 
+    (hasOnlyStaticProducts && !hasNonStaticProducts && staticProductIds.length > 0) || 
+    allItemsSupportCOD;
+
+  console.log('💳 COD Availability Check:', {
+    cartItemCount: cartItems.length,
+    cartItems: cartItems.map(i => ({ id: i.id, name: i.name, cod_available: i.cod_available })),
+    allItemsSupportCOD,
+    hasOnlyStaticProducts,
+    hasNonStaticProducts,
+    isCodAvailableForCart
+  });
+
   const amount = Number(subtotal) || 0;
   const canUseWallet =
   Number(walletBalance || 0) >= amount &&
@@ -126,11 +152,10 @@ console.log('Auth user ID:', user?.id);
   const tabbyInstallment = (amount / 4).toFixed(2);
 
   useEffect(() => {
-    const isCodAvailable = hasOnlyStaticProducts && !hasNonStaticProducts && staticProductIds.length > 0;
-    if (selectedMethod === 'cod' && !isCodAvailable) {
+    if (selectedMethod === 'cod' && !isCodAvailableForCart) {
       onMethodSelect('card', 'Credit/Debit Card', CardIcon);
     }
-  }, [cartItems, selectedMethod, onMethodSelect, hasOnlyStaticProducts, hasNonStaticProducts, staticProductIds.length]);
+  }, [cartItems, selectedMethod, onMethodSelect, isCodAvailableForCart]);
 
   // --- TabbyCard integration ---
   useEffect(() => {
@@ -230,7 +255,7 @@ console.log('Wallet loading:', walletLoading);
     <div className="pm-wrapper">
       <h3>Payment methods</h3>
 
-      {cartItems.length > 0 && hasNonStaticProducts && staticProductIds.length > 0 && (
+      {cartItems.length > 0 && !isCodAvailableForCart && (
         <div
           style={{
             backgroundColor: '#fff3cd',
@@ -346,7 +371,7 @@ console.log('Wallet loading:', walletLoading);
         </div>
 
         {/* Cash on Delivery */}
-        {hasOnlyStaticProducts && !hasNonStaticProducts && staticProductIds.length > 0 && (
+        {isCodAvailableForCart && (
           <div className="payment-method-item">
             <input
               type="radio"

@@ -225,6 +225,7 @@ useEffect(() => {
        const details = await Promise.all(
   contextCartItems.map(async (item) => {
     const prod = await fetchWithAuth(`products/${item.id}`);
+    console.log('🛒 Product fetched for cart:', prod.id, 'COD Available:', prod.cod_available);
     // Use the cart item's price if available (from bundle selection), otherwise use WooCommerce price
     const finalPrice = item.price ? parseFloat(item.price) : parseFloat(prod.price) || 0;
     return {
@@ -232,9 +233,11 @@ useEffect(() => {
       price: finalPrice,
       inStock: prod.stock_quantity > 0,
       name: prod.name,
+      cod_available: prod.cod_available, // Include COD availability from fresh product data
     };
   })
 );
+        console.log('🛒 Cart items with COD status:', details.map(d => ({ id: d.id, name: d.name, cod_available: d.cod_available })));
         setCartItems(details);
       } catch {
         setCartItems(contextCartItems.map(i => ({ ...i, price: i.price || 0, inStock: true })));

@@ -455,7 +455,7 @@ export const getProductsByCategories = async (categoryIds = [], page = 1, perPag
 };
 
 export const getProductBySlug = async (slug) => {
-  const data = await fetchAPI(`/products?slug=${slug}&_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle`);
+  const data = await fetchAPI(`/products?slug=${slug}&_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle,cod_available`);
   const product = Array.isArray(data) && data.length > 0 ? data[0] : null;
   return enrichWithShortDescription(product);
 };
@@ -483,7 +483,7 @@ export const getShortDescriptionBySlug = async (slug) => {
 };
 
 export const getProductById = async (id) => {
-  const product = await fetchAPI(`/products/${id}?_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle`);
+  const product = await fetchAPI(`/products/${id}?_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle,cod_available`);
   return enrichWithShortDescription(product);
 };
 export const searchProducts = (term) => fetchAPI(`/products?search=${encodeURIComponent(term)}`);
