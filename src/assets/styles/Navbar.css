@@ -38,7 +38,7 @@
 }
 .lang-dropdown-card {
   position: absolute;
-  top: calc(100% + 8px);  /* adds 8px space below the parent */
+  top: calc(100% + 8px);  
   left: 50%;
   transform: translateX(-50%);
   background: #fff;
@@ -54,7 +54,7 @@
   position: absolute;
   top: -6px;             
   left: 50%;             
-  transform: translateX(-50%); /* align arrow to center */
+  transform: translateX(-50%); 
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
