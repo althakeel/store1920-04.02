@@ -40,6 +40,7 @@ export default function OrderSuccess() {
   const location = useLocation();
   const { user } = useAuth();
   const hasTrackedRef = useRef(false);
+  const retryCountRef = useRef(0);
 
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("order_id");
@@ -90,7 +91,6 @@ export default function OrderSuccess() {
 
   useEffect(() => {
     if (!order || hasTrackedRef.current) return;
-    if (typeof window === 'undefined' || typeof window.fbq !== 'function') return;
 
     const trackKey = `fbq_purchase_tracked_${order.id}`;
     if (localStorage.getItem(trackKey) === '1') {
@@ -98,27 +98,39 @@ export default function OrderSuccess() {
       return;
     }
 
-    const value = Number.parseFloat(order.total) || 0;
-    const currency = order.currency || 'AED';
-    const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
-    const numItems = lineItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
-    const contents = lineItems.map((item) => ({
-      id: item.product_id,
-      quantity: Number(item.quantity) || 0,
-      item_price: Number.parseFloat(item.price || item.total) || 0,
-    }));
+    const firePurchase = () => {
+      if (typeof window === 'undefined' || typeof window.fbq !== 'function') {
+        if (retryCountRef.current < 5) {
+          retryCountRef.current += 1;
+          setTimeout(firePurchase, 500);
+        }
+        return;
+      }
 
-    window.fbq('track', 'Purchase', {
-      value,
-      currency,
-      content_type: 'product',
-      contents,
-      num_items: numItems,
-      order_id: order.id,
-    });
+      const value = Number.parseFloat(order.total) || 0;
+      const currency = order.currency || 'AED';
+      const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
+      const numItems = lineItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+      const contents = lineItems.map((item) => ({
+        id: item.product_id,
+        quantity: Number(item.quantity) || 0,
+        item_price: Number.parseFloat(item.price || item.total) || 0,
+      }));
 
-    localStorage.setItem(trackKey, '1');
-    hasTrackedRef.current = true;
+      window.fbq('track', 'Purchase', {
+        value,
+        currency,
+        content_type: 'product',
+        contents,
+        num_items: numItems,
+        order_id: order.id,
+      });
+
+      localStorage.setItem(trackKey, '1');
+      hasTrackedRef.current = true;
+    };
+
+    firePurchase();
   }, [order]);
 
   useEffect(() => {
