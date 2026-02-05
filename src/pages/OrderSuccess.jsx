@@ -92,6 +92,12 @@ export default function OrderSuccess() {
     if (!order || hasTrackedRef.current) return;
     if (typeof window === 'undefined' || typeof window.fbq !== 'function') return;
 
+    const trackKey = `fbq_purchase_tracked_${order.id}`;
+    if (localStorage.getItem(trackKey) === '1') {
+      hasTrackedRef.current = true;
+      return;
+    }
+
     const value = Number.parseFloat(order.total) || 0;
     const currency = order.currency || 'AED';
     const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
@@ -111,6 +117,7 @@ export default function OrderSuccess() {
       order_id: order.id,
     });
 
+    localStorage.setItem(trackKey, '1');
     hasTrackedRef.current = true;
   }, [order]);
 

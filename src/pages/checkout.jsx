@@ -412,10 +412,41 @@ meta_data: [
       const order = orderId ? await fetchWithAuth(`orders/${orderId}`) : await createOrder();
       setOrderId(order.id);
 
+      const trackPurchase = (createdOrder) => {
+        if (typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+        if (!createdOrder?.id) return;
+
+        const trackKey = `fbq_purchase_tracked_${createdOrder.id}`;
+        if (localStorage.getItem(trackKey) === '1') return;
+
+        const value = Number.parseFloat(createdOrder.total) || 0;
+        const currency = createdOrder.currency || 'AED';
+        const lineItems = Array.isArray(createdOrder.line_items) ? createdOrder.line_items : [];
+        const numItems = lineItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+        const contents = lineItems.map((item) => ({
+          id: item.product_id,
+          quantity: Number(item.quantity) || 0,
+          item_price: Number.parseFloat(item.price || item.total) || 0,
+        }));
+
+        window.fbq('track', 'Purchase', {
+          value,
+          currency,
+          content_type: 'product',
+          contents,
+          num_items: numItems,
+          order_id: createdOrder.id,
+        });
+
+        localStorage.setItem(trackKey, '1');
+      };
+
       if (formData.paymentMethod === 'cod') {
+        trackPurchase(order);
         clearCart();
         navigate(`/order-success?order_id=${order.id}`);
       } else if (formData.paymentMethod === 'paymob_accept') {
+        trackPurchase(order);
         if (order.payment_url) window.location.href = order.payment_url;
         else throw new Error('Paymob payment URL not found. Check plugin setup.');
       } else {
