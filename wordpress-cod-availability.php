@@ -34,13 +34,13 @@ if (!function_exists('store1920_add_cod_availability_meta_box')) {
     add_action('add_meta_boxes', 'store1920_add_cod_availability_meta_box', 10);
 }
 
-// Render the COD availability checkbox
+
 if (!function_exists('store1920_render_cod_availability_meta_box')) {
     function store1920_render_cod_availability_meta_box($post) {
-        // Add nonce for security
+  
         wp_nonce_field('store1920_save_cod_availability', 'store1920_cod_availability_nonce');
         
-        // Get current value
+        
         $cod_available = get_post_meta($post->ID, '_cod_available', true);
         $is_checked = ($cod_available === 'yes') ? 'checked' : '';
         
@@ -64,10 +64,10 @@ if (!function_exists('store1920_render_cod_availability_meta_box')) {
     }
 }
 
-// Save the COD availability setting
+
 if (!function_exists('store1920_save_cod_availability')) {
     function store1920_save_cod_availability($post_id) {
-        // Check nonce
+
         if (!isset($_POST['store1920_cod_availability_nonce']) || 
             !wp_verify_nonce($_POST['store1920_cod_availability_nonce'], 'store1920_save_cod_availability')) {
             return;

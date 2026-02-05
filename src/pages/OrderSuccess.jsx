@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
@@ -39,6 +39,7 @@ export default function OrderSuccess() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const hasTrackedRef = useRef(false);
 
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("order_id");
@@ -86,6 +87,32 @@ export default function OrderSuccess() {
     }
     fetchOrder();
   }, [orderId, isCancelled, navigate]);
+
+  useEffect(() => {
+    if (!order || hasTrackedRef.current) return;
+    if (typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+
+    const value = Number.parseFloat(order.total) || 0;
+    const currency = order.currency || 'AED';
+    const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
+    const numItems = lineItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+    const contents = lineItems.map((item) => ({
+      id: item.product_id,
+      quantity: Number(item.quantity) || 0,
+      item_price: Number.parseFloat(item.price || item.total) || 0,
+    }));
+
+    window.fbq('track', 'Purchase', {
+      value,
+      currency,
+      content_type: 'product',
+      contents,
+      num_items: numItems,
+      order_id: order.id,
+    });
+
+    hasTrackedRef.current = true;
+  }, [order]);
 
   useEffect(() => {
     if (!orderId) {

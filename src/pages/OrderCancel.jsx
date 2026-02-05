@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getOrderById } from "../api/woocommerce";
@@ -38,6 +38,7 @@ export default function OrderCancel() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const hasTrackedRef = useRef(false);
 
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("order_id");
@@ -103,6 +104,18 @@ export default function OrderCancel() {
       window.removeEventListener("popstate", handlePopState);
     };
   }, [navigate, orderId]);
+
+  useEffect(() => {
+    if (loading || !orderId || orderPlaced || hasTrackedRef.current) return;
+    if (typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+
+    window.fbq('trackCustom', 'PurchaseFailed', {
+      order_id: orderId,
+      reason: cancelReason,
+    });
+
+    hasTrackedRef.current = true;
+  }, [loading, orderId, orderPlaced, cancelReason]);
 
   const handleCopyOrderId = () => {
     navigator.clipboard.writeText(orderId);
