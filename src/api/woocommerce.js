@@ -225,8 +225,35 @@ export const clearCategoryCache = () => {
 export const API_BASE = "https://db.store1920.com/wp-json/wc/v3";
 export const CONSUMER_KEY = "ck_8dfeb134379e51fa95e3a22769f67bd6b4f0e507";
 export const CONSUMER_SECRET = "cs_2e5da71434cc874771a8ab0ef2dae2ffef3591c0";
+const SHORT_DESC_API_BASE = "https://db.store1920.com/wp-json/store1920/v1/product";
 
 const authParams = `consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
+
+const hasMeaningfulHtml = (html) => {
+  if (!html) return false;
+  const text = String(html)
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;|\s+/g, '')
+    .trim();
+  return text.length > 0;
+};
+
+const enrichWithShortDescription = async (product) => {
+  if (!product?.id) return product;
+  if (hasMeaningfulHtml(product.short_description)) return product;
+
+  try {
+    const response = await axios.get(`${SHORT_DESC_API_BASE}/${product.id}`);
+    const data = response?.data;
+    if (data?.short_description) {
+      return { ...product, short_description: data.short_description };
+    }
+  } catch (error) {
+    console.warn('⚠️ Short description fetch failed:', error?.message || error);
+  }
+
+  return product;
+};
 
 // ===================== Generic Fetch =====================
 export async function fetchAPI(endpoint) {
@@ -428,11 +455,37 @@ export const getProductsByCategories = async (categoryIds = [], page = 1, perPag
 };
 
 export const getProductBySlug = async (slug) => {
-  const data = await fetchAPI(`/products?slug=${slug}&_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales`);
-  return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  const data = await fetchAPI(`/products?slug=${slug}&_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle`);
+  const product = Array.isArray(data) && data.length > 0 ? data[0] : null;
+  return enrichWithShortDescription(product);
 };
 
-export const getProductById = (id) => fetchAPI(`/products/${id}?_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales`);
+export const getShortDescriptionBySlug = async (slug) => {
+  if (!slug) return '';
+  const data = await fetchAPI(`/products?slug=${slug}&_fields=short_description`);
+  if (Array.isArray(data) && data.length > 0 && data[0]?.short_description) {
+    return data[0].short_description || '';
+  }
+
+  try {
+    const wpV2 = await axios.get(
+      `https://db.store1920.com/wp-json/wp/v2/product?slug=${encodeURIComponent(slug)}&_fields=excerpt`
+    );
+    const wpData = wpV2?.data;
+    if (Array.isArray(wpData) && wpData.length > 0) {
+      return wpData[0]?.excerpt?.rendered || '';
+    }
+  } catch (error) {
+    console.warn('⚠️ WP v2 excerpt fetch failed:', error?.message || error);
+  }
+
+  return '';
+};
+
+export const getProductById = async (id) => {
+  const product = await fetchAPI(`/products/${id}?_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle`);
+  return enrichWithShortDescription(product);
+};
 export const searchProducts = (term) => fetchAPI(`/products?search=${encodeURIComponent(term)}`);
 export const getProductsByIds = (ids = []) => {
   if (!Array.isArray(ids) || !ids.length) return [];

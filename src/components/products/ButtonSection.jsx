@@ -62,9 +62,10 @@ export default function ButtonSection({ product, selectedVariation, quantity, is
     document.body.appendChild(script);
 
     return () => {
-      // cleanup: remove widget html when variation changes
-      const target = document.querySelector('#TabbyPromo');
-      if (target) target.innerHTML = '';
+      // Only remove script, not the widget
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, [variation]);
 
@@ -96,7 +97,7 @@ export default function ButtonSection({ product, selectedVariation, quantity, is
       )}
 
       {/* ⭐⭐⭐ TABBY PROMO WIDGET BELOW BUTTONS ⭐⭐⭐ */}
-      <div id="TabbyPromo" style={{ marginTop: '15px',marginBottom:"10px" }}></div>
+      <div id="TabbyPromo" style={{ marginTop: '15px', marginBottom: '10px' }}></div>
     </>
   );
 }

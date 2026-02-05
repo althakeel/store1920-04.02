@@ -1,58 +1,170 @@
 .product-short-description {
-  max-width: 700px;       /* limit width */
-  width: 100%;            /* make it responsive */
-  margin: 10px 0;
-  padding: 10px 0;          /* fixed missing value */
-  background-color: #fff;
-
-  /* border-bottom: 1px solid #858585; */
-  border-top: 1px solid #cacaca;
+  max-width: 700px;
+  width: 100%;
+  margin: 8px 0 14px 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  position: static;
 
   /* Text wrap */
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
 
-  font-family: 'Montserrat', sans-serif;  /* Montserrat font */
+  font-family: 'Montserrat', sans-serif;
 }
 
-.product-short-description h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+.short-desc-title {
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #222;
-  margin-top: 10px;
-
-  /* Remove underline or border line */
-  text-decoration: none;
-  border-bottom: none;
-  box-shadow: none;
-  padding-bottom: 0;
+  color: #111827;
+  margin: 0 0 8px 0;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 
 .product-short-description div {
-  font-size: 0.75rem;
-  color: #131313;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.65;
 
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
 
-  font-family: 'Montserrat', sans-serif;  /* Montserrat font */
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* WP-like content styling */
+.product-short-description .wp-editor-content {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.7;
+}
+
+.product-short-description .wp-editor-content p {
+  margin: 0 0 10px 0;
+}
+
+.product-short-description .wp-editor-content p:last-child {
+  margin-bottom: 0;
+}
+
+.product-short-description .wp-editor-content h1,
+.product-short-description .wp-editor-content h2,
+.product-short-description .wp-editor-content h3,
+.product-short-description .wp-editor-content h4 {
+  font-weight: 600;
+  color: #111827;
+  margin: 16px 0 8px 0;
+}
+
+.product-short-description .wp-editor-content h1 { font-size: 1.25rem; }
+.product-short-description .wp-editor-content h2 { font-size: 1.15rem; }
+.product-short-description .wp-editor-content h3 { font-size: 1.05rem; }
+.product-short-description .wp-editor-content h4 { font-size: 1rem; }
+
+.product-short-description .wp-editor-content ul,
+.product-short-description .wp-editor-content ol {
+  margin: 8px 0 12px 18px;
+  padding-left: 18px;
+}
+
+.product-short-description .wp-editor-content li {
+  margin: 4px 0;
+}
+
+.product-short-description .wp-editor-content blockquote {
+  margin: 12px 0;
+  padding: 8px 12px;
+  border-left: 3px solid #e5e7eb;
+  color: #4b5563;
+  background: #f9fafb;
+}
+
+.product-short-description .wp-editor-content strong,
+.product-short-description .wp-editor-content b {
+  font-weight: 600;
+  color: #111827;
+}
+
+.product-short-description .wp-editor-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.product-short-description .wp-editor-content a:hover {
+  color: #1d4ed8;
+}
+
+.product-short-description .wp-editor-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+}
+
+.product-short-description p {
+  margin: 0 0 6px 0;
+}
+
+.product-short-description p:last-child {
+  margin-bottom: 0;
+}
+
+.product-short-description ul,
+.product-short-description ol {
+  margin: 6px 0 6px 18px;
+  padding-left: 18px;
+}
+
+.product-short-description .tick-list {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.product-short-description .tick-list li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.product-short-description .tick-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #10b981;
+  font-weight: 700;
+}
+
+.product-short-description li {
+  margin: 3px 0;
 }
 
 /* Remove underline from links inside product-short-description */
 .product-short-description a {
-  text-decoration: none;
-  color: inherit; /* keep link color same as surrounding text */
+  text-decoration: underline;
+  color: #2563eb;
 }
 
 
 .product-short-description a:hover {
-  text-decoration: underline;
-  color: #0073e6; 
+  color: #1d4ed8; 
+}
+
+
+@media (max-width: 768px) {
+  .product-short-description {
+    padding: 0;
+  }
+
+  .product-short-description div {
+    font-size: 0.85rem;
+  }
 }
 
 

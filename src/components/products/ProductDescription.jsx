@@ -38,7 +38,7 @@ export default function ProductDescription({ product, selectedVariation }) {
     if (!node) return;
 
     const evaluate = () => {
-      const shouldCollapse = node.scrollHeight > 1920 || descriptionHtml.length > 2000;
+      const shouldCollapse = node.scrollHeight > 400 || descriptionHtml.length > 500;
       setIsCollapsible(shouldCollapse);
     };
 

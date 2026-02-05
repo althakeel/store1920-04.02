@@ -28,7 +28,7 @@
 }
 
 .product-description-content.collapsed {
-  max-height: 1920px;
+  max-height: 400px;
   overflow: hidden;
   position: relative;
 }

@@ -1,0 +1,39 @@
+.product-subtitle-wrapper {
+  display: block;
+  margin: 8px 0 12px 0;
+}
+
+.subtitle-accent {
+  display: none;
+}
+
+.product-subtitle {
+  margin: 0;
+  padding: 0;
+  font-size: 0.88rem;
+  color: #6b7280;
+  line-height: 1.5;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 768px) {
+  .product-subtitle {
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-subtitle-wrapper {
+    gap: 8px;
+  }
+
+  .product-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .subtitle-accent {
+    height: 14px;
+  }
+}

@@ -9,6 +9,7 @@ import ProductBadges from './ProductSellerbadge';
 import ProductBadgesseller from './sub/ProductBadges';
 import ShareDropdown from './ShareDropdown';
 import PriceDisplay from './products/PriceDisplay';
+import ProductSubtitle from './products/ProductSubtitle';
 import ProductVariants from './products/ProductVariants';
 import ClearanceSaleBox from './products/ClearanceSaleBox';
 import QuantitySelector from './products/QuantitySelector';
@@ -108,6 +109,9 @@ export default function ProductInfo({ product, variations, selectedVariation, on
         <h1 style={{ margin: '5px 0' }}>
             {product.name} <ShareDropdown url={window.location.href} />
           </h1>
+          <ProductSubtitle
+            subtitle={product.subtitle ?? product.product_subtitle ?? product.meta?.subtitle}
+          />
           <ProductBadges badges={combinedBadges} />
           <div style={{ display: "flex", justifyContent: "flex-start", gap: "10px" }}>
   <ProductCardReviews 
@@ -125,7 +129,12 @@ export default function ProductInfo({ product, variations, selectedVariation, on
     
 
       <PriceDisplay product={product} selectedVariation={selectedVariation} />
-      <ProductShortDescription shortDescription={product.short_description} />
+      <ProductShortDescription
+        productSlug={product.slug}
+        shortDescription={
+          product.short_description ?? product.shortdesc ?? product.shortDescription
+        }
+      />
 
       {showClearance && clearanceEndTime ? (
         <ClearanceSaleBox endTime={clearanceEndTime} style={{padding: '50px', background:"red"}}>
