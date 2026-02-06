@@ -76,11 +76,15 @@ import TamaraSuccess from './pages/tamara-success';
 import TamaraFailure from './pages/tamara-failure';
 import TamaraCancel from './pages/tamara-cancel';
 import PaymentCallback from './pages/PaymentCallback';
+import { useTikTokTracking } from './hooks/useTikTokTracking';
 
 
 const AppContent = () => {
   const { isCartOpen, setIsCartOpen, cartItems } = useCart();
   const location = useLocation();
+  
+  // Track every page view with TikTok pixel
+  useTikTokTracking();
   const path = location.pathname;
   const cartIconRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
