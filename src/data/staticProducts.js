@@ -644,7 +644,7 @@ const staticProducts = [
     id: 522827,
     name: "Electric Paint Sprayer",
     slug: "850w-electric-paint-sprayer-uae",
-    price: 99.90,
+    price: 89.90,
     description: "Paint Like a Pro – Anywhere, Anytime",
     shortdesc:
       "Transform your DIY projects with the 850W Electric Paint Sprayer. Whether it’s walls, furniture, fences, or your car — enjoy a flawless, even finish with ease. ",
@@ -675,7 +675,7 @@ const staticProducts = [
         name: "Electric Paint Sprayer",
         label: "Buy 1 for Only 85 AED",
         discount: 0,
-        price: 99.90,
+        price: 89.90,
         originalPrice: 250,
         image: Product41,
       },
