@@ -5,20 +5,44 @@ export const useTikTokTracking = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Track page view on every route change
-    if (window.ttq) {
-      window.ttq.track('PageView');
-      console.log('TikTok pageview tracked:', location.pathname);
-    }
+    // Wait for TikTok SDK to be ready before tracking
+    const trackPageView = () => {
+      if (window.ttq) {
+        window.ttq.track('PageView');
+        console.log('✅ TikTok pageview tracked:', location.pathname);
+      } else {
+        // Retry if ttq not ready yet (max 3 retries with 300ms delay)
+        const retryCount = window.__ttqRetryCount || 0;
+        if (retryCount < 3) {
+          window.__ttqRetryCount = retryCount + 1;
+          setTimeout(trackPageView, 300);
+        }
+      }
+    };
+
+    trackPageView();
   }, [location]);
 };
 
-// Function to track custom events
+// Function to track custom events with retry logic
 export const trackTikTokEvent = (eventName, data = {}) => {
-  if (window.ttq) {
-    window.ttq.track(eventName, data);
-    console.log('TikTok event tracked:', eventName, data);
-  }
+  const attemptTrack = (retries = 0) => {
+    if (window.ttq) {
+      window.ttq.track(eventName, data);
+      console.log('✅ TikTok event tracked:', eventName, data);
+      return true;
+    }
+    
+    if (retries < 5) {
+      setTimeout(() => attemptTrack(retries + 1), 200);
+      return false;
+    }
+    
+    console.warn('⚠️ TikTok SDK not available after retries for event:', eventName);
+    return false;
+  };
+
+  attemptTrack();
 };
 
 // Common e-commerce events

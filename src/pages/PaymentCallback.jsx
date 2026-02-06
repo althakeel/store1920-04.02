@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getOrderById } from "../api/woocommerce";
+import { trackPurchase } from "../hooks/useTikTokTracking";
 
 /**
  * PaymentCallback Component
@@ -133,6 +134,10 @@ export default function PaymentCallback() {
         num_items: numItems,
         order_id: order.id,
       });
+
+      // Track TikTok Purchase Event
+      trackPurchase(order.id, value, numItems);
+      console.log('✅ TikTok Purchase event fired for order:', order.id);
 
       localStorage.setItem(trackKey, '1');
       hasTrackedRef.current = true;
