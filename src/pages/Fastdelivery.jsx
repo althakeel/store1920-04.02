@@ -17,6 +17,7 @@ import Product15 from '../assets/images/staticproducts/wrinkle-remover/10.webp'
 import Product16 from '../assets/images/staticproducts/massager/3.webp'
 import product17 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-2998.webp'
 import Product18 from '../assets/images/staticproducts/quran/1.webp';
+import Product19 from '../assets/images/staticproducts/quran speaker/1.webp';
 
 const staticProducts = [
    
@@ -220,12 +221,24 @@ const staticProducts = [
   ,
    {
     id: "13",
-    name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+    name: "Quran Magnet Speaker with Built-In  Quran",
     price: "69.90",
     regular_price: "199.00",
     sale_price: "69.90",
     images: [{ src: Product18 }],
     path: "/products/quran-magnet-speaker-built-in-surah-player",
+    rating: 5,
+    reviews: 165,
+    sold: 195,
+  },
+  {
+    id: "14",
+    name: "Holy Wall Speaker Bluetooth Quran Light Speaker",
+    price: "79.90",
+    regular_price: "120",
+    sale_price: "79.90",
+    images: [{ src: Product19 }],
+    path: "/products/holy-wall-speaker-bluetooth-quran-light-speaker",
     rating: 5,
     reviews: 165,
     sold: 195,
