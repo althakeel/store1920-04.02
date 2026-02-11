@@ -217,6 +217,13 @@ import Product243 from '../assets/images/staticproducts/quran/4.webp';
 import Product244 from '../assets/images/staticproducts/quran/5.webp';  
 import Product245 from '../assets/images/staticproducts/quran/6.webp';
 
+import Product246 from '../assets/images/staticproducts/quran speaker/1.webp';
+import Product247 from '../assets/images/staticproducts/quran speaker/2.webp';
+import Product248 from '../assets/images/staticproducts/quran speaker/3.webp';
+import Product249 from '../assets/images/staticproducts/quran speaker/4.webp';
+
+
+
 
 const staticProducts = [
   {
@@ -3601,7 +3608,7 @@ reviews: [
 
 {
   id: 529508, 
-  name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+  name: "Quran Magnet Speaker with Built-In  Quran",
   slug: "quran-magnet-speaker-built-in-surah-player", 
   price: 69.90,
   salePrice: 69.90,
@@ -3636,7 +3643,7 @@ reviews: [
       {
       type: "Buy 1",
       id: 529508,
-      name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+      name: "Quran Magnet Speaker with Built-In  Quran ",
       label: "Buy 1 for only 69.90 AED",
       discount: 0,
       slug: "quran-magnet-speaker-built-in-surah-player",
@@ -3648,7 +3655,7 @@ reviews: [
     {
       type: "Bundle of 2",
       id: 529509,
-      name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+      name: "Quran Magnet Speaker with Built-In  Quran",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
       price: 125.90, 
@@ -3661,7 +3668,7 @@ reviews: [
     {
       type: "Bundle of 3",
       id: 529510,
-      name: "Quran Magnet Speaker with Built-In Full Quran (All Surahs)",
+      name: "Quran Magnet Speaker with Built-In  Quran",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
       price: 171.90, 
@@ -3778,6 +3785,192 @@ reviews: [
   {
     text: "A beautiful gift. The full Quran being included makes it very special.",
     author: "Aisha M.",
+    stars: 5,
+  },
+  
+]
+
+
+},
+
+// quran speaker===========================
+{
+  id: 530990, 
+  name: "Holy Wall Speaker Bluetooth Quran Light Speaker",
+  slug: "holy-wall-speaker-bluetooth-quran-light-speaker", 
+  price: 79.90,
+  salePrice: 79.90,
+  regularPrice: 150.99,
+
+  description:
+    " Screen-Free Daily Quran Recitation for Your Home",
+  shortdesc:
+    " Screen-Free Daily Quran Recitation for Your Home",
+
+  subdesc: "Built-In Quran Audio",
+  subdesc1: "Bluetooth Connectivity",
+  subdesc2: "Elegant Wall-Mounted Design",
+  subdesc3: "Remote Control Included",
+  subdesc4: "Soft LED Light Feature",
+  subdesc5: "Clear 10W Surround Sound",
+
+  // main images anas
+  image: Product246,
+  thumb1: Product247,
+  thumb2: Product248,
+  thumb3: Product249,
+    thumb4: Product246,
+ 
+  
+
+
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    
+      {
+      type: "Buy 1",
+      id: 530991,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 1 for only 79.90 AED",
+      discount: 0,
+      slug: "quran-magnet-speaker-built-in-surah-player",
+      price: 79.90,
+        note: "Ideal for personal daily listening.",
+      originalPrice: 150.99,
+      image: Product241,
+    },
+    {
+      type: "Bundle of 2",
+      id: 530992,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 2 & Get 15% Off",
+      discount: 15,
+      price: 143.90, 
+      originalPrice: 180,
+      mostPopular: true,
+      note: "Great for couples or gifting.",
+      image: Product245,
+      slug: "quran-magnet-speaker-built-in-surah-player",
+    },
+    {
+      type: "Bundle of 3",
+      id: 530993,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 3 & Get 20% Off",
+      discount: 20,
+      price: 196.90, 
+      originalPrice: 320,
+    note: "Best value for families or gifts.",
+      mostPopular: false,
+      image: Product247,
+      slug: "quran-magnet-speaker-built-in-surah-player",
+    },
+  ],
+
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Problem + Solution + Features
+  section2contentTitle: "Emotional Story Block",
+  section2contentDesc:
+    "The Quran Should Be Heard Daily — Not Lost in Notifications.",
+  section2list: [
+    "Between work, phones, and constant distractions, staying connected to the Quran becomes harder than it should be.",
+    "This Holy Wall Speaker is designed to gently bring remembrance back into your space — playing Quran recitations clearly while serving as an elegant part of your home",
+    "Mounted on your wall. Visible every day. Heard effortlessly",
+
+  ],
+  section2image: Product247,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "Feature Breakdown",
+    section3contentDesc:
+    "More Than a Speaker — A Daily Reminder",
+  section3image: Product247,
+  section3points: [
+    "Powerful 10W Clear Sound",
+    "Bluetooth + Built-In Quran",
+    "Soft Ambient Light",
+    "Remote Control Access",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "Join the Movement",
+  sectionProgressSubtitle: "Metrics",
+  sectionProgress: [
+    {
+      title: "Daily Quran Listening",
+      desc: " Families listen more consistently when the full Quran is easily accessible.",
+      percent: 96,
+    },
+    {
+      title: " Ramadan nights",
+      desc: "One-tap access to all Surahs, no setup required",
+      percent: 94,
+    },
+    {
+      title: "Family gatherings",
+      desc: " Highly rated as a meaningful Islamic gift.",
+      percent: 91,
+    },
+    // {
+    //   title: "Premium Finish",
+    //   desc: "ABS material adds durability and style",
+    //   percent: 98,
+    // },
+  ],
+
+  // 🔹 Comparison table – smart boxing vs punching bag
+  comparisonData: {
+    title: "More Than a Speaker — A Daily Reminder",
+    description:
+      "Unlike ordinary Bluetooth speakers, this device is designed specifically for Muslim homes.",
+    headers: ["Feature", "Ordinary Speaker", "Holy Wall Quran Speaker"],
+    rows: [
+      { feature: "Faith focused", lumineux: true, others: false },
+      { feature: "Wall-mounted reminder", lumineux: true, others: false },
+      { feature: "Built-in Quran recitation", lumineux: true, others: false },
+      { feature: "One-Tap Simplicity", lumineux: true, others: false },
+      { feature: "Encourages daily remembrance", lumineux: true, others: false },
+    ]
+  },
+
+  section5image: Product245,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free for 30 Days",
+  Guranteedesc:
+    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "Does it include Quran recitations built in?",
+  fAQ1A:"Yes, it comes with built-in Quran audio.",
+  Faq2Q: "Can I connect my phone?",
+  fAQ2A:"Yes, it supports Bluetooth connectivity",
+  Faq3Q: "Is it difficult to install?",
+  fAQ3A:"No, it is designed for simple wall mounting",
+  Faq4Q: "Is it loud enough for a living room?",
+  fAQ4A:"Yes, the 10W speaker provides strong clear sound",
+  Faq5Q: "Does it come with a remote?",
+  fAQ6A:"Yes, remote control is included.",
+ 
+  // 🔹 Reviews
+  reviewsTitle: "Trusted by Hundreds of Families",
+  reviewsRating: 5,
+reviews: [
+  {
+    text: "Really important for every home, for listening to Quran daily",
+    author: "Ahmed A.",
+    stars: 5,
+  },
+  {
+    text: "Recommended”",
+    author: "Hashim K.",
+    stars: 5,
+  },
+  {
+    text: "“Good quality and clear sound.",
+    author: "Bushra R.",
     stars: 5,
   },
   
