@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { trackPageView } from '../utils/gtmTracking';
 
 // Inject Montserrat font
 const injectFont = () => {
@@ -37,21 +38,35 @@ const sections = [
     ),
   },
   {
-    id: 'how-to-return',
-    title: '2. How to Initiate a Return',
-    content: (
-      <>
-        <ol>
-          <li>Log in to your Store1920 account → “Your Orders” → click “Return/Refund”.</li>
-          <li>If you checked out as guest, use the link in your confirmation email.</li>
-          <li>Select item(s) & reason for return. Upload a photo if requested.</li>
-          <li>Receive a prepaid return shipping label (or QR code).</li>
-          <li>Pack securely, attach label, and hand over to courier/drop-off point.</li>
-        </ol>
-        <p>The first return per order is <strong>free</strong>. Later returns from the same order may incur a fee.</p>
-      </>
-    ),
-  },
+  id: 'how-to-return',
+  title: '2. How to Initiate a Return',
+  content: (
+    <>
+      <ol>
+        <li>
+          Log in to your Store1920 account, go to <strong>“Your Orders”</strong>, and click <strong>“Return/Refund”</strong>.
+        </li>
+        <li>
+          If you checked out as a guest, use the return link provided in your order confirmation email.
+        </li>
+        <li>
+          Select the item(s) you wish to return and choose the reason for the return. 
+          <strong> Upload a photo or video showing:</strong> the item's condition, original packaging, all accessories, and proof that everything delivered is being returned.
+        </li>
+        <li>
+          <strong>Verify Item Condition:</strong> Ensure the item is in its original condition with all accessories, packaging, and any other components received.
+        </li>
+        <li>
+          Pack the item securely with all original components, attach the return label, and drop it off with the courier or at an authorized drop-off point.
+        </li>
+      </ol>
+      <p>
+        <strong>Important:</strong> To be eligible for a full refund, returns must include all delivered items and accessories in their original condition.
+      </p>
+    </>
+  ),
+}
+,
   {
     id: 'shipping',
     title: '3. Return Shipping Costs',
@@ -132,8 +147,10 @@ const sections = [
     content: (
       <>
         <ul>
-          <li>Always use the return label provided — not the manufacturer/original sender’s address.</li>
+          <li><strong>Original Condition Required:</strong> All returned items must be in original condition with original packaging and all delivered accessories included.</li>
+          <li>Always use the return label provided — not the manufacturer/original sender's address.</li>
           <li>Do not include unrelated/personal items in your return package.</li>
+          <li>Ensure all items delivered in the original order are included in the return package to avoid refund deductions.</li>
           <li>Contact support if you face issues; we can assist or liaise with sellers.</li>
           <li>Policy abuse (excessive returns of used items) may result in refusal or restocking fees.</li>
         </ul>
@@ -252,6 +269,11 @@ const ReturnPolicyPage = () => {
   const [activeSection, setActiveSection] = useState(sections[0].id);
   const contentRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Track page view on component mount
+  useEffect(() => {
+    trackPageView('Return & Refund Policy', window.location.href);
+  }, []);
 
   useEffect(() => {
     // handle responsive breakpoint
