@@ -66,11 +66,14 @@ export default function OrderCancel() {
           console.log('💳 Payment Method:', data.payment_method);
           console.log('� Payment Method Title:', data.payment_method_title);
           console.log('📊 Order Status:', data.status);
-          
-          // CHECK: If COD, we already have the order placed
-          // So we'll show success page, not cancelled
+
+          const confirmedStatuses = ['processing', 'completed'];
+          const normalizedStatus = String(data.status || '').toLowerCase();
+          const isConfirmedStatus = confirmedStatuses.includes(normalizedStatus);
+
+          // Only show confirmed UI for confirmed statuses
           setOrder(data);
-          setOrderPlaced(true);
+          setOrderPlaced(isConfirmedStatus);
         } else {
           // Order was NOT placed
           console.warn('❌ Order not found in backend - order was not placed');
@@ -154,7 +157,7 @@ export default function OrderCancel() {
     );
   }
 
-  // If order WAS placed, show Order Confirmed UI regardless of cancellation
+  // If order WAS placed and not cancelled, show Order Confirmed UI
   if (order && orderPlaced) {
     const isCOD = order.payment_method === 'cod' || 
                   order.payment_method_title === 'Cash on Delivery' ||
