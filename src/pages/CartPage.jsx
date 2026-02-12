@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../contexts/CartContext';
+import { trackViewCart } from '../utils/gtmTracking';
 import CartItem from '../components/CartItem';
 import OrderSummary from '../components/OrderSummary';
 import CartMessages from '../components/sub/CartMessages';
@@ -26,6 +27,13 @@ export default function CartPage() {
     0
   );
   const total = Math.max(subtotal - discount, 0);
+
+  // Track view cart when page loads or cart items change
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      trackViewCart(cartItems, total);
+    }
+  }, [cartItems, total]);
 
   return (
     <div className="cartPageWrapper">
