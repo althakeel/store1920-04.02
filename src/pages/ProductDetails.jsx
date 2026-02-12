@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, Suspense, lazy, useMemo, useRe
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
+import { trackProductView } from '../utils/gtmTracking';
 
 import ProductGallery from '../components/ProductGallery';
 import ProductInfo from '../components/ProductInfo';
@@ -91,6 +92,16 @@ export default function ProductDetails() {
     if (product) {
       console.log('📦 Product loaded:', product);
       console.log('📝 Short Description:', product.short_description);
+      
+      // Track product view with GTM
+      trackProductView({
+        id: product.id,
+        sku: product.sku,
+        name: product.name,
+        title: product.name,
+        price: product.price,
+        category: product.categories?.[0]?.name || 'Uncategorized',
+      });
     }
   }, [product]);
 

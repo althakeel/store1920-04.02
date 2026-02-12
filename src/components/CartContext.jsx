@@ -1,5 +1,6 @@
 // CartContext.jsx
 import React, { createContext, useState, useContext } from 'react';
+import { trackAddToCart, trackRemoveFromCart } from '../utils/gtmTracking';
 
 const CartContext = createContext();
 
@@ -12,18 +13,22 @@ export const CartProvider = ({ children }) => {
       const existing = items.find((item) => item.id === product.id);
       if (existing) {
         // Increase quantity
+        trackAddToCart(product, 1); // Track additional qty
         return items.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
+      trackAddToCart(product, 1); // Track first add
       return [...items, { ...product, quantity: 1 }];
     });
     setIsCartOpen(true); // open cart on add
   };
 
   const removeFromCart = (productId) => {
-    setCartItems((items) => items.filter((item) => item.id !== productId));
-  };
+    const productToRemove = cartItems.find(item => item.id === productId);
+    if (productToRemove) {
+      trackRemoveFromCart(productToRemove, productToRemove.quantity);
+    }
 
   const toggleCart = () => setIsCartOpen((open) => !open);
   const closeCart = () => setIsCartOpen(false);

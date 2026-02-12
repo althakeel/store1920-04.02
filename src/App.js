@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
+import { trackPageView, initializeDataLayer } from './utils/gtmTracking';
 import { CartProvider, useCart } from './contexts/CartContext';
 import { CompareProvider } from './contexts/CompareContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -83,8 +84,20 @@ const AppContent = () => {
   const { isCartOpen, setIsCartOpen, cartItems } = useCart();
   const location = useLocation();
   
-  // Track every page view with TikTok pixel
+  // Initialize GTM
+  useEffect(() => {
+    initializeDataLayer();
+  }, []);
+
+  // Track every page view with TikTok and GTM pixels
   useTikTokTracking();
+  
+  // Track page views with GTM
+  useEffect(() => {
+    const pageName = location.pathname === '/' ? 'Home' : location.pathname.split('/')[1] || 'Page';
+    trackPageView(pageName, window.location.href);
+  }, [location.pathname]);
+
   const path = location.pathname;
   const cartIconRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);

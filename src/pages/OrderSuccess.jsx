@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
+import { trackPurchase } from "../utils/gtmTracking";
 import { getOrderById } from "../api/woocommerce";
 import "../assets/styles/OrderSuccess.css";
 
@@ -117,6 +118,7 @@ export default function OrderSuccess() {
         item_price: Number.parseFloat(item.price || item.total) || 0,
       }));
 
+      // Track with Facebook Pixel
       window.fbq('track', 'Purchase', {
         value,
         currency,
@@ -124,6 +126,22 @@ export default function OrderSuccess() {
         contents,
         num_items: numItems,
         order_id: order.id,
+      });
+
+      // Track with Google Tag Manager (GTM)
+      trackPurchase({
+        id: order.id,
+        total: value,
+        tax: order.tax_total || 0,
+        shipping: order.shipping_total || 0,
+        coupon_code: order.coupon_lines?.[0]?.code || '',
+        items: lineItems.map(item => ({
+          id: item.product_id,
+          product_name: item.name,
+          product_price: Number.parseFloat(item.price || item.total) || 0,
+          quantity: Number(item.quantity) || 0,
+          category: item.categories?.join(', ') || 'Uncategorized',
+        })),
       });
 
       localStorage.setItem(trackKey, '1');

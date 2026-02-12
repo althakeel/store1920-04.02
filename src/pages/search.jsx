@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { trackSearch } from "../utils/gtmTracking";
 import PlaceHolderImage from '../assets/images/common/Placeholder.png';
 import { searchProducts, getProductById } from "../api/woocommerce";
 
@@ -27,6 +28,9 @@ const Search = () => {
         }
         // Ensure data is always an array
         setResults(Array.isArray(data) ? data : []);
+        
+        // Track search with GTM
+        trackSearch(searchTerm, Array.isArray(data) ? data.length : 0);
       } catch (err) {
         console.error(err);
         setResults([]);
