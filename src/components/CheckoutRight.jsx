@@ -426,9 +426,8 @@ console.log("✅ Wallet Payment Response =>", data);
   const handleCloseOrderConfirmed = () => {
     setShowOrderConfirmed(false);
     console.log('✅ COD Order Confirmed - Redirecting to success page');
-    // For COD orders, redirect to payment callback which shows success
-    // This ensures proper status checking
-    window.location.href = `/payment-callback?order_id=${confirmedOrderId}`;
+    // For COD orders, go directly to success page
+    window.location.href = `/order-success?order_id=${confirmedOrderId}`;
   };
 
   // Handle payment method selection from selector
