@@ -146,6 +146,9 @@ console.log('Auth user ID:', user?.id);
   });
 
   const amount = Number(subtotal) || 0;
+  const tamaraMinAmount = 99;
+  const tamaraMaxAmount = 3000;
+  const isTamaraEligible = amount >= tamaraMinAmount && amount <= tamaraMaxAmount;
   const canUseWallet =
   Number(walletBalance || 0) >= amount &&
   amount > 0;
@@ -344,28 +347,47 @@ console.log('Wallet loading:', walletLoading);
         </div>
 
         {/* Tamara Official Widget */}
-      <div className="payment-method-item" style={{ width: '100%' }}>
+        <div className="payment-method-item" style={{ width: '100%', opacity: isTamaraEligible ? 1 : 0.5 }}>
           <input
             type="radio"
             id="tamara"
             name="payment-method"
+            disabled={!isTamaraEligible}
             checked={selectedMethod === 'tamara'}
             onChange={() => handlePaymentMethodSelect('tamara', 'Tamara', TamaraIcon)}
           />
           <label htmlFor="tamara" className="payment-method-label" style={{ width: '100%' }}>
             <div className="payment-method-content" style={{ width: '100%' }}>
-              <div
-                className="tamara-installment-plan-widget"
-                data-lang="en"
-                data-currency="AED"
-                data-price={(Number(subtotal) || 0).toFixed(2)}
-                data-number-of-installments="4"
-                data-disable-installment="false"
-                data-installment-minimum-amount="99"
-                data-installment-maximum-amount="3000"
-                data-installment-available-amount="99"
-                style={{ width: '100%', marginTop: '4px' }}
-              ></div>
+              {isTamaraEligible ? (
+                <div
+                  className="tamara-installment-plan-widget"
+                  data-lang="en"
+                  data-currency="AED"
+                  data-price={(Number(subtotal) || 0).toFixed(2)}
+                  data-number-of-installments="4"
+                  data-disable-installment="false"
+                  data-installment-minimum-amount="99"
+                  data-installment-maximum-amount="3000"
+                  data-installment-available-amount="99"
+                  style={{ width: '100%', marginTop: '4px' }}
+                ></div>
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    marginTop: '4px',
+                    padding: '12px 14px',
+                    background: '#fff7ed',
+                    border: '1px solid #fed7aa',
+                    borderRadius: '12px',
+                    color: '#9a3412',
+                    fontSize: '13px'
+                  }}
+                >
+                  Tamara is available for orders between AED {tamaraMinAmount} and AED {tamaraMaxAmount}.
+                  Your total is AED {amount.toFixed(2)}.
+                </div>
+              )}
             </div>
           </label>
         </div>

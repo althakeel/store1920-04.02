@@ -256,6 +256,10 @@ const AppContent = () => {
   const isFestSalePage = path === '/fest-sale';
   const isSeasonSalePage = path === '/season-sale';
   const onCheckoutPage = path === '/checkout' || path.startsWith('/checkout/');
+  const shouldShowCookiePopup =
+    !path.startsWith('/products/') &&
+    !path.startsWith('/checkout') &&
+    !path.startsWith('/fast-delivery');
 
   const queryClient = new QueryClient();
 
@@ -398,7 +402,7 @@ const AppContent = () => {
               </div>
 
               {!isMobile && <PurchasePopup />}
-{!path.startsWith('/products/') && !path.startsWith('/checkout') && <CookiePopup />}
+          {shouldShowCookiePopup && <CookiePopup />}
        {/* <ChatBot /> */}
 {isHomePage && <NewUserBonusPopup />}
               <Footer />
