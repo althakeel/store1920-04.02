@@ -3605,7 +3605,6 @@ reviews: [
 
 
 
-
 {
   id: 529508, 
   name: "Quran Magnet Speaker with Built-In  Quran",
@@ -3667,7 +3666,7 @@ reviews: [
     },
     {
       type: "Bundle of 3",
-      id: 529510,
+      id: 532756,
       name: "Quran Magnet Speaker with Built-In  Quran",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
