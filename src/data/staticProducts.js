@@ -3618,7 +3618,7 @@ reviews: [
   shortdesc:
     " Screen-Free Daily Quran Recitation for Your Home",
 
-  subdesc: "Complete Quran Preloaded – All 114 Surahs Included",
+  subdesc: "",
   subdesc1: "One-Tap Playback (No Phone, No App Required)",
   subdesc2: "Works Without Internet or Bluetooth",
   subdesc3: "Magnetic Mount for Fridge & Metal Surfaces",
