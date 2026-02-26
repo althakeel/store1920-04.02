@@ -2852,7 +2852,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
   slug: "neck-face-massager", // URL: /products/neck-face-massager
 
   // ✅ Price
-  price: 99.99,
+  price: 59.90,
   salePrice: 99.99,
   regularPrice: 199.0,
 
@@ -2890,8 +2890,8 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
       label: "Buy 1 for only AED 79.99",
       discount: 0,
       slug: "neck-face-massager",
-      price: 99.99,
-      originalPrice: 120,
+      price: 59.90,
+      originalPrice: 99.99,
       image: Product206,
     },
     {
@@ -2900,8 +2900,8 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
       name: "Neck Face Massager",
       label: "Buy 2 & Save More – Perfect for gifting or couples",
       discount: 15,
-      price: 177.00, // you can adjust these later
-      originalPrice: 165,
+      price: 107.90, // you can adjust these later
+      originalPrice: 177.00,
       note: "Great for home use and as a gift",
       mostPopular: true,
       image: Product207,
@@ -2913,8 +2913,8 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
       name: "Neck Face Massager",
       label: "Buy 3 & Save More – Family beauty bundle",
       discount: 15,
-      price: 222.0, // adjustable
-      originalPrice: 240,
+      price: 146.90, // adjustable
+      originalPrice: 222,
       note: "Ideal for family or multiple rooms",
       mostPopular: false,
       image: Product209,

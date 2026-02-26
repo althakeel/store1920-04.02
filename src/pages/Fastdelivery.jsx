@@ -27,7 +27,7 @@ const staticProducts = [
     name: "Neck Face Massager",
     price: "100",
     regular_price: "120.  ",
-    sale_price: "99.99",
+    sale_price: "59.90",
     images: [{ src: Product15 }],
     path: "/products/neck-face-massager",
     rating: 5,
