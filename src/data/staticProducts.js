@@ -3684,9 +3684,9 @@ reviews: [
   // 🔹 Section 2 – Problem + Solution + Features
   section2contentTitle: "Listen to the Entire Quran — Anytime, Without Distractions",
   section2contentDesc:
-    "Staying connected to the Quran shouldn’t require apps, Wi-Fi, or screen time. This Quran Magnet Speaker comes preloaded with the complete Quran — all 114 Surahs, allowing you to listen anytime with a single tap.Placed where you see it every day, it naturally encourages consistent remembrance and brings peace into your home.",
+    "Staying connected to the Quran shouldn’t require apps, Wi-Fi, or screen time. This Quran Magnet Speaker comes preloaded with the Surahs, allowing you to listen anytime with a single tap.Placed where you see it every day, it naturally encourages consistent remembrance and brings peace into your home.",
   section2list: [
-    "Full Quran recitation available anytime",
+    "Quran recitation available anytime",
     "Encourages daily listening without effort",
     "Perfect for kitchens, bedrooms, or offices",
     "Simple enough for kids and elders",
@@ -3700,10 +3700,9 @@ reviews: [
   section2image: Product242,
 
   // 🔹 Section 3 – Use cases / lifestyle
-  section3title: "Full Quran Access — Effortlessly Integrated Into Your Home",
+  section3title: "Quran Access — Effortlessly Integrated Into Your Home",
   section3image: Product243,
   section3points: [
-    "Complete Quran Preloaded",
     "Screen-Free Listening",
     "Magnetic Mount",
     "Rechargeable & Portable",
@@ -3715,7 +3714,7 @@ reviews: [
   sectionProgress: [
     {
       title: "Daily Quran Listening",
-      desc: " Families listen more consistently when the full Quran is easily accessible.",
+      desc: " Families listen more consistently when the  Quran is easily accessible.",
       percent: 96,
     },
     {
@@ -3742,7 +3741,7 @@ reviews: [
       "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
     headers: ["Feature", "Quran Magnet Speaker", "Phone / Bluetooth Speaker "],
     rows: [
-      { feature: "Full Quran (All Surahs)", lumineux: true, others: false },
+  
       { feature: "Works Without Internet", lumineux: true, others: false },
       { feature: "No Distractions", lumineux: true, others: false },
       { feature: "One-Tap Simplicity", lumineux: true, others: false },
@@ -3758,8 +3757,8 @@ reviews: [
     "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
 
   // 🔹 FAQs
-  Faq1Q: "Does it include the full Quran or only selected Surahs?",
-  fAQ1A:"Yes, the entire Quran (all 114 Surahs) is preloaded.",
+  Faq1Q: "Does it include the  Quran or only selected Surahs?",
+  fAQ1A:"Yes, the entire Quran is preloaded.",
   Faq2Q: "Can I use it without internet or Bluetooth?",
   fAQ2A:
     " Yes, it works completely offline.",
@@ -3772,7 +3771,7 @@ reviews: [
   reviewsRating: 4.9,
 reviews: [
   {
-    text: "Having the full Quran available at any time makes daily listening so easy.",
+    text: "Having the Quran available at any time makes daily listening so easy.",
     author: "Leila S.",
     stars: 5,
   },
@@ -3782,7 +3781,7 @@ reviews: [
     stars: 5,
   },
   {
-    text: "A beautiful gift. The full Quran being included makes it very special.",
+    text: "A beautiful gift. The Quran being included makes it very special.",
     author: "Aisha M.",
     stars: 5,
   },
@@ -3899,7 +3898,7 @@ reviews: [
   sectionProgress: [
     {
       title: "Daily Quran Listening",
-      desc: " Families listen more consistently when the full Quran is easily accessible.",
+      desc: " Families listen more consistently when the  Quran is easily accessible.",
       percent: 96,
     },
     {
