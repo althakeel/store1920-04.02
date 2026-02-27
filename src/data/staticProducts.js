@@ -131,7 +131,7 @@ import Product161 from "../assets/images/staticproducts/Peeler/12.webp";
 // import Product163 from '../assets/images/staticproducts/Peeler/14.webp'
 
 
-
+  
 
 
 // 21.11.25
@@ -209,13 +209,16 @@ import Product232 from '../assets/images/staticproducts/wirelesscharger//GNPTRIO
 
 
 // Rohith  - quran products
-
-import Product240 from '../assets/images/staticproducts/quran/1.webp';
-import Product241 from '../assets/images/staticproducts/quran/2.webp';
-import Product242 from '../assets/images/staticproducts/quran/3.webp';
-import Product243 from '../assets/images/staticproducts/quran/4.webp';  
-import Product244 from '../assets/images/staticproducts/quran/5.webp';  
-import Product245 from '../assets/images/staticproducts/quran/6.webp';
+// image: Product240,
+  // thumb1: Product241,
+  // thumb2: Product242,
+  // thumb3: Product243,
+import Product240 from '../assets/images/staticproducts/quran/7.webp';
+import Product241 from '../assets/images/staticproducts/quran/8.webp';
+import Product242 from '../assets/images/staticproducts/quran/9.webp';
+import Product243 from '../assets/images/staticproducts/quran/10.webp';  
+import Product244 from '../assets/images/staticproducts/quran/8.webp';  
+import Product245 from '../assets/images/staticproducts/quran/8.webp';
 
 import Product246 from '../assets/images/staticproducts/quran speaker/1.webp';
 import Product247 from '../assets/images/staticproducts/quran speaker/2.webp';
