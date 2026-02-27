@@ -16,7 +16,7 @@ import Product14 from '../assets/images/staticproducts/drill-machine/2.webp'
 import Product15 from '../assets/images/staticproducts/wrinkle-remover/10.webp'
 import Product16 from '../assets/images/staticproducts/massager/3.webp'
 import product17 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-2998.webp'
-import Product18 from '../assets/images/staticproducts/quran/1.webp';
+import Product18 from '../assets/images/staticproducts/quran/9.webp';
 import Product19 from '../assets/images/staticproducts/quran speaker/1.webp';
 
 const staticProducts = [
