@@ -226,6 +226,12 @@ import Product248 from '../assets/images/staticproducts/quran speaker/3.webp';
 import Product249 from '../assets/images/staticproducts/quran speaker/4.webp';
 
 
+import Product250 from "../assets/images/staticproducts/portable bottle warmer/1.webp";
+import Product251 from "../assets/images/staticproducts/portable bottle warmer/2.webp";
+import Product252 from "../assets/images/staticproducts/portable bottle warmer/3.webp";
+import Product253 from "../assets/images/staticproducts/portable bottle warmer/4.webp";
+
+
 
 
 const staticProducts = [
@@ -3979,7 +3985,204 @@ reviews: [
 
 
 },
+//portable bottle warmer
 
+{
+  id: 535718,
+  name: "Portable Bottle Warmer –Keep Every Feed Warm, Anywhere, Anytime",
+  slug: "portable-bottle-warmer", 
+  price: 69.90,
+  salePrice: 119.90,
+  regularPrice: 150.99,
+
+  description:
+    " Screen-Free Daily Quran Recitation for Your Home",
+  shortdesc:
+    " Screen-Free Daily Quran Recitation for Your Home",
+
+  subdesc: "1x Portable Bottle Warmer Sleeve",
+  subdesc1: "1x USB Charging Cable",
+  subdesc2: "1x User Manual",
+  subdesc3: "6000mAh Built-In Battery (No Batteries Required)",
+  subdesc4: "Compatible with Bottles up to 6.5cm Diameter",
+
+
+
+  image: Product250,
+  thumb1: Product251,
+  thumb2: Product252,
+  thumb3: Product253,
+  thumb4: Product252,
+ 
+  
+
+
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    
+      {
+      type: "Buy 1",
+      id: 535722,
+      name: "Portable Bottle Warmer",
+      label: "Buy 1 for only 79.90 AED",
+      discount: 0,
+      slug: "portable-bottle-warmer",
+      price: 69.90,
+      originalPrice: 150.99,
+      image: Product251,
+    },
+    {
+      type: "Bundle of 2",
+      id: 535723,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 2 & Get 15% Off",
+      discount: 15,
+      price: 125.90, 
+      originalPrice: 300,
+      mostPopular: true,
+      
+      image: Product252,
+      slug: "portable-bottle-warmer",
+    },
+    {
+      type: "Bundle of 3",
+      id: 535728,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 3 & Get 20% Off",
+      discount: 20,
+      price: 171.90, 
+      originalPrice: 300,
+      mostPopular: false,
+      image: Product253,
+      slug: "portable-bottle-warmer",
+    },
+  ],
+
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Problem + Solution + Features
+  section2contentTitle: "Your Go-To Warmer for Every Situation",
+  section2contentDesc:
+    "The Quran Should Be Heard Daily — Not Lost in Notifications.",
+  section2list: [
+    "Long car journeys and road trips with baby",
+    "Flights and airport layovers",
+    "Park outings, errands, and shopping trips",
+    "Night feeds — no need to go to the kitchen",
+    "Breastmilk defrosting on the go",
+    "Heating baby food pouches and formula",
+
+  ],
+  section2image: Product250,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "Key Features",
+    section3contentDesc:
+    "Built for Real Parents. Built for Real Life.",
+  section3image: Product251,
+  section3points: [
+    "6-Speed Temperature Control, Choose from 37°C, 40°C, 42°C, 45°C, 50°C, or 55°C for precise warming every time.",
+    "Fast Heating in 2–5 Minutes, Powerful internal regulator heats milk quickly — no more waiting, no more crying.",
+    "6000mAh Long-Life Battery, Fully cordless. Use it anywhere — car, plane, park, or restaurant. ",
+    "48-Hour Keep Warm Mode,Maintains the perfect temperature for up to 48 hours continuously. ",
+    "Universal Bottle Fit ",
+    "Night Feed Friendly ",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "Join the Movement",
+  sectionProgressSubtitle: "Metrics",
+  sectionProgress: [
+    {
+      title: "Recommend for Travel",
+      desc: "Perfect for long car journeys and road trips with baby.",
+      percent: 96,
+    },
+    {
+      title: "Love the Temperature Control",
+      desc: "Parents love the 6-speed temperature control for precise warming every time.",
+      percent: 94,
+    },
+    {
+      title: "Notice Long Battery Life",
+      desc: "The 6000mAh battery provides up to 48 hours of continuous use.",
+      percent: 91,
+    },
+    {
+      title: "Would Buy Again",
+      desc: "Parents are highly satisfied with the product and would purchase it again.",
+      percent: 94,
+    },
+  ],
+
+  // 🔹 Comparison table – smart boxing vs punching bag
+  comparisonData: {
+    title: "Your Baby Deserves the Best — On the Go and at Home",
+    description:
+      "Join thousands of happy parents across the UAE. Order your Portable Bottle Warmer today and never worry about a cold bottle again",
+    headers: ["Feature", "Ordinary Speaker", "Holy Wall Quran Speaker"],
+    rows: [
+      { feature: "6-Speed Temperature Control (37°C–55°C)", lumineux: true, others: false },
+      { feature: "6000mAh Large Capacity Battery", lumineux: true, others: false },
+      { feature: "Fast Heating (2–5 minutes)", lumineux: true, others: false },
+      { feature: "48-Hour Keep Warm Function", lumineux: true, others: false },
+      { feature: "Cord-Free & Portable Design", lumineux: true, others: false },
+      { feature: "Fits Bottles up to 6.5cm Diameter", lumineux: true, others: false },
+      { feature: "Velcro Adjustable Sleeven", lumineux: true, others: false },
+      { feature: "Digital Display Screen", lumineux: true, others: false },
+    ]
+  },
+
+  section5image: Product253,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free for 30 Days",
+  Guranteedesc:
+    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "Can it heat breast milk safely?",
+  fAQ1A:"Yes! The 6-speed temperature control goes as low as 37°C, which is ideal for preserving nutrients in breast milk without overheating.",
+  Faq2Q: "Does it work without charging?",
+  fAQ2A:"The built-in 6000mAh battery means no cords needed. Simply charge it before heading out and it's ready to go.",
+  
+  Faq3Q: "Is it compatible with all bottle brands?",
+  fAQ3A:"No, it is designed for simple wall mounting",
+  
+  Faq4Q: "Is it loud enough for a living room?",
+  fAQ4A:"The Velcro adjustable sleeve fits bottles up to 6.5cm in diameter, covering most major brands including Tommee Tippee, Philips Avent, and Dr. Brown's",
+  
+  Faq5Q: "How long does the battery last?",
+  fAQ5A:"On a full charge, the warmer can maintain temperature for up to 48 hours in keep-warm mode, or complete multiple heating cycles.",
+
+  Faq6Q: "Is it suitable for beginners?",
+  fAQ6A:"Absolutely. The digital display and single power button make it intuitive for any parent, first-time or experienced.",
+ 
+  // 🔹 Reviews
+  reviewsTitle: "Trusted by Hundreds of Families",
+  reviewsRating: 5,
+reviews: [
+  {
+    text: "Perfect for travel with my newborn. Heats milk in under 5 minutes and stays warm for hours",
+    author: "Yashma S.",
+    stars: 5,
+  },
+  {
+    text: "No more crying from a hungry baby on long car trips. This warmer is a lifesaver”",
+    author: "Bilal K.",
+    stars: 5,
+  },
+  {
+    text: "“Compact and easy to use. Fits all our different bottle brands perfectly..",
+    author: "Ridha G.",
+    stars: 5,
+  },
+  
+]
+
+
+},
 
 ];
 

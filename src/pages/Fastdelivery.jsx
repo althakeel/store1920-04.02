@@ -18,6 +18,7 @@ import Product16 from '../assets/images/staticproducts/massager/3.webp'
 import product17 from '../assets/images/staticproducts/wirelesscharger/GNPTRIOWCGY-2998.webp'
 import Product18 from '../assets/images/staticproducts/quran/9.webp';
 import Product19 from '../assets/images/staticproducts/quran speaker/1.webp';
+import Product20 from '../assets/images/staticproducts/portable bottle warmer/4.webp';
 
 const staticProducts = [
    
@@ -239,6 +240,18 @@ const staticProducts = [
     sale_price: "79.90",
     images: [{ src: Product19 }],
     path: "/products/holy-wall-speaker-bluetooth-quran-light-speaker",
+    rating: 5,
+    reviews: 165,
+    sold: 195,
+  },
+  {
+    id: "15",
+    name: "Portable Bottle Warmer",
+    price: "79.90",
+    regular_price: "120",
+    sale_price: "79.90",
+    images: [{ src: Product20 }],
+    path: "/products/portable-bottle-warmer",
     rating: 5,
     reviews: 165,
     sold: 195,
