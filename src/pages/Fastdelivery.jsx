@@ -247,7 +247,7 @@ const staticProducts = [
   {
     id: "15",
     name: "Portable Bottle Warmer",
-    price: "79.90",
+    price: "69.90",
     regular_price: "120",
     sale_price: "79.90",
     images: [{ src: Product20 }],
