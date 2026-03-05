@@ -3996,9 +3996,9 @@ reviews: [
   regularPrice: 150.99,
 
   description:
-    " Screen-Free Daily Quran Recitation for Your Home",
+    "Keep Every Feed Warm — Anywhere, Anytime",
   shortdesc:
-    " Screen-Free Daily Quran Recitation for Your Home",
+    "Keep Every Feed Warm — Anywhere, Anytime",
 
   subdesc: "1x Portable Bottle Warmer Sleeve",
   subdesc1: "1x USB Charging Cable",
@@ -4064,7 +4064,7 @@ reviews: [
   // 🔹 Section 2 – Problem + Solution + Features
   section2contentTitle: "Your Go-To Warmer for Every Situation",
   section2contentDesc:
-    "The Quran Should Be Heard Daily — Not Lost in Notifications.",
+    "Everything You Need, Right Out of the Box.",
   section2list: [
     "Long car journeys and road trips with baby",
     "Flights and airport layovers",
@@ -4121,7 +4121,7 @@ reviews: [
     title: "Your Baby Deserves the Best — On the Go and at Home",
     description:
       "Join thousands of happy parents across the UAE. Order your Portable Bottle Warmer today and never worry about a cold bottle again",
-    headers: ["Feature", "Ordinary Speaker", "Holy Wall Quran Speaker"],
+    headers: ["Feature", "Portable Bottle Warmer", "Basic Warmer"],
     rows: [
       { feature: "6-Speed Temperature Control (37°C–55°C)", lumineux: true, others: false },
       { feature: "6000mAh Large Capacity Battery", lumineux: true, others: false },
