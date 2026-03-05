@@ -90,7 +90,7 @@ const sections = [
       <>
         <p>Once your return arrives and passes inspection, refunds are processed as follows:</p>
         <ul>
-          <li><strong>Original Payment Method:</strong> 5–14 business days (up to 30 for some banks).</li>
+          <li><strong>Original Payment Method:</strong> 7–14 business days (up to 30 for some banks).</li>
           <li><strong>Cash on Delivery:</strong> Refunded via bank transfer or Store1920 credits.</li>
           <li><strong>Store1920 Credits:</strong> Instant after check-in (can be used for future orders).</li>
         </ul>
