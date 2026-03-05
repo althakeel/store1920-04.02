@@ -232,6 +232,11 @@ import Product252 from "../assets/images/staticproducts/portable bottle warmer/3
 import Product253 from "../assets/images/staticproducts/portable bottle warmer/4.webp";
 
 
+import Product254 from "../assets/images/staticproducts/scalp_messager/1.webp";
+import Product255 from "../assets/images/staticproducts/scalp_messager/2.webp";
+import Product256 from "../assets/images/staticproducts/scalp_messager/3.webp";
+import Product257 from "../assets/images/staticproducts/scalp_messager/4.webp";
+
 
 
 const staticProducts = [
@@ -4183,6 +4188,207 @@ reviews: [
 
 
 },
+//scalp messager 
+{
+  id: 536006,
+  name: "Electric Scalp Massager",
+  slug: "electric-scalp-massager",
+  price: 89.90,
+  salePrice: 89.90,
+  regularPrice: 109.90,
+
+  description:
+    "Stop hair loss at the root — literally. The Electric Scalp Massager combines 650nm red light therapy, high-frequency vibration massage, and a built-in oil applicator to deliver a clinical-grade scalp spa experience at home.",
+
+  shortdesc:
+    "Stop hair loss at the root — literally.",
+
+  subdesc: "1x Electric Scalp Massager",
+  subdesc1: "1x Type-C Charging Cable",
+  subdesc2: "1x User Manual",
+  subdesc3: "6ml Built-In Essence Oil Chamber (Refillable)",
+  subdesc4: "72 Comb Teeth + 8 Liquid-Guiding Roller Balls",
+
+  image: Product254,
+  thumb1: Product255,
+  thumb2: Product254,
+  thumb3: Product256,
+  thumb4: Product257,
+
+  // 🔹 Bundle / pricing section
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 536009,
+      name: "Electric Scalp Massager",
+      label: "Buy 1",
+      discount: 0,
+      slug: "electric-scalp-massager",
+      price: 89.90,
+      originalPrice: 109.90,
+      image: Product254,
+    },
+    {
+      type: "Bundle of 2",
+      id: 536007,
+      name: "Electric Scalp Massager",
+      label: "Buy 2 ★ BEST VALUE",
+      discount: 0,
+      price: 159.00,
+      originalPrice: 179.80,
+      mostPopular: true,
+      image: Product255,
+      slug: "electric-scalp-massager",
+    },
+    {
+      type: "Bundle of 3",
+      id: 536008,
+      name: "Electric Scalp Massager",
+      label: "Buy 3",
+      discount: 0,
+      price: 218.00,
+      originalPrice: 269.70,
+      mostPopular: false,
+      image: Product256,
+      slug: "electric-scalp-massager",
+    },
+  ],
+
+  BundleTitle: "BUNDLE & SAVE",
+
+  // 🔹 Section 2
+  section2contentTitle: "WHAT'S IN THE BOX",
+  section2contentDesc:
+    "Everything You Need to Start Your Hair Growth Journey",
+
+  section2list: [
+    "1x Electric Scalp Massager",
+    "1x Type-C Charging Cable",
+    "1x User Manual",
+    "6ml Built-In Essence Oil Chamber (Refillable)",
+    "72 Comb Teeth + 8 Liquid-Guiding Roller Balls",
+  ],
+
+  section2image: Product255,
+
+  // 🔹 Key Features
+  section3title: "KEY FEATURES",
+  section3contentDesc:
+    "One Device. Three Powerful Treatments. Zero Hair Excuses.",
+
+  section3image: Product254,
+
+  section3points: [
+    "650nm Red Light Therapy",
+    "3 Vibration Massage Modes",
+    "Built-In Oil Applicator (6ml)",
+    "IPX7 Fully Waterproof",
+    "Type-C Fast Charging",
+    "10-Minute Auto Shut-Off",
+    "Safe, Premium Materials",
+    "Ergonomic Non-Slip Grip",
+  ],
+
+  // 🔹 Progress metrics
+  sectionProgressTitle: "Real People. Real Results.",
+  sectionProgressSubtitle: "Metrics",
+
+  sectionProgress: [
+    {
+      title: "Noticed Less Hair Fall",
+      desc: "",
+      percent: 95,
+    },
+    {
+      title: "Love the Oil Dispenser",
+      desc: "",
+      percent: 93,
+    },
+    {
+      title: "Feel Visible Results",
+      desc: "",
+      percent: 91,
+    },
+    {
+      title: "Would Recommend It",
+      desc: "",
+      percent: 97,
+    },
+  ],
+
+  // 🔹 Comparison table
+  comparisonData: {
+    title: "WHY CHOOSE GROWPRO",
+    description: "Not All Scalp Massagers Are Created Equal",
+
+    headers: ["Feature", "Our Scalp Massager", "Basic Massager"],
+
+    rows: [
+      { feature: "650nm Red Light Therapy", lumineux: true, others: false },
+      { feature: "Built-In Oil Applicator (6ml)", lumineux: true, others: false },
+      { feature: "72 Comb Teeth + 8 Roller Balls", lumineux: true, others: false },
+      { feature: "3 Vibration Modes", lumineux: true, others: false },
+      { feature: "IPX7 Fully Waterproof", lumineux: true, others: false },
+      { feature: "10-Min Auto Shut-Off Safety", lumineux: true, others: false },
+      { feature: "Type-C Fast Charging", lumineux: true, others: false },
+      { feature: "Clinically Backed Hair Growth", lumineux: true, others: false },
+    ]
+  },
+
+  section5image: Product257,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "OUR 30-DAY RISK-FREE GUARANTEE",
+  Guranteedesc:
+    "We are confident you will love your GrowPro Scalp Wand. If for any reason you are not completely satisfied within 30 days of purchase, simply return it for a full refund — no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "How soon will I see results?",
+  fAQ1A:
+    "Most users notice reduced hair fall within 2–3 weeks of regular use (3–5x per week). Visible new growth typically appears by week 6–8.",
+
+  Faq2Q: "Can I use it with any hair oil?",
+  fAQ2A:
+    "Yes! The 6ml chamber works with any liquid hair oil or serum — castor oil, argan oil, rosemary oil, minoxidil, or your favourite brand.",
+
+  Faq3Q: "Is it safe for sensitive scalps?",
+  fAQ3A:
+    "Absolutely. The soft rounded comb teeth and low-frequency vibration modes are gentle enough for sensitive scalps. Start on Mode 1 and build up.",
+
+  Faq4Q: "Can I use it in the shower?",
+  fAQ4A:
+    "Yes — the body is IPX7 fully waterproof. Do not submerge the charging port at the bottom of the device.",
+
+  Faq5Q: "How long does one charge last?",
+  fAQ5A:
+    "A full 3-hour charge provides multiple sessions. Each session runs for 10 minutes before auto shut-off.",
+
+  Faq6Q: "Is it suitable for men?",
+  fAQ6A:
+    "100%. Hair loss is one of the top concerns for men across the UAE. The GrowPro Scalp Wand is designed for all genders and hair types.",
+
+  // 🔹 Reviews
+  reviewsTitle: "CUSTOMER REVIEWS",
+  reviewsRating: 4.8,
+
+  reviews: [
+    {
+      text: "My hair has noticeably less shedding after 3 weeks. The red light therapy really makes a difference. Love the oil applicator!",
+      author: "Hessa A.",
+      stars: 5,
+    },
+    {
+      text: "Finally a scalp massager that actually dispenses the oil evenly. No mess, no waste. Total game changer for my hair care routine.",
+      author: "Rania S.",
+      stars: 5,
+    },
+    {
+      text: "Bought this for my husband who was losing hair. He uses it every night. Already seeing baby hairs coming through.",
+      author: "Fatima K.",
+      stars: 5,
+    },
+  ],
+}
 
 ];
 
