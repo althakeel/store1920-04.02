@@ -226,6 +226,17 @@ import Product248 from '../assets/images/staticproducts/quran speaker/3.webp';
 import Product249 from '../assets/images/staticproducts/quran speaker/4.webp';
 
 
+import Product250 from "../assets/images/staticproducts/portable bottle warmer/1.webp";
+import Product251 from "../assets/images/staticproducts/portable bottle warmer/2.webp";
+import Product252 from "../assets/images/staticproducts/portable bottle warmer/3.webp";
+import Product253 from "../assets/images/staticproducts/portable bottle warmer/4.webp";
+
+
+import Product254 from "../assets/images/staticproducts/scalp_messager/1.webp";
+import Product255 from "../assets/images/staticproducts/scalp_messager/2.webp";
+import Product256 from "../assets/images/staticproducts/scalp_messager/3.webp";
+import Product257 from "../assets/images/staticproducts/scalp_messager/4.webp";
+
 
 
 const staticProducts = [
@@ -3979,7 +3990,405 @@ reviews: [
 
 
 },
+//portable bottle warmer
 
+{
+  id: 535718,
+  name: "Portable Bottle Warmer –Keep Every Feed Warm, Anywhere, Anytime",
+  slug: "portable-bottle-warmer", 
+  price: 69.90,
+  salePrice: 119.90,
+  regularPrice: 150.99,
+
+  description:
+    "Keep Every Feed Warm — Anywhere, Anytime",
+  shortdesc:
+    "Keep Every Feed Warm — Anywhere, Anytime",
+
+  subdesc: "1x Portable Bottle Warmer Sleeve",
+  subdesc1: "1x USB Charging Cable",
+  subdesc2: "1x User Manual",
+  subdesc3: "6000mAh Built-In Battery (No Batteries Required)",
+  subdesc4: "Compatible with Bottles up to 6.5cm Diameter",
+
+
+
+  image: Product250,
+  thumb1: Product251,
+  thumb2: Product252,
+  thumb3: Product253,
+  thumb4: Product252,
+ 
+  
+
+
+
+  // 🔹 Bundle / pricing section (top right)
+  bundles: [
+    
+      {
+      type: "Buy 1",
+      id: 535722,
+      name: "Portable Bottle Warmer",
+      label: "Buy 1 for only 79.90 AED",
+      discount: 0,
+      slug: "portable-bottle-warmer",
+      price: 69.90,
+      originalPrice: 150.99,
+      image: Product251,
+    },
+    {
+      type: "Bundle of 2",
+      id: 535723,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 2 & Get 15% Off",
+      discount: 15,
+      price: 125.90, 
+      originalPrice: 300,
+      mostPopular: true,
+      
+      image: Product252,
+      slug: "portable-bottle-warmer",
+    },
+    {
+      type: "Bundle of 3",
+      id: 535728,
+      name: "Quran Magnet Speaker with Built-In  Quran",
+      label: "Buy 3 & Get 20% Off",
+      discount: 20,
+      price: 171.90, 
+      originalPrice: 300,
+      mostPopular: false,
+      image: Product253,
+      slug: "portable-bottle-warmer",
+    },
+  ],
+
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  // 🔹 Section 2 – Problem + Solution + Features
+  section2contentTitle: "Your Go-To Warmer for Every Situation",
+  section2contentDesc:
+    "Everything You Need, Right Out of the Box.",
+  section2list: [
+    "Long car journeys and road trips with baby",
+    "Flights and airport layovers",
+    "Park outings, errands, and shopping trips",
+    "Night feeds — no need to go to the kitchen",
+    "Breastmilk defrosting on the go",
+    "Heating baby food pouches and formula",
+
+  ],
+  section2image: Product250,
+
+  // 🔹 Section 3 – Use cases / lifestyle
+  section3title: "Key Features",
+    section3contentDesc:
+    "Built for Real Parents. Built for Real Life.",
+  section3image: Product251,
+  section3points: [
+    "6-Speed Temperature Control, Choose from 37°C, 40°C, 42°C, 45°C, 50°C, or 55°C for precise warming every time.",
+    "Fast Heating in 2–5 Minutes, Powerful internal regulator heats milk quickly — no more waiting, no more crying.",
+    "6000mAh Long-Life Battery, Fully cordless. Use it anywhere — car, plane, park, or restaurant. ",
+    "48-Hour Keep Warm Mode,Maintains the perfect temperature for up to 48 hours continuously. ",
+    "Universal Bottle Fit ",
+    "Night Feed Friendly ",
+  ],
+
+  // 🔹 Progress / stats bar
+  sectionProgressTitle: "Join the Movement",
+  sectionProgressSubtitle: "Metrics",
+  sectionProgress: [
+    {
+      title: "Recommend for Travel",
+      desc: "Perfect for long car journeys and road trips with baby.",
+      percent: 96,
+    },
+    {
+      title: "Love the Temperature Control",
+      desc: "Parents love the 6-speed temperature control for precise warming every time.",
+      percent: 94,
+    },
+    {
+      title: "Notice Long Battery Life",
+      desc: "The 6000mAh battery provides up to 48 hours of continuous use.",
+      percent: 91,
+    },
+    {
+      title: "Would Buy Again",
+      desc: "Parents are highly satisfied with the product and would purchase it again.",
+      percent: 94,
+    },
+  ],
+
+  // 🔹 Comparison table – smart boxing vs punching bag
+  comparisonData: {
+    title: "Your Baby Deserves the Best — On the Go and at Home",
+    description:
+      "Join thousands of happy parents across the UAE. Order your Portable Bottle Warmer today and never worry about a cold bottle again",
+    headers: ["Feature", "Portable Bottle Warmer", "Basic Warmer"],
+    rows: [
+      { feature: "6-Speed Temperature Control (37°C–55°C)", lumineux: true, others: false },
+      { feature: "6000mAh Large Capacity Battery", lumineux: true, others: false },
+      { feature: "Fast Heating (2–5 minutes)", lumineux: true, others: false },
+      { feature: "48-Hour Keep Warm Function", lumineux: true, others: false },
+      { feature: "Cord-Free & Portable Design", lumineux: true, others: false },
+      { feature: "Fits Bottles up to 6.5cm Diameter", lumineux: true, others: false },
+      { feature: "Velcro Adjustable Sleeven", lumineux: true, others: false },
+      { feature: "Digital Display Screen", lumineux: true, others: false },
+    ]
+  },
+
+  section5image: Product253,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "Try It Risk-Free for 30 Days",
+  Guranteedesc:
+    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "Can it heat breast milk safely?",
+  fAQ1A:"Yes! The 6-speed temperature control goes as low as 37°C, which is ideal for preserving nutrients in breast milk without overheating.",
+  Faq2Q: "Does it work without charging?",
+  fAQ2A:"The built-in 6000mAh battery means no cords needed. Simply charge it before heading out and it's ready to go.",
+  
+  Faq3Q: "Is it compatible with all bottle brands?",
+  fAQ3A:"No, it is designed for simple wall mounting",
+  
+  Faq4Q: "Is it loud enough for a living room?",
+  fAQ4A:"The Velcro adjustable sleeve fits bottles up to 6.5cm in diameter, covering most major brands including Tommee Tippee, Philips Avent, and Dr. Brown's",
+  
+  Faq5Q: "How long does the battery last?",
+  fAQ5A:"On a full charge, the warmer can maintain temperature for up to 48 hours in keep-warm mode, or complete multiple heating cycles.",
+
+  Faq6Q: "Is it suitable for beginners?",
+  fAQ6A:"Absolutely. The digital display and single power button make it intuitive for any parent, first-time or experienced.",
+ 
+  // 🔹 Reviews
+  reviewsTitle: "Trusted by Hundreds of Families",
+  reviewsRating: 5,
+reviews: [
+  {
+    text: "Perfect for travel with my newborn. Heats milk in under 5 minutes and stays warm for hours",
+    author: "Yashma S.",
+    stars: 5,
+  },
+  {
+    text: "No more crying from a hungry baby on long car trips. This warmer is a lifesaver”",
+    author: "Bilal K.",
+    stars: 5,
+  },
+  {
+    text: "“Compact and easy to use. Fits all our different bottle brands perfectly..",
+    author: "Ridha G.",
+    stars: 5,
+  },
+  
+]
+
+
+},
+//scalp messager 
+{
+  id: 536006,
+  name: "Electric Scalp Massager",
+  slug: "electric-scalp-massager",
+  price: 89.90,
+  salePrice: 89.90,
+  regularPrice: 109.90,
+
+  description:
+    "Stop hair loss at the root — literally. The Electric Scalp Massager combines 650nm red light therapy, high-frequency vibration massage, and a built-in oil applicator to deliver a clinical-grade scalp spa experience at home.",
+
+  shortdesc:
+    "Stop hair loss at the root — literally.",
+
+  subdesc: "1x Electric Scalp Massager",
+  subdesc1: "1x Type-C Charging Cable",
+  subdesc2: "1x User Manual",
+  subdesc3: "6ml Built-In Essence Oil Chamber (Refillable)",
+  subdesc4: "72 Comb Teeth + 8 Liquid-Guiding Roller Balls",
+
+  image: Product254,
+  thumb1: Product255,
+  thumb2: Product254,
+  thumb3: Product256,
+  thumb4: Product257,
+
+  // 🔹 Bundle / pricing section
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 536009,
+      name: "Electric Scalp Massager",
+      label: "Buy 1",
+      discount: 0,
+      slug: "electric-scalp-massager",
+      price: 89.90,
+      originalPrice: 109.90,
+      image: Product254,
+    },
+    {
+      type: "Bundle of 2",
+      id: 536007,
+      name: "Electric Scalp Massager",
+      label: "Buy 2 ★ BEST VALUE",
+      discount: 0,
+      price: 159.00,
+      originalPrice: 179.80,
+      mostPopular: true,
+      image: Product255,
+      slug: "electric-scalp-massager",
+    },
+    {
+      type: "Bundle of 3",
+      id: 536008,
+      name: "Electric Scalp Massager",
+      label: "Buy 3",
+      discount: 0,
+      price: 218.00,
+      originalPrice: 269.70,
+      mostPopular: false,
+      image: Product256,
+      slug: "electric-scalp-massager",
+    },
+  ],
+
+  BundleTitle: "BUNDLE & SAVE",
+
+  // 🔹 Section 2
+  section2contentTitle: "WHAT'S IN THE BOX",
+  section2contentDesc:
+    "Everything You Need to Start Your Hair Growth Journey",
+
+  section2list: [
+    "1x Electric Scalp Massager",
+    "1x Type-C Charging Cable",
+    "1x User Manual",
+    "6ml Built-In Essence Oil Chamber (Refillable)",
+    "72 Comb Teeth + 8 Liquid-Guiding Roller Balls",
+  ],
+
+  section2image: Product255,
+
+  // 🔹 Key Features
+  section3title: "KEY FEATURES",
+  section3contentDesc:
+    "One Device. Three Powerful Treatments. Zero Hair Excuses.",
+
+  section3image: Product254,
+
+  section3points: [
+    "650nm Red Light Therapy",
+    "3 Vibration Massage Modes",
+    "Built-In Oil Applicator (6ml)",
+    "IPX7 Fully Waterproof",
+    "Type-C Fast Charging",
+    "10-Minute Auto Shut-Off",
+    "Safe, Premium Materials",
+    "Ergonomic Non-Slip Grip",
+  ],
+
+  // 🔹 Progress metrics
+  sectionProgressTitle: "Real People. Real Results.",
+  sectionProgressSubtitle: "Metrics",
+
+  sectionProgress: [
+    {
+      title: "Noticed Less Hair Fall",
+      desc: "",
+      percent: 95,
+    },
+    {
+      title: "Love the Oil Dispenser",
+      desc: "",
+      percent: 93,
+    },
+    {
+      title: "Feel Visible Results",
+      desc: "",
+      percent: 91,
+    },
+    {
+      title: "Would Recommend It",
+      desc: "",
+      percent: 97,
+    },
+  ],
+
+  // 🔹 Comparison table
+  comparisonData: {
+    title: "WHY CHOOSE GROWPRO",
+    description: "Not All Scalp Massagers Are Created Equal",
+
+    headers: ["Feature", "Our Scalp Massager", "Basic Massager"],
+
+    rows: [
+      { feature: "650nm Red Light Therapy", lumineux: true, others: false },
+      { feature: "Built-In Oil Applicator (6ml)", lumineux: true, others: false },
+      { feature: "72 Comb Teeth + 8 Roller Balls", lumineux: true, others: false },
+      { feature: "3 Vibration Modes", lumineux: true, others: false },
+      { feature: "IPX7 Fully Waterproof", lumineux: true, others: false },
+      { feature: "10-Min Auto Shut-Off Safety", lumineux: true, others: false },
+      { feature: "Type-C Fast Charging", lumineux: true, others: false },
+      { feature: "Clinically Backed Hair Growth", lumineux: true, others: false },
+    ]
+  },
+
+  section5image: Product257,
+
+  // 🔹 Guarantee
+  Guaranteetitle: "OUR 30-DAY RISK-FREE GUARANTEE",
+  Guranteedesc:
+    "We are confident you will love your GrowPro Scalp Wand. If for any reason you are not completely satisfied within 30 days of purchase, simply return it for a full refund — no questions asked.",
+
+  // 🔹 FAQs
+  Faq1Q: "How soon will I see results?",
+  fAQ1A:
+    "Most users notice reduced hair fall within 2–3 weeks of regular use (3–5x per week). Visible new growth typically appears by week 6–8.",
+
+  Faq2Q: "Can I use it with any hair oil?",
+  fAQ2A:
+    "Yes! The 6ml chamber works with any liquid hair oil or serum — castor oil, argan oil, rosemary oil, minoxidil, or your favourite brand.",
+
+  Faq3Q: "Is it safe for sensitive scalps?",
+  fAQ3A:
+    "Absolutely. The soft rounded comb teeth and low-frequency vibration modes are gentle enough for sensitive scalps. Start on Mode 1 and build up.",
+
+  Faq4Q: "Can I use it in the shower?",
+  fAQ4A:
+    "Yes — the body is IPX7 fully waterproof. Do not submerge the charging port at the bottom of the device.",
+
+  Faq5Q: "How long does one charge last?",
+  fAQ5A:
+    "A full 3-hour charge provides multiple sessions. Each session runs for 10 minutes before auto shut-off.",
+
+  Faq6Q: "Is it suitable for men?",
+  fAQ6A:
+    "100%. Hair loss is one of the top concerns for men across the UAE. The GrowPro Scalp Wand is designed for all genders and hair types.",
+
+  // 🔹 Reviews
+  reviewsTitle: "CUSTOMER REVIEWS",
+  reviewsRating: 4.8,
+
+  reviews: [
+    {
+      text: "My hair has noticeably less shedding after 3 weeks. The red light therapy really makes a difference. Love the oil applicator!",
+      author: "Hessa A.",
+      stars: 5,
+    },
+    {
+      text: "Finally a scalp massager that actually dispenses the oil evenly. No mess, no waste. Total game changer for my hair care routine.",
+      author: "Rania S.",
+      stars: 5,
+    },
+    {
+      text: "Bought this for my husband who was losing hair. He uses it every night. Already seeing baby hairs coming through.",
+      author: "Fatima K.",
+      stars: 5,
+    },
+  ],
+}
 
 ];
 
