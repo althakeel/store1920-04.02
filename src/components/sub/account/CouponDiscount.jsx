@@ -1,5 +1,7 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
+import SignInModal from '../SignInModal';
 import axios from 'axios';
 
 export default function CouponDiscount({ onApplyCoupon }) {
@@ -9,39 +11,28 @@ export default function CouponDiscount({ onApplyCoupon }) {
   const [discountData, setDiscountData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) {
-      setMessage('Please enter a coupon code.');
-      setDiscountData(null);
-      setIsValid(false);
-      onApplyCoupon && onApplyCoupon(null);
-      return;
-    }
-
     setLoading(true);
     setMessage('');
     setDiscountData(null);
     setIsValid(false);
-
     try {
       const formData = new FormData();
       formData.append('coupon_code', couponCode.trim());
-
       const response = await axios.post(
         'https://db.store1920.com/wp-admin/admin-ajax.php?action=check_coupon',
         formData
       );
-
       if (response.data.success) {
-        // Check if backend returned a usage limit error in the data (sometimes plugins return success: false, sometimes true with error in data)
         const data = response.data.data;
         if (typeof data === 'string' && data.toLowerCase().includes('usage limit')) {
+          onApplyCoupon && onApplyCoupon(null);
+          setLoading(false);
           setMessage('You have already used this coupon the maximum allowed times.');
           setIsValid(false);
           setDiscountData(null);
-          onApplyCoupon && onApplyCoupon(null);
-          setLoading(false);
           return;
         }
         setDiscountData(data);
@@ -65,7 +56,6 @@ export default function CouponDiscount({ onApplyCoupon }) {
       setIsValid(false);
       onApplyCoupon && onApplyCoupon(null);
     }
-
     setLoading(false);
   };
 
@@ -73,9 +63,89 @@ export default function CouponDiscount({ onApplyCoupon }) {
     <div className="coupon-card">
       <div className="coupon-header">Have a Coupon?</div>
       {!user ? (
-        <div className="coupon-message error">Please sign in to use a coupon.</div>
+        <div className="coupon-signin-wrapper">
+          {/* <div className="coupon-message error">Please sign in to use a coupon.</div> */}
+          <button className="coupon-signin-btn-better" onClick={() => setShowSignInModal(true)}>
+            <span className="signin-icon-better">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="11" fill="#ff9800"/>
+                <path d="M7.5 10V8.5C7.5 6.57 9.07 5 11 5C12.93 5 14.5 6.57 14.5 8.5V10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
+                <rect x="6.5" y="10" width="9" height="6" rx="2" fill="#fff"/>
+                <circle cx="11" cy="13" r="1" fill="#ff9800"/>
+              </svg>
+            </span>
+            <span className="signin-text-better">Sign In to Use Coupon</span>
+          </button>
+          {showSignInModal && (
+            <div className="coupon-signin-modal-overlay">
+              <div className="coupon-signin-modal">
+                <SignInModal isOpen={true} onClose={() => setShowSignInModal(false)} onLoginSuccess={() => setShowSignInModal(false)} />
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
         <>
+                <style jsx>{`
+                  .coupon-signin-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                  }
+                  .coupon-signin-btn-better {
+                    margin-top: 12px;
+                    width: 100%;
+                    padding: 16px 0;
+                    border-radius: 32px;
+                    border: none;
+                    font-weight: 800;
+                    font-size: 18px;
+                    color: #222;
+                    background: linear-gradient(90deg, #ffe0b2 0%, #ff9800 100%);
+                    box-shadow: 0 2px 12px rgba(255, 152, 0, 0.10);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 14px;
+                    letter-spacing: 0.7px;
+                    transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+                  }
+                  .coupon-signin-btn-better:hover:not(:disabled) {
+                    background: linear-gradient(90deg, #ffd54f 0%, #ff9800 100%);
+                    box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
+                    transform: translateY(-2px) scale(1.03);
+                  }
+                  .signin-icon-better {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 6px;
+                  }
+                  .signin-text-better {
+                    font-size: 18px;
+                    font-weight: 800;
+                    letter-spacing: 0.7px;
+                  }
+                  .coupon-signin-modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0,0,0,0.35);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                  }
+                  .coupon-signin-modal {
+                    background: #fff;
+                    border-radius: 18px;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                    padding: 32px 24px 24px 24px;
+                    min-width: 320px;
+                    max-width: 95vw;
+                  }
+                `}</style>
           <div className="coupon-row">
             <input
               type="text"
