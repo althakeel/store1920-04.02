@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import axios from 'axios';
 
 export default function CouponDiscount({ onApplyCoupon }) {
+  const { user } = useAuth();
   const [couponCode, setCouponCode] = useState('');
   const [message, setMessage] = useState('');
   const [discountData, setDiscountData] = useState(null);
@@ -32,14 +34,29 @@ export default function CouponDiscount({ onApplyCoupon }) {
       );
 
       if (response.data.success) {
+        // Check if backend returned a usage limit error in the data (sometimes plugins return success: false, sometimes true with error in data)
         const data = response.data.data;
+        if (typeof data === 'string' && data.toLowerCase().includes('usage limit')) {
+          setMessage('You have already used this coupon the maximum allowed times.');
+          setIsValid(false);
+          setDiscountData(null);
+          onApplyCoupon && onApplyCoupon(null);
+          setLoading(false);
+          return;
+        }
         setDiscountData(data);
         setMessage('Coupon applied!');
         setIsValid(true);
         onApplyCoupon && onApplyCoupon(data);
       } else {
-        setMessage(response.data.data || 'Invalid coupon code.');
+        // Check for usage limit error or other backend error
+        let errorMsg = response.data.data || 'Invalid coupon code.';
+        if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('usage limit')) {
+          errorMsg = 'You have already used this coupon the maximum allowed times.';
+        }
+        setMessage(errorMsg);
         setIsValid(false);
+        setDiscountData(null);
         onApplyCoupon && onApplyCoupon(null);
       }
     } catch (error) {
@@ -55,41 +72,40 @@ export default function CouponDiscount({ onApplyCoupon }) {
   return (
     <div className="coupon-card">
       <div className="coupon-header">Have a Coupon?</div>
-
-      <div className="coupon-row">
-        <input
-          type="text"
-          placeholder="Enter coupon code"
-          value={couponCode}
-          onChange={e => setCouponCode(e.target.value.toUpperCase())}
-          onKeyDown={e => e.key === 'Enter' && handleApplyCoupon()}
-          disabled={loading}
-          className={`coupon-input ${isValid ? 'valid' : ''}`}
-        />
-
-        <button
-          onClick={handleApplyCoupon}
-          disabled={loading}
-          className="coupon-button"
-        >
-          {loading ? 'Checking...' : 'Apply'}
-        </button>
-      </div>
-
-      {message && (
-        <div className={`coupon-message ${isValid ? 'success' : 'error'}`}>
-          {message}
-        </div>
+      {!user ? (
+        <div className="coupon-message error">Please sign in to use a coupon.</div>
+      ) : (
+        <>
+          <div className="coupon-row">
+            <input
+              type="text"
+              placeholder="Enter coupon code"
+              value={couponCode}
+              onChange={e => setCouponCode(e.target.value.toUpperCase())}
+              onKeyDown={e => e.key === 'Enter' && handleApplyCoupon()}
+              disabled={loading}
+              className={`coupon-input ${isValid ? 'valid' : ''}`}
+            />
+            <button
+              onClick={handleApplyCoupon}
+              disabled={loading}
+              className="coupon-button"
+            >
+              {loading ? 'Checking...' : 'Apply'}
+            </button>
+          </div>
+          {message && (
+            <div className={`coupon-message ${isValid ? 'success' : 'error'}`}>{message}</div>
+          )}
+          {discountData && isValid && (
+            <div className="coupon-discount">
+              {discountData.discount_type === 'percent'
+                ? `${discountData.amount}% OFF`
+                : `AED ${discountData.amount} OFF`}
+            </div>
+          )}
+        </>
       )}
-
-      {discountData && isValid && (
-        <div className="coupon-discount">
-          {discountData.discount_type === 'percent'
-            ? `${discountData.amount}% OFF`
-            : `AED ${discountData.amount} OFF`}
-        </div>
-      )}
-
       <style jsx>{`
         .coupon-card {
           background: none;

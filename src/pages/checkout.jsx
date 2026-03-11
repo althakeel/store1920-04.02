@@ -43,8 +43,6 @@ const fetchWithAuth = async (endpoint, options = {}) => {
   }
 };
 
-
-
 const sanitizeField = (value) => (value && value.trim() ? value : 'NA');
 
 export default function CheckoutPage() {
@@ -56,9 +54,11 @@ export default function CheckoutPage() {
 
 
   const [cartItems, setCartItems] = useState([]);
-  const [showForm, setShowForm] = useState(false); // controls address popup
+  const [showForm, setShowForm] = useState(false); 
   const [countries, setCountries] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [discount, setDiscount] = useState(0);
+  const [coinDiscount, setCoinDiscount] = useState(0);
   const [formData, setFormData] = useState({
     shipping: {
       first_name: '',
@@ -330,6 +330,22 @@ useEffect(() => {
       return cityCodeMap[key] || cityName;
     };
 
+
+    // Add discount and coinDiscount as negative fee lines if present
+    const fee_lines = [];
+    if (discount > 0) {
+      fee_lines.push({
+        name: 'Coupon Discount',
+        total: (-discount).toFixed(2),
+      });
+    }
+    if (coinDiscount > 0) {
+      fee_lines.push({
+        name: 'Coin Discount',
+        total: (-coinDiscount).toFixed(2),
+      });
+    }
+
     const payload = {
       payment_method: formData.paymentMethod,
       payment_method_title: formData.paymentMethodTitle,
@@ -362,38 +378,38 @@ useEffect(() => {
       },
       line_items,
       shipping_lines: formData.shippingMethodId ? [{ method_id: formData.shippingMethodId }] : [],
-meta_data: [
-  { key: '_from_react_checkout', value: true },
-  { 
-    key: '_react_order_products', 
-    value: JSON.stringify(cartItems.map(i => ({
-      name: i.name,
-      price: i.price,
-      quantity: i.quantity
-    })))
-  },
-  {
-    key: '_react_customer_name',
-    value: `${billing.first_name} ${billing.last_name}`
-  },
-  // Delivery type and time
-  shipping.delivery_type ? {
-    key: '_delivery_type',
-    value: shipping.delivery_type
-  } : null,
-  shipping.delivery_type ? {
-    key: '_delivery_time',
-    value: (() => {
-      switch (shipping.delivery_type) {
-        case 'Office': return '9am-5pm';
-        case 'Home': return '5pm-9pm';
-        case 'Apartment': return '12pm-8pm';
-        default: return '';
-      }
-    })()
-  } : null,
-].filter(Boolean),
-
+      fee_lines,
+      meta_data: [
+        { key: '_from_react_checkout', value: true },
+        { 
+          key: '_react_order_products', 
+          value: JSON.stringify(cartItems.map(i => ({
+            name: i.name,
+            price: i.price,
+            quantity: i.quantity
+          })))
+        },
+        {
+          key: '_react_customer_name',
+          value: `${billing.first_name} ${billing.last_name}`
+        },
+        // Delivery type and time
+        shipping.delivery_type ? {
+          key: '_delivery_type',
+          value: shipping.delivery_type
+        } : null,
+        shipping.delivery_type ? {
+          key: '_delivery_time',
+          value: (() => {
+            switch (shipping.delivery_type) {
+              case 'Office': return '9am-5pm';
+              case 'Home': return '5pm-9pm';
+              case 'Apartment': return '12pm-8pm';
+              default: return '';
+            }
+          })()
+        } : null,
+      ].filter(Boolean),
       ...(userId ? { customer_id: parseInt(userId, 10) } : { create_account: true }),
     };
 
@@ -551,6 +567,10 @@ return (
         clearCart={() => setCartItems([])}
         handlePlaceOrder={handlePlaceOrder}
         subtotal={subtotal}
+        discount={discount}
+        setDiscount={setDiscount}
+        coinDiscount={coinDiscount}
+        setCoinDiscount={setCoinDiscount}
       />
     </div>
 

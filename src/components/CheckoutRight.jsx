@@ -70,12 +70,10 @@ const parsePrice = (raw) => {
 // -----------------------------
 // CheckoutRight Component
 // -----------------------------
-export default function CheckoutRight({ cartItems, formData, createOrder, clearCart, orderId, showForm = false }) {
+export default function CheckoutRight({ cartItems, formData, createOrder, clearCart, orderId, showForm = false, discount, setDiscount, coinDiscount, setCoinDiscount }) {
   const [alert, setAlert] = useState({ message: '', type: 'info' });
   const [hoverMessage, setHoverMessage] = useState('');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-  const [discount, setDiscount] = useState(0);
-  const [coinDiscount, setCoinDiscount] = useState(0);
   const [showOrderConfirmed, setShowOrderConfirmed] = useState(false);
   const [editingAddress, setEditingAddress] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState(null);
