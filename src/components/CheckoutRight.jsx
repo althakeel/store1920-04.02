@@ -91,8 +91,8 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
   }, 0);
 
   const subtotal = Math.max(0, itemsTotal - discount - coinDiscount);
-const totalWithDelivery = subtotal;
-const amountToSend = Number(totalWithDelivery.toFixed(2));
+  const totalWithDelivery = Math.max(0, subtotal); // Ensure total never goes below zero
+  const amountToSend = Number(totalWithDelivery.toFixed(2));
   const hasCartItems = cartItems.some((item) => (parseInt(item.quantity, 10) || 0) > 0);
   const isAddressFormOpen = !!(showForm || formData?.addressModalOpen);
 
@@ -647,7 +647,41 @@ console.log("✅ Wallet Payment Response =>", data);
             >
               Order Summary
             </h2>
-            <CouponDiscount onApplyCoupon={() => {}} />
+            <CouponDiscount onApplyCoupon={data => {
+              // data: { amount, discount_type, ... }
+              if (!data) {
+                setDiscount(0);
+                return;
+              }
+              if (data.discount_type === 'percent') {
+                // percent off subtotal
+                const percent = parseFloat(data.amount) || 0;
+                const itemsTotal = cartItems.reduce((acc, item) => {
+                  const price = parsePrice(item.prices?.price ?? item.price);
+                  const quantity = parseInt(item.quantity, 10) || 1;
+                  return acc + price * quantity;
+                }, 0);
+                setDiscount((itemsTotal * percent) / 100);
+              } else {
+                setDiscount(parseFloat(data.amount) || 0);
+              }
+            }} />
+            <div className="summaryRowCR" style={{ marginTop: '1rem' }}>
+              <span>Subtotal:</span>
+              <span>{`AED ${itemsTotal.toFixed(2)}`}</span>
+            </div>
+            {discount > 0 && (
+              <div className="summaryRowCR">
+                <span>Coupon Discount:</span>
+                <span style={{ color: '#28a745', fontWeight: 600 }}>- AED {discount.toFixed(2)}</span>
+              </div>
+            )}
+            {coinDiscount > 0 && (
+              <div className="summaryRowCR">
+                <span>Coin Discount:</span>
+                <span style={{ color: '#1976d2', fontWeight: 600 }}>- AED {coinDiscount.toFixed(2)}</span>
+              </div>
+            )}
             <div className="summaryRowCR" style={{ marginTop: '1rem' }}>
               <span>Total:</span>
               <strong>{`AED ${totalWithDelivery.toFixed(2)}`}</strong>
