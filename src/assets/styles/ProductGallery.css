@@ -3,83 +3,91 @@
 /* Outer container */
 .product-gallery-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: stretch;
   width: 100%;
   --gallery-max-width: 100%;
   max-width: 100%;
   height: auto;
   gap: 14px;
   position: relative;
-  z-index: 1;
+  z-index: 0;
   margin: 0 auto;
 }
 
 /* Thumbnail strip on the left */
 .thumbnail-strip {
   position: relative;
-  width: 100%;
-  order: 2;
+  z-index: 0;
+  width: 66px;
+  min-width: 66px;
+  max-height: 100%;
+  padding: 34px 0;
+  order: 1;
 }
 
 .thumbnail-list {
   display: flex;
-  flex-direction: row;
-  gap: 8px;
+  flex-direction: column;
+  gap: 7px;
   width: 100%;
-  max-width: 100%;
-  max-height: none;
-  overflow-x: auto;
-  overflow-y: hidden;
+  max-width: 66px;
+  max-height: 520px;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
   flex-wrap: nowrap;
   flex-shrink: 0;
   margin: 0;
-  padding: 4px 32px 0;
+  padding: 4px 0;
   position: relative;
   background: transparent;
   border-radius: 8px;
   box-sizing: border-box;
-  order: 2;
-  align-self: center;
+  order: 1;
+  align-self: stretch;
   justify-content: flex-start;
-  cursor: grab;
+  cursor: ns-resize;
 
   scrollbar-width: none; /* Firefox */
 }
 
 .thumb-scroll {
+  display: flex;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #111;
-  border: none;
-  color: #fff;
-  width: 32px;
-  height: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid #cfd8e3;
+  color: #0f172a;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
   user-select: none;
   border-radius: 50%;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.18);
 }
 
 .thumb-scroll:hover {
-  background: #111;
+  background: #f8fafc;
+  border-color: #94a3b8;
 }
 
 .thumb-scroll-left {
-  left: 2px;
+  top: 0;
 }
 
 .thumb-scroll-right {
-  right: 2px;
+  bottom: 0;
 }
 
 
@@ -99,52 +107,62 @@
 
 /* Individual thumbnail buttons */
 .thumbnail-btn {
-  border: 2px solid transparent;
-  border-radius: 6px;
-  background: none;
-  padding: 0;
+  border: 1.5px solid #d8dde6;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 2px;
   cursor: pointer;
   margin: 0;
-  /* width: 100%; */
+  width: 100%;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 0 0 auto;
   flex-grow: 0;       /* <-- prevents stretching */
   flex-shrink: 0;
+  opacity: 1;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
 }
 
 .thumbnail-btn.active {
-  /* border-color: #007bff; */
+  border-color: #0f172a;
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.15);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+.thumbnail-btn:hover {
+  border-color: #94a3b8;
+  opacity: 1;
 }
 
 .thumbnail-btn:hover img,
 .thumbnail-btn.active img {
-  transform: scale(1.01);
-  transition: transform 0.3s ease;
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
 }
 
 /* Thumbnail image */
 .thumbnail-image {
-  width: 64px;
-  height: 64px;
-  max-height: 64px;
+  width: 54px;
+  height: 54px;
+  max-height: 54px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
   display: block;
   transition: transform 0.3s ease;
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: #c7c7c7 transparent;
-  cursor: grab;
-  overscroll-behavior-x: contain;
+  cursor: pointer;
+  overscroll-behavior-y: contain;
 }
 
 /* Main image container - flexible to fill remaining space */
 .main-image-wrapper {
-  width: 100%;
+  width: calc(100% - 80px);
   max-width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
@@ -155,8 +173,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
-  order: 1;
+  z-index: 0;
+  order: 2;
   align-self: stretch;
 }
 
@@ -187,7 +205,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  z-index: 1;
 }
 
 .arrow-btn:hover {
@@ -316,7 +334,9 @@
 /* Modal thumbnail list */
 .modal-thumbnail-list {
   display: flex;
+  flex-direction: row;
   overflow-x: auto;
+  overflow-y: hidden;
   gap: 8px;
   width: 100%;
   scrollbar-width: none;
@@ -366,14 +386,67 @@
 
 
 @media (max-width: 900px) {
+  .product-gallery-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .thumbnail-strip {
+    width: 100%;
+    min-width: 0;
+    max-height: none;
+    padding: 0;
+    order: 2;
+  }
+
+  .thumbnail-list {
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    padding: 4px 32px 0;
+    order: 2;
+    align-self: center;
+    cursor: grab;
+  }
+
+  .thumb-scroll {
+    display: flex;
+    position: absolute;
+    left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .thumb-scroll-left {
+    left: 2px;
+    top: 50%;
+  }
+
+  .thumb-scroll-right {
+    right: 2px;
+    top: 50%;
+    bottom: auto;
+  }
+
   .thumbnail-btn,
   .thumbnail-image {
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
     flex-shrink: 0;
   }
 
+  .thumbnail-btn {
+    width: auto;
+    opacity: 1;
+  }
+
   .main-image-wrapper {
+    order: 1;
     width: 100%;
     height: auto;
     max-height: 520px;
@@ -467,8 +540,8 @@
 
   .thumbnail-list img {
     flex: 0 0 auto;
-    height: 64px;
-    width: 64px;
+    height: 56px;
+    width: 56px;
     border-radius: 4px;
   }
 }

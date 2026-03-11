@@ -1,75 +1,100 @@
 .pd-price-container {
   margin-bottom: 16px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'Segoe UI', Roboto, Arial, sans-serif;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #222;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .pd-sale-price {
-  color: #000000;
-  font-weight: 600;
-  font-size: 1.8rem;
-}
-
-.price-int {
-  font-size: 1.8rem; /* big number */
-  font-weight: 700;
-}
-
-.price-dec {
-  font-size: 1rem; /* smaller number */
-  vertical-align: super; /* raise decimal slightly */
+  color: #f97316;
+  font-weight: 500;
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
 }
 
 
 .pd-regular-price {
-  color: #6b6b6b; /* text color */
+  color: #111827;
   position: relative;
   font-weight: 400;
-  font-size: .9rem;
+  font-size: 1.12rem;
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+  margin-bottom: 1px;
 }
 
-/* Custom colored line-through */
+.pd-regular-int {
+  font-size: 1em;
+  font-weight: 400;
+  color: #111827;
+  line-height: 1;
+}
+
+.pd-regular-dec {
+  font-size: 0.78em;
+  font-weight: 400;
+  color: #111827;
+  line-height: 1;
+}
+
 .pd-regular-price::after {
   content: "";
   position: absolute;
   left: 0;
-  top: 55%;
+  top: 47%;
   width: 100%;
-  border-bottom: 1px solid #e60023; /* red colored line-through */
+  border-bottom: 1.5px solid #f97316;
   transform: translateY(-50%);
   pointer-events: none;
 }
 
 .pd-discount-badge {
-  padding: 1px 5px;
-  border: 1px solid #f06c01;
-  border-radius: 4px;
-  font-size: .6rem;
-  font-weight: 700;
-  color: #e60023;
-  background-color: transparent;
+  padding: 2px 6px;
+  border: 1px solid #fb923c;
+  border-radius: 2px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: #ea580c;
+  background-color: #fff7ed;
+  line-height: 1.1;
   user-select: none;
-}
-.price-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  text-transform: uppercase;
+  margin-bottom: 1px;
 }
 
-.currency-icon {
-  width: 22px;
-  height: 22x;
-  /* remove position/top from here when using flex */
-  margin-right: 0; /* spacing handled by gap in price-wrapper */
+.price-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
 }
-.currency-icon1 {
-  width: 13px;
-  height: 14x;
-  /* remove position/top from here when using flex */
-  margin-right: 0; /* spacing handled by gap in price-wrapper */
+
+.pd-sale-currency {
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  color: #f97316;
+}
+
+.pd-sale-int {
+  font-size: 1em;
+  font-weight: 500;
+  color: #f97316;
+  line-height: 1;
+}
+
+.pd-sale-dec {
+  font-size: 0.55em;
+  font-weight: 500;
+  color: #f97316;
+  line-height: 1;
+  transform: translateY(-0.02em);
 }

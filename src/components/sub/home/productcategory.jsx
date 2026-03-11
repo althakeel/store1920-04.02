@@ -596,7 +596,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
 
   // Load more products
   const loadMoreProducts = () => {
-    setVisibleCount(prev => Math.min(prev + INITIAL_VISIBLE, getTotalProducts()));
+    setVisibleCount(prev => Math.min(prev + PAGE_SIZE, getTotalProducts()));
   };
 
   // Fly to cart animation

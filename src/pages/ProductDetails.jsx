@@ -6,9 +6,8 @@ import { trackProductView } from '../utils/gtmTracking';
 
 import ProductGallery from '../components/ProductGallery';
 import ProductInfo from '../components/ProductInfo';
-import ProductDescription from '../components/products/ProductDescription';
 import SkeletonLoader from '../components/SkeletonLoader';
-import ProductReviewList from '../components/products/ProductReviewList';
+import SignInModal from '../components/sub/SignInModal';
 import { getProductReviewsWoo } from '../data/wooReviews';
 import {
   fetchAPI,
@@ -49,6 +48,58 @@ function getReviewSummary(reviews) {
   return { totalReviews, avgRating };
 }
 
+function getRatingBreakdown(reviews) {
+  const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  reviews.forEach((review) => {
+    const rating = Math.round(Number(review.rating) || 0);
+    if (rating >= 1 && rating <= 5) counts[rating] += 1;
+  });
+  return counts;
+}
+
+function formatReviewDate(dateValue) {
+  if (!dateValue) return '';
+  const parsed = new Date(dateValue);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return parsed.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function getAvatarColor(name = '') {
+  const colors = ['#8b5cf6', '#06b6d4', '#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+  const index = name ? name.charCodeAt(0) % colors.length : 0;
+  return colors[index];
+}
+
+const QUALITY_MARQUEE_TEXT =
+  "• Each item passes rigorous quality checks. • Safe packaging to prevent any damage. • Shipping available all over the UAE. • Hassle-free returns. • 100% secure payment and data protection. • Money-back guarantee if you’re not satisfied. • Fast and reliable delivery to your doorstep.";
+const QUALITY_MARQUEE_LOOP_TEXT = QUALITY_MARQUEE_TEXT.replace(/•/g, ' • ');
+const TRUST_BAR_THEMES = [
+  {
+    background: 'linear-gradient(90deg, #111827 0%, #1f2937 45%, #111827 100%)',
+    border: '#0b1220',
+    shadow: '0 4px 12px rgba(17, 24, 39, 0.35)',
+  },
+  {
+    background: 'linear-gradient(90deg, #052e2b 0%, #0f4f49 45%, #052e2b 100%)',
+    border: '#042320',
+    shadow: '0 4px 12px rgba(5, 46, 43, 0.34)',
+  },
+  {
+    background: 'linear-gradient(90deg, #0f1f4a 0%, #1e3a8a 45%, #0f1f4a 100%)',
+    border: '#0b1738',
+    shadow: '0 4px 12px rgba(15, 31, 74, 0.35)',
+  },
+  {
+    background: 'linear-gradient(90deg, #2a1148 0%, #4c1d95 45%, #2a1148 100%)',
+    border: '#1f0d36',
+    shadow: '0 4px 12px rgba(42, 17, 72, 0.34)',
+  },
+];
+
 export default function ProductDetails() {
   const { slug, id } = useParams();
   const { user, login } = useAuth();
@@ -61,10 +112,24 @@ export default function ProductDetails() {
   const [extraImages, setExtraImages] = useState([]);
   const [toast, setToast] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [hasPurchasedCurrentProduct, setHasPurchasedCurrentProduct] = useState(null);
+  const [isCheckingReviewEligibility, setIsCheckingReviewEligibility] = useState(false);
+  const [reviewDraft, setReviewDraft] = useState({
+    name: '',
+    email: '',
+    rating: 5,
+    comment: '',
+  });
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [headerStickyOffset, setHeaderStickyOffset] = useState(126);
+  const [openInfoSection, setOpenInfoSection] = useState('description');
+  const [trustBarThemeIndex, setTrustBarThemeIndex] = useState(
+    () => new Date().getHours() % TRUST_BAR_THEMES.length
+  );
 
   const leftColumnRef = useRef(null);
   const isLoggedIn = !!user;
+  const trustBarTheme = TRUST_BAR_THEMES[trustBarThemeIndex];
 
   // Restore user from localStorage
   useEffect(() => {
@@ -78,7 +143,31 @@ export default function ProductDetails() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const updateHeaderOffset = () => {
+      const stickyHeader = document.querySelector('[data-sticky-header="true"]');
+      if (!stickyHeader) return;
+      const height = Math.round(stickyHeader.getBoundingClientRect().height);
+      setHeaderStickyOffset(Math.max(96, height + 8));
+    };
+
+    updateHeaderOffset();
+    window.addEventListener('resize', updateHeaderOffset);
+    return () => window.removeEventListener('resize', updateHeaderOffset);
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTrustBarThemeIndex((prevIndex) => (prevIndex + 1) % TRUST_BAR_THEMES.length);
+    }, 60 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const isMobile = windowWidth <= 768;
+  const desktopStickyTop = headerStickyOffset;
+  const uiFontFamily = 'miui, system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", Helvetica, Arial, sans-serif';
 
   // Fetch minimal/full product
   const { data: product, isLoading, error } = useQuery({
@@ -109,6 +198,10 @@ export default function ProductDetails() {
     console.log('📸 mainImageUrl changed to:', mainImageUrl);
   }, [mainImageUrl]);
 
+  useEffect(() => {
+    setOpenInfoSection('description');
+  }, [product?.id]);
+
   // Fetch variations
   useEffect(() => {
     if (!product?.variations?.length) return setVariations([]);
@@ -124,8 +217,10 @@ export default function ProductDetails() {
   }, [product]);
 
   useEffect(() => {
-    if (variations.length > 0 && !selectedVariation) setSelectedVariation(variations[0]);
-  }, [variations, selectedVariation]);
+    if (!variations.length) {
+      setSelectedVariation(null);
+    }
+  }, [variations.length]);
 
   // Set main image - only on initial product load
   useEffect(() => {
@@ -180,7 +275,286 @@ export default function ProductDetails() {
     fetchReviews();
   }, [product]);
 
+  useEffect(() => {
+    setHasPurchasedCurrentProduct(null);
+  }, [product?.id, user?.id]);
+
+  const hasUserPurchasedCurrentProduct = useCallback(async () => {
+    if (!user?.id || !product?.id) return false;
+
+    const perPage = 100;
+    const allowedStatuses = [
+      'pending',
+      'processing',
+      'cod',
+      'confirmed',
+      'on-hold',
+      'shipped',
+      'completed',
+      'paid',
+      'ready-to-pickup',
+      'pickup-requested',
+    ].join(',');
+
+    for (let page = 1; page <= 3; page += 1) {
+      const orders = await fetchAPI(
+        `/orders?customer=${encodeURIComponent(user.id)}&status=${encodeURIComponent(allowedStatuses)}&per_page=${perPage}&page=${page}`
+      );
+
+      if (!Array.isArray(orders) || orders.length === 0) {
+        break;
+      }
+
+      const found = orders.some((order) =>
+        Array.isArray(order?.line_items) &&
+        order.line_items.some((item) => Number(item?.product_id) === Number(product.id))
+      );
+
+      if (found) {
+        return true;
+      }
+
+      if (orders.length < perPage) {
+        break;
+      }
+    }
+
+    return false;
+  }, [product?.id, user?.id]);
+
   const reviewSummary = getReviewSummary(reviews);
+  const reviewBreakdown = getRatingBreakdown(reviews);
+  const maxBreakdownValue = Math.max(1, ...Object.values(reviewBreakdown));
+
+  const toggleInfoSection = useCallback((sectionName) => {
+    setOpenInfoSection(prev => (prev === sectionName ? null : sectionName));
+  }, []);
+
+  const renderCompactInfoSections = () => (
+    <div
+      style={{
+        marginTop: 12,
+        borderTop: '1px solid #e5e7eb',
+        borderRadius: 12,
+        overflow: 'hidden',
+        fontFamily: uiFontFamily,
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => toggleInfoSection('description')}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: '#fff',
+          border: 0,
+          borderBottom: '1px solid #e5e7eb',
+          padding: isMobile ? '12px 12px' : '14px 14px',
+          fontSize: isMobile ? '1.05rem' : '1.2rem',
+          fontWeight: 700,
+          color: '#111827',
+          cursor: 'pointer',
+          textAlign: 'left',
+        }}
+        aria-expanded={openInfoSection === 'description'}
+      >
+        <span>Description</span>
+        <span style={{ fontSize: '18px', lineHeight: 1 }}>{openInfoSection === 'description' ? '⌄' : '›'}</span>
+      </button>
+      {openInfoSection === 'description' && (
+        <div
+          style={{
+            padding: isMobile ? '12px 12px' : '14px 14px',
+            borderBottom: '1px solid #e5e7eb',
+            background: '#fff',
+          }}
+        >
+          <div
+            className="product-description-content pi-description-content"
+            style={{
+              fontSize: isMobile ? '14px' : '15px',
+              lineHeight: '1.8',
+              color: '#374151',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+              fontFamily: uiFontFamily,
+            }}
+            dangerouslySetInnerHTML={{ __html: product.description || '' }}
+          />
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => toggleInfoSection('shipping')}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: '#fff',
+          border: 0,
+          borderBottom: '1px solid #e5e7eb',
+          padding: isMobile ? '12px 12px' : '14px 14px',
+          fontSize: isMobile ? '1.05rem' : '1.2rem',
+          fontWeight: 700,
+          color: '#111827',
+          cursor: 'pointer',
+          textAlign: 'left',
+        }}
+        aria-expanded={openInfoSection === 'shipping'}
+      >
+        <span>Processing & Shipping</span>
+        <span style={{ fontSize: '18px', lineHeight: 1 }}>{openInfoSection === 'shipping' ? '⌄' : '›'}</span>
+      </button>
+      {openInfoSection === 'shipping' && (
+        <div
+          style={{
+            padding: isMobile ? '12px 12px' : '14px 14px',
+            borderBottom: '1px solid #e5e7eb',
+            background: '#fff',
+            fontSize: isMobile ? '13px' : '14px',
+            lineHeight: '1.7',
+            color: '#374151',
+            fontFamily: uiFontFamily,
+          }}
+        >
+          Orders are usually processed within 1-2 business days and delivery timelines vary by location.
+        </div>
+      )}
+    </div>
+  );
+
+  const renderReviewSection = ({ embedded = false } = {}) => (
+    <div
+      style={{
+        maxWidth: embedded ? '100%' : 1400,
+        margin: embedded ? '16px 0 0' : '14px auto 0',
+        padding: embedded ? '0' : '0 20px',
+        width: '100%',
+        boxSizing: 'border-box',
+        fontFamily: uiFontFamily,
+      }}
+    >
+      <section
+        style={{
+          background: '#fff',
+          border: 'none',
+          borderRadius: 12,
+          padding: isMobile ? '14px 12px' : '16px 16px',
+          boxShadow: '0 4px 14px rgba(17, 24, 39, 0.04)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 12,
+            flexWrap: 'wrap',
+            marginBottom: 12,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#111827' }}>
+            <span style={{ fontSize: 24, fontWeight: 700 }}>{reviewSummary.totalReviews}</span>
+            <span style={{ fontSize: 18, fontWeight: 500 }}>{reviewSummary.totalReviews === 1 ? 'review' : 'reviews'}</span>
+            <span style={{ fontSize: 22, fontWeight: 700 }}>{reviewSummary.avgRating.toFixed(1)}</span>
+            <ReviewStars rating={Math.round(reviewSummary.avgRating)} />
+          </div>
+          <div style={{ color: '#16a34a', fontSize: isMobile ? 12 : 13, fontWeight: 600 }}>
+            ✓ All reviews are from verified purchases
+          </div>
+        </div>
+
+        {reviews.length === 0 ? (
+          <div
+            style={{
+              fontSize: 15,
+              color: '#6b7280',
+              background: '#f9fafb',
+              border: 'none',
+              borderRadius: 10,
+              padding: '14px 12px',
+              textAlign: 'center',
+            }}
+          >
+            No reviews yet.
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {reviews.slice(0, 5).map((review) => {
+              const reviewerName = review.reviewer || 'Anonymous';
+              const reviewerInitial = reviewerName.charAt(0).toUpperCase();
+              const reviewDate = formatReviewDate(review.date);
+
+              return (
+                <article
+                  key={review.id}
+                  style={{
+                    paddingBottom: 10,
+                    borderBottom: 'none',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        background: getAvatarColor(reviewerName),
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 700,
+                        fontSize: 13,
+                      }}
+                    >
+                      {reviewerInitial}
+                    </div>
+                    <strong style={{ fontSize: 14, color: '#111827' }}>{reviewerName}</strong>
+                    {reviewDate && <span style={{ fontSize: 12, color: '#9ca3af' }}>on {reviewDate}</span>}
+                  </div>
+                  <div style={{ marginBottom: 6 }}>
+                    <ReviewStars rating={Math.round(Number(review.rating) || 0)} />
+                  </div>
+                  <div
+                    style={{ fontSize: isMobile ? 14 : 15, color: '#1f2937', lineHeight: 1.55 }}
+                    dangerouslySetInnerHTML={{ __html: review.comment || '' }}
+                  />
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={handleAddReview}
+          style={{
+            marginTop: 14,
+            width: '100%',
+            border: 'none',
+            borderRadius: 999,
+            background: '#fff',
+            color: '#111827',
+            fontWeight: 600,
+            fontSize: 15,
+            padding: '11px 14px',
+            cursor: 'pointer',
+          }}
+        >
+          {isCheckingReviewEligibility
+            ? 'Checking your order...'
+            : !isLoggedIn
+              ? 'Sign in to write a review'
+              : 'Write a review'}
+        </button>
+      </section>
+    </div>
+  );
 
   // Handlers
   const handleVariationChange = useCallback(v => setSelectedVariation(v), []);
@@ -193,23 +567,88 @@ export default function ProductDetails() {
   const handleAddToWishlist = () =>
     !isLoggedIn ? setShowLoginModal(true) : showToast('✅ Product added to wishlist!');
   const handleReportProduct = () => showToast('⚠️ Product reported!');
-  const handleAddReview = () =>
-    !isLoggedIn ? setShowLoginModal(true) : setActiveModal('review');
-  const closeLoginModal = () => setShowLoginModal(false);
-  const mockLogin = () => {
-    const mockUser = { id: '123', name: 'Test User', token: 'mock-token' };
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    login(mockUser);
-    closeLoginModal();
-    showToast('✅ Logged in successfully!');
+  const handleAddReview = async () => {
+    if (!isLoggedIn) {
+      showToast('⚠️ Please sign in to write a review.');
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (isCheckingReviewEligibility) {
+      return;
+    }
+
+    let isEligible = hasPurchasedCurrentProduct;
+
+    if (isEligible === null) {
+      setIsCheckingReviewEligibility(true);
+      isEligible = await hasUserPurchasedCurrentProduct();
+      setHasPurchasedCurrentProduct(isEligible);
+      setIsCheckingReviewEligibility(false);
+    }
+
+    if (!isEligible) {
+      showToast('⚠️ Only customers who ordered this product can write a review.');
+      return;
+    }
+
+    setReviewDraft((prev) => ({
+      ...prev,
+      name: prev.name || user?.name || '',
+      email: prev.email || user?.email || '',
+    }));
+
+    setActiveModal('review');
   };
+
+  const handleReviewSubmit = (event) => {
+    event.preventDefault();
+
+    const trimmedName = reviewDraft.name.trim();
+    const trimmedEmail = reviewDraft.email.trim();
+    const trimmedComment = reviewDraft.comment.trim();
+
+    if (!isLoggedIn) {
+      showToast('⚠️ Please sign in to submit a review.');
+      setActiveModal(null);
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (hasPurchasedCurrentProduct === false) {
+      showToast('⚠️ Only customers who ordered this product can submit a review.');
+      setActiveModal(null);
+      return;
+    }
+
+    if (!trimmedName || !trimmedEmail || !trimmedComment || !reviewDraft.rating) {
+      showToast('⚠️ Please fill all review fields.');
+      return;
+    }
+
+    const newReview = {
+      id: Date.now(),
+      reviewer: trimmedName,
+      reviewer_email: trimmedEmail,
+      rating: Number(reviewDraft.rating),
+      comment: trimmedComment,
+      date: new Date().toISOString(),
+    };
+
+    setReviews((prev) => [newReview, ...prev]);
+    setReviewDraft({ name: '', email: '', rating: 5, comment: '' });
+    setActiveModal(null);
+    showToast('✅ Review submitted successfully!');
+  };
+
+  const closeLoginModal = () => setShowLoginModal(false);
 
   if (isLoading) return <SkeletonLoader />;
   if (error) return <div>Error loading product.</div>;
   if (!product) return <div>Product not found.</div>;
 
   return (
-    <>
+    <div className="pd-font-scope">
       {toast && (
         <div
           style={{
@@ -234,9 +673,10 @@ export default function ProductDetails() {
           display: isMobile ? 'block' : 'flex',
           maxWidth: 1400,
           margin: '0 auto',
-          padding: '20px',
+          padding: isMobile ? '12px' : '16px 20px',
           gap: isMobile ? 0 : 24,
           alignItems: isMobile ? 'stretch' : 'flex-start',
+          fontFamily: uiFontFamily,
         }}
       >
         {/* Left Column */}
@@ -246,25 +686,41 @@ export default function ProductDetails() {
             flex: isMobile ? 'auto' : '1 1 0',
             width: isMobile ? '100%' : '50%',
             minWidth: 0,
+            height: 'auto',
             boxSizing: 'border-box',
-            maxHeight: isMobile ? 'auto' : '80vh',
-            overflowY: isMobile ? 'visible' : 'auto',
+            position: 'static',
+            top: 'auto',
+            alignSelf: isMobile ? 'auto' : 'stretch',
             paddingRight: 0,
-            scrollbarWidth: isMobile ? 'auto' : 'none',
           }}
-          className={isMobile ? '' : 'thin-scrollbar'}
+          className=""
         >
-          <ProductGallery
-            images={combinedImages.length > 0 ? combinedImages : product.images || []}
-            mainImageUrl={mainImageUrl || product.images?.[0]?.src}
-            setMainImageUrl={setMainImageUrl}
-            activeModal={activeModal}
-            openModal={openModal}
-            closeModal={closeModal}
-          />
+          <div
+            style={{
+              position: 'static',
+              top: 'auto',
+              alignSelf: 'flex-start',
+            }}
+          >
+            <ProductGallery
+              images={combinedImages.length > 0 ? combinedImages : product.images || []}
+              mainImageUrl={mainImageUrl || product.images?.[0]?.src}
+              setMainImageUrl={setMainImageUrl}
+              activeModal={activeModal}
+              openModal={openModal}
+              closeModal={closeModal}
+            />
+          </div>
+
+          {!isMobile && (
+            <div style={{ marginTop: 16 }}>
+              {renderReviewSection({ embedded: true })}
+              {renderCompactInfoSections()}
+            </div>
+          )}
 
           {isMobile && (
-            <div style={{ marginTop: 20, marginBottom: 40 }}>
+            <div style={{ marginTop: 20, marginBottom: 72, position: 'relative', zIndex: 2 }}>
               <ProductInfo
                 product={product}
                 variations={variations}
@@ -272,6 +728,10 @@ export default function ProductDetails() {
                 onVariationChange={handleVariationChange}
                 loadingVariations={variations.length === 0 && !!product.variations?.length}
               />
+              <div style={{ marginTop: 14 }}>
+                {renderReviewSection({ embedded: true })}
+                {renderCompactInfoSections()}
+              </div>
             </div>
           )}
 
@@ -299,7 +759,7 @@ export default function ProductDetails() {
               width: '50%',
               minWidth: 0,
               position: 'sticky',
-              top: 20,
+              top: desktopStickyTop,
               alignSelf: 'flex-start',
             }}
           >
@@ -314,64 +774,59 @@ export default function ProductDetails() {
         )}
       </div>
 
-      {/* Full Width Product Description */}
-      {product.description && (
-        <div style={{ 
-          maxWidth: 1400, 
-          margin: isMobile ? '50px auto 30px auto' : '30px auto', 
-          padding: '0 20px',
-          width: '100%',
-          boxSizing: 'border-box'
-        }}>
-          <div style={{
-            background: '#ffffff',
-            borderRadius: '8px',
-            border: '1px solid #e5e7eb',
-            padding: '24px',
-            boxSizing: 'border-box'
-          }}>
-            <h2 style={{
-              fontSize: '1.5rem',
-              fontWeight: '700',
-              color: '#1f2937',
-              margin: '0 0 20px 0',
-              paddingBottom: '12px',
-              borderBottom: '2px solid #f3f4f6'
-            }}>Product Description</h2>
-            <div 
-              style={{
-                fontSize: '15px',
-                lineHeight: '1.8',
-                color: '#374151',
-                wordWrap: 'break-word',
-                overflowWrap: 'break-word'
-              }}
-              className="product-description-content pi-description-content"
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
-          </div>
-          <div
-  style={{
-    marginTop: 20,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  }}
->
-  <Suspense fallback={<div>Loading reviews...</div>}>
-    <ProductReviewList
-      productId={product.id}
-      user={user}
-      onLogin={login}
-      reviews={reviews}
-      setReviews={setReviews}
-    />
-  </Suspense>
-</div>
+      <style>
+        {`
+          .pd-font-scope,
+          .pd-font-scope * {
+            font-family: miui, system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", Helvetica, Arial, sans-serif !important;
+          }
 
+          @keyframes pd-trust-loop {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+        `}
+      </style>
+
+      <div
+        style={{
+          width: '100vw',
+          marginLeft: 'calc(50% - 50vw)',
+          marginRight: 'calc(50% - 50vw)',
+          marginTop: 18,
+          marginBottom: 12,
+          background: trustBarTheme.background,
+          color: '#ffffff',
+          borderTop: `1px solid ${trustBarTheme.border}`,
+          borderBottom: `1px solid ${trustBarTheme.border}`,
+          fontWeight: 700,
+          fontSize: isMobile ? 14 : 17,
+          lineHeight: 1.45,
+          letterSpacing: 0.2,
+          boxShadow: trustBarTheme.shadow,
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ maxWidth: 1440, margin: '0 auto', overflow: 'hidden' }}>
+          <div
+            style={{
+              display: 'flex',
+              width: 'max-content',
+              minWidth: '200%',
+              whiteSpace: 'nowrap',
+              animation: 'pd-trust-loop 26s linear infinite',
+              padding: '18px 0',
+            }}
+          >
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-block', paddingRight: 48 }}>
+              {QUALITY_MARQUEE_LOOP_TEXT}
+            </span>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-block', paddingRight: 48 }} aria-hidden="true">
+              {QUALITY_MARQUEE_LOOP_TEXT}
+            </span>
+          </div>
         </div>
-      )}
+      </div>
       
 
       {/* Related Products */}
@@ -416,28 +871,91 @@ export default function ProductDetails() {
         </Suspense>
       </div>
 
-      {/* Login Modal */}
-      {showLoginModal && (
+      <SignInModal
+        isOpen={showLoginModal}
+        onClose={closeLoginModal}
+        onLogin={() => setShowLoginModal(false)}
+      />
+
+      {activeModal === 'review' && (
         <div
+          role="presentation"
+          onClick={() => setActiveModal(null)}
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0,0,0,0.5)',
+            background: 'rgba(17, 24, 39, 0.5)',
+            zIndex: 10000,
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
-            zIndex: 9999,
+            justifyContent: 'center',
+            padding: 16,
           }}
         >
-          <div style={{ background: '#fff', padding: 20, borderRadius: 8, minWidth: 300 }}>
-            <h3>Login Required</h3>
-            <button onClick={mockLogin} style={{ marginRight: 10 }}>
-              Mock Login
-            </button>
-            <button onClick={closeLoginModal}>Cancel</button>
-          </div>
+          <form
+            onSubmit={handleReviewSubmit}
+            onClick={(event) => event.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: 520,
+              background: '#fff',
+              borderRadius: 14,
+              padding: isMobile ? '16px 14px' : '18px 18px',
+              boxShadow: '0 20px 45px rgba(0, 0, 0, 0.25)',
+              fontFamily: uiFontFamily,
+            }}
+          >
+            <h3 style={{ margin: '0 0 12px', fontSize: 24, color: '#111827' }}>Write a review</h3>
+
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: 6 }}>Name</label>
+            <input
+              type="text"
+              value={reviewDraft.name}
+              onChange={(event) => setReviewDraft((prev) => ({ ...prev, name: event.target.value }))}
+              style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: 10, padding: '10px 12px', marginBottom: 10 }}
+              placeholder="Your name"
+            />
+
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: 6 }}>Email</label>
+            <input
+              type="email"
+              value={reviewDraft.email}
+              onChange={(event) => setReviewDraft((prev) => ({ ...prev, email: event.target.value }))}
+              style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: 10, padding: '10px 12px', marginBottom: 10 }}
+              placeholder="you@example.com"
+            />
+
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: 6 }}>Rating</label>
+            <div style={{ marginBottom: 10 }}>
+              <ReviewStars rating={reviewDraft.rating} onRate={(rating) => setReviewDraft((prev) => ({ ...prev, rating }))} />
+            </div>
+
+            <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: 6 }}>Review</label>
+            <textarea
+              value={reviewDraft.comment}
+              onChange={(event) => setReviewDraft((prev) => ({ ...prev, comment: event.target.value }))}
+              style={{ width: '100%', minHeight: 110, border: '1px solid #d1d5db', borderRadius: 10, padding: '10px 12px', resize: 'vertical' }}
+              placeholder="Share your experience with this product"
+            />
+
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 14 }}>
+              <button
+                type="button"
+                onClick={() => setActiveModal(null)}
+                style={{ border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 999, padding: '9px 14px', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                style={{ border: '1px solid #f59e0b', background: '#f59e0b', color: '#fff', borderRadius: 999, padding: '9px 16px', cursor: 'pointer', fontWeight: 700 }}
+              >
+                Submit Review
+              </button>
+            </div>
+          </form>
         </div>
       )}
-    </>
+    </div>
   );
 }

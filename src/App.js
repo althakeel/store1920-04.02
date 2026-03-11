@@ -100,6 +100,7 @@ const AppContent = () => {
 
   const path = location.pathname;
   const cartIconRef = useRef(null);
+  const stickyHeaderRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const CLIENT_ID = "387544567110-hjjhf6sapjq6k35hgoki34kq5c2b6j51.apps.googleusercontent.com";
@@ -111,6 +112,21 @@ const AppContent = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const setStickyHeaderHeightVar = () => {
+      const headerHeight = Math.round(stickyHeaderRef.current?.getBoundingClientRect().height || 0);
+      document.documentElement.style.setProperty('--app-sticky-header-height', `${headerHeight}px`);
+    };
+
+    setStickyHeaderHeightVar();
+    window.addEventListener('resize', setStickyHeaderHeightVar);
+
+    return () => {
+      window.removeEventListener('resize', setStickyHeaderHeightVar);
+      document.documentElement.style.removeProperty('--app-sticky-header-height');
+    };
+  }, [location.pathname, isMobile]);
 
 
   // Notification effect in AppContent
@@ -282,31 +298,33 @@ const AppContent = () => {
           <AuthProvider>
             <FirebaseAuthSync />
             <>
-              {!isMobile && <Topbar />}
-              {onCheckoutPage ? (
-                <CheckoutNavbar />
-              ) : isMobile ? (
-                <MobileNavbar
-                  openCart={() => setIsCartOpen(true)}
-                  isCartOpen={isCartOpen}
-                  cartIconRef={cartIconRef}
-                />
-              ) : (
-                <NavbarWithMegaMenu
-                  openCart={() => {
-                    if (!isMobile) setIsCartOpen(true);
-                  }}
-                  isCartOpen={isCartOpen}
-                  cartIconRef={cartIconRef}
-                />
-              )}
+              <div ref={stickyHeaderRef} data-sticky-header="true" style={{ position: 'sticky', top: 0, zIndex: 1200, background: '#fff' }}>
+                {!isMobile && <Topbar />}
+                {onCheckoutPage ? (
+                  <CheckoutNavbar />
+                ) : isMobile ? (
+                  <MobileNavbar
+                    openCart={() => setIsCartOpen(true)}
+                    isCartOpen={isCartOpen}
+                    cartIconRef={cartIconRef}
+                  />
+                ) : (
+                  <NavbarWithMegaMenu
+                    openCart={() => {
+                      if (!isMobile) setIsCartOpen(true);
+                    }}
+                    isCartOpen={isCartOpen}
+                    cartIconRef={cartIconRef}
+                  />
+                )}
+              </div>
 
               <div style={{ display: 'flex', position: 'relative' }}>
                 <main
                   style={{
                     width: shouldShowMiniCart ? 'calc(100% - 250px)' : '100%',
                     transition: 'width 0.3s ease',
-                    overflowX: 'hidden',
+                    overflowX: 'clip',
                     background: '#fff',
                   }}
                 >

@@ -109,7 +109,7 @@ useEffect(() => {
           boxShadow: '0 0 10px rgba(0,0,0,0.1)',
           display: 'flex',
           flexDirection: 'column',
-          zIndex: 1000,
+          zIndex: 2002,
         }}
       >
         {/* Top Section */}

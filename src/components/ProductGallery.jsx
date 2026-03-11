@@ -16,11 +16,12 @@ export default function ProductGallery({
   const [mainIndex, setMainIndex] = useState(0);
   const [mainLoading, setMainLoading] = useState(true);
   const modalThumbListRef = useRef(null);
-  const [thumbsLoaded, setThumbsLoaded] = useState(false);
   const galleryRef = useRef(null);
   const thumbnailListRef = useRef(null);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [isScrollLocked, setIsScrollLocked] = useState(true);
+  const [isDesktopThumbRail, setIsDesktopThumbRail] = useState(window.innerWidth > 900);
+  const [hasThumbOverflow, setHasThumbOverflow] = useState(false);
   const isThumbDragging = useRef(false);
   const thumbDragStartX = useRef(0);
   const thumbScrollStart = useRef(0);
@@ -73,13 +74,40 @@ export default function ProductGallery({
     if (modalThumbListRef.current) scrollModalThumbnails(mainIndex);
   }, [mainIndex]);
 
-  // Delay thumbnails appearance for smoother effect
   useEffect(() => {
-    if (!mainLoading) {
-      const timer = setTimeout(() => setThumbsLoaded(true), 300);
-      return () => clearTimeout(timer);
+    const onResize = () => setIsDesktopThumbRail(window.innerWidth > 900);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  useEffect(() => {
+    const thumbEl = thumbnailListRef.current;
+    if (!thumbEl) return undefined;
+
+    const updateThumbOverflow = () => {
+      if (isDesktopThumbRail) {
+        setHasThumbOverflow(thumbEl.scrollHeight - thumbEl.clientHeight > 2);
+        return;
+      }
+      setHasThumbOverflow(thumbEl.scrollWidth - thumbEl.clientWidth > 2);
+    };
+
+    updateThumbOverflow();
+    thumbEl.addEventListener('scroll', updateThumbOverflow);
+    window.addEventListener('resize', updateThumbOverflow);
+
+    let resizeObserver;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(updateThumbOverflow);
+      resizeObserver.observe(thumbEl);
     }
-  }, [mainLoading]);
+
+    return () => {
+      thumbEl.removeEventListener('scroll', updateThumbOverflow);
+      window.removeEventListener('resize', updateThumbOverflow);
+      if (resizeObserver) resizeObserver.disconnect();
+    };
+  }, [images, isDesktopThumbRail]);
 
   // Handle scroll locking on gallery - scroll through images first, then allow page scroll
   useEffect(() => {
@@ -197,11 +225,21 @@ export default function ProductGallery({
 
   const scrollThumbsLeft = e => {
     e.stopPropagation();
-    thumbnailListRef.current?.scrollBy({ left: -120, behavior: 'smooth' });
+    if (!thumbnailListRef.current) return;
+    if (isDesktopThumbRail) {
+      thumbnailListRef.current.scrollBy({ top: -140, behavior: 'smooth' });
+      return;
+    }
+    thumbnailListRef.current.scrollBy({ left: -120, behavior: 'smooth' });
   };
   const scrollThumbsRight = e => {
     e.stopPropagation();
-    thumbnailListRef.current?.scrollBy({ left: 120, behavior: 'smooth' });
+    if (!thumbnailListRef.current) return;
+    if (isDesktopThumbRail) {
+      thumbnailListRef.current.scrollBy({ top: 140, behavior: 'smooth' });
+      return;
+    }
+    thumbnailListRef.current.scrollBy({ left: 120, behavior: 'smooth' });
   };
 
   // Zoom/pan logic
@@ -278,16 +316,17 @@ export default function ProductGallery({
     <>
       <div className="product-gallery-wrapper" ref={galleryRef}>
         {/* Thumbnail strip */}
-        {thumbsLoaded && (
-          <div className="thumbnail-strip">
+        <div className="thumbnail-strip">
+            {hasThumbOverflow && (
             <button
-              className="thumb-scroll thumb-scroll-left"
+              className={`thumb-scroll thumb-scroll-left ${isDesktopThumbRail ? 'thumb-scroll-top' : ''}`}
               onClick={scrollThumbsLeft}
-              aria-label="Scroll thumbnails left"
+              aria-label={isDesktopThumbRail ? 'Scroll thumbnails up' : 'Scroll thumbnails left'}
               type="button"
             >
-              ‹
+              {isDesktopThumbRail ? '↑' : '‹'}
             </button>
+            )}
             <div
               className="thumbnail-list"
               role="list"
@@ -322,16 +361,17 @@ export default function ProductGallery({
                 </button>
               ))}
             </div>
+            {hasThumbOverflow && (
             <button
-              className="thumb-scroll thumb-scroll-right"
+              className={`thumb-scroll thumb-scroll-right ${isDesktopThumbRail ? 'thumb-scroll-bottom' : ''}`}
               onClick={scrollThumbsRight}
-              aria-label="Scroll thumbnails right"
+              aria-label={isDesktopThumbRail ? 'Scroll thumbnails down' : 'Scroll thumbnails right'}
               type="button"
             >
-              ›
+              {isDesktopThumbRail ? '↓' : '›'}
             </button>
+            )}
           </div>
-        )}
 
         {/* Main image wrapper with inline skeleton */}
         <div
@@ -420,7 +460,7 @@ export default function ProductGallery({
           {/* Modal thumbnail strip */}
           <div className="modal-thumbnail-container" onClick={e => e.stopPropagation()}>
             <button className="modal-thumb-scroll arrow-left" onClick={scrollModalThumbsLeft} aria-label="Scroll thumbnails left" type="button">‹</button>
-            <div className="thumbnail-list" role="list">
+            <div className="modal-thumbnail-list" role="list" ref={modalThumbListRef}>
   {visibleImages.map((img, idx) => (
     <button
       key={img.id || idx}

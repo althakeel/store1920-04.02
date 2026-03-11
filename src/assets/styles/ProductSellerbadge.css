@@ -1,0 +1,39 @@
+.psb-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.psb-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.psb-almost_sold {
+  background: #e60023 !important;
+  color: #ffffff !important;
+}
+
+.psb-best_recommended,
+.psb-best_seller,
+.psb-recommended {
+  background: #2f9e44 !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 480px) {
+  .psb-chip {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+}

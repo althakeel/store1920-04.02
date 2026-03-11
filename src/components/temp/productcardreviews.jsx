@@ -58,25 +58,33 @@ export default function ProductCardReviews({ productId, soldCount = 0, hideLoadi
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(rating)) {
-        stars.push(<span key={i} style={{ color: '#ffcc00' }}>★</span>);
+        stars.push(<span key={i} className="pi-star-filled">★</span>);
       } else if (i === Math.ceil(rating) && rating % 1 !== 0) {
-        stars.push(<span key={i} style={{ color: '#ffcc00' }}>☆</span>); // half-star fallback
+        stars.push(<span key={i} className="pi-star-filled">☆</span>); // half-star fallback
       } else {
-        stars.push(<span key={i} style={{ color: '#ccc' }}>★</span>);
+        stars.push(<span key={i} className="pi-star-empty">★</span>);
       }
     }
     return stars;
   };
 
   if (loading && hideLoading) return null;
-  if (loading) return <div>Loading reviews...</div>;
+  if (loading) {
+    return (
+      <div className="pi-rating-meta" aria-live="polite">
+        <strong className="pi-rating-score">0.0</strong>
+        <div className="pi-stars">{renderStars(0)}</div>
+        <span className="pi-rating-count">(0)</span>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#333' }}>
-      <strong>{averageRating.toFixed(1)}</strong>
-      <div>{renderStars(averageRating)}</div>
-      <span style={{ color: '#777' }}>({reviews.length})</span>
-      {soldCount > 0 && <span>{soldCount} sold</span>}
+    <div className="pi-rating-meta" aria-live="polite">
+      <strong className="pi-rating-score">{averageRating.toFixed(1)}</strong>
+      <div className="pi-stars">{renderStars(averageRating)}</div>
+      <span className="pi-rating-count">({reviews.length})</span>
+      {soldCount > 0 && <span className="pi-sold-count">{soldCount} sold</span>}
     </div>
   );
 }

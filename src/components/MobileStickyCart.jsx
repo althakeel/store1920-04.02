@@ -7,6 +7,7 @@ export default function MobileStickyCart({
   maxQuantity,
   product,
   selectedVariation,
+  hasVariantOptions,
   showClearance,
   handleAddToCart
 }) {
@@ -61,6 +62,7 @@ export default function MobileStickyCart({
             product={product}
             selectedVariation={selectedVariation}
             quantity={quantity}
+            hasVariantOptions={hasVariantOptions}
             isClearance={showClearance}
             handleAddToCart={handleAddToCart}
           />

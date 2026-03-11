@@ -2,6 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import '../../assets/styles/ProductVariants.css';
 
 export default function ProductVariants({ variations, selectedVariation, onVariationChange }) {
+  const isCompactAttribute = (name = '') => {
+    const normalized = String(name).toLowerCase();
+    return /(size|height|width|length|qty|quantity|capacity|pack|set)/.test(normalized);
+  };
+
   // Get unique attribute names from all variations
   const attributeNames = useMemo(() => {
     if (!variations || variations.length === 0) return [];
@@ -34,7 +39,7 @@ export default function ProductVariants({ variations, selectedVariation, onVaria
     const init = {};
     attributeNames.forEach(name => {
       const selectedAttr = selectedVariation?.attributes?.find(a => a.name === name);
-      init[name] = selectedAttr?.option || attributeOptions[name]?.[0] || '';
+      init[name] = selectedAttr?.option || '';
     });
     return init;
   });
@@ -44,14 +49,21 @@ export default function ProductVariants({ variations, selectedVariation, onVaria
     const init = {};
     attributeNames.forEach(name => {
       const selectedAttr = selectedVariation?.attributes?.find(a => a.name === name);
-      init[name] = selectedAttr?.option || attributeOptions[name]?.[0] || '';
+      init[name] = selectedAttr?.option || '';
     });
     setSelectedOptions(init);
-  }, [selectedVariation, attributeNames, attributeOptions]);
+  }, [selectedVariation, attributeNames]);
 
   // Find matching variation whenever selectedOptions change and notify parent
   useEffect(() => {
     if (!variations || variations.length === 0) return;
+
+    const allAttributesChosen = attributeNames.every(name => Boolean(selectedOptions[name]));
+
+    if (!allAttributesChosen) {
+      if (selectedVariation) onVariationChange(null);
+      return;
+    }
 
     const matchingVariation = variations.find(variation =>
       attributeNames.every(name => {
@@ -63,6 +75,9 @@ export default function ProductVariants({ variations, selectedVariation, onVaria
     if (matchingVariation && matchingVariation.id !== selectedVariation?.id) {
       onVariationChange(matchingVariation);
     }
+    if (!matchingVariation && selectedVariation) {
+      onVariationChange(null);
+    }
   }, [selectedOptions, variations, attributeNames, onVariationChange, selectedVariation]);
 
   if (!variations || variations.length === 0) return null;
@@ -71,12 +86,24 @@ export default function ProductVariants({ variations, selectedVariation, onVaria
     <div className="variants-section">
       {attributeNames.map(name => (
         <div key={name} className="variant-attribute-group">
-          <div className="variant-title">{name} :</div>
-          <div className="variants-list">
+          {(() => {
+            const compactAttribute = isCompactAttribute(name);
+
+            return (
+              <>
+          <div className="variant-title">
+            <span className="variant-title-name">{name}</span>
+            {!!selectedOptions[name] && (
+              <span className="variant-title-selected">: {selectedOptions[name]}</span>
+            )}
+          </div>
+          <div className={`variants-list ${compactAttribute ? 'variants-list--pill' : 'variants-list--card'}`}>
             {attributeOptions[name].map(option => {
               const optionVariations = variations.filter(v =>
                 v.attributes?.some(attr => attr.name === name && attr.option === option)
               );
+              const optionImage = optionVariations[0]?.image?.src || '';
+              const compactOption = compactAttribute;
 
               const isOutOfStock = optionVariations.every(v => v.is_in_stock === false);
               const isSelected = selectedOptions[name] === option;
@@ -84,7 +111,7 @@ export default function ProductVariants({ variations, selectedVariation, onVaria
               return (
                 <button
                 key={option}
-                className={`variant-btn ${isSelected ? 'selected' : ''} ${isOutOfStock ? 'out-of-stock' : ''}`}
+                className={`variant-btn ${compactOption ? 'variant-btn--pill' : ''} ${isSelected ? 'selected' : ''} ${isOutOfStock ? 'out-of-stock' : ''}`}
                 type="button"
                 disabled={isOutOfStock}
                 aria-pressed={isSelected}
@@ -94,23 +121,28 @@ export default function ProductVariants({ variations, selectedVariation, onVaria
                   }
                 }}
               >
-                <div className="variant-image-wrapper">
-                  {optionVariations[0]?.image?.src && (
+                {!compactOption && (
+                  <div className="variant-image-wrapper">
+                    {optionImage && (
                     <img
-                      src={optionVariations[0].image.src}
+                      src={optionImage}
                       alt={`${name} ${option}`}
                       className="variant-image"
                       loading="lazy"
                     />
-                  )}
-                  {isOutOfStock && <div className="variant-overlay">Out of Stock</div>}
-                </div>
+                    )}
+                    {isOutOfStock && <div className="variant-overlay">Out of Stock</div>}
+                  </div>
+                )}
                 <span className="variant-label">{option}</span>
               </button>
               
               );
             })}
           </div>
+              </>
+            );
+          })()}
         </div>
       ))}
     </div>

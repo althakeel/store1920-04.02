@@ -56,6 +56,7 @@ const [currentMessage, setCurrentMessage] = useState('🚀 Fast Delivery');
   const supportTimeoutRef = useRef(null);
   const userTimeoutRef = useRef(null);
   const langTimeoutRef = useRef(null);
+  const navRef = useRef(null);
 
     const fastDeliveryRef = useRef(null);
   const buttonRef = useRef(null);
@@ -245,6 +246,66 @@ const messages = [
   // const backgroundColor = currentTheme?.navbarBg || '#CCA000';
   const backgroundColor ='#002E46';
 
+  const colorToRgba = (color, alpha) => {
+    if (!color) return `rgba(0, 46, 70, ${alpha})`;
+
+    const trimmed = String(color).trim();
+
+    if (trimmed.startsWith('#')) {
+      const normalized = trimmed.replace('#', '');
+      const full = normalized.length === 3
+        ? normalized.split('').map(ch => ch + ch).join('')
+        : normalized;
+      const value = parseInt(full, 16);
+      const red = (value >> 16) & 255;
+      const green = (value >> 8) & 255;
+      const blue = value & 255;
+      return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    }
+
+    const rgbMatch = trimmed.match(/rgba?\(([^)]+)\)/i);
+    if (rgbMatch) {
+      const parts = rgbMatch[1].split(',').map(p => Number(p.trim()));
+      if (parts.length >= 3 && parts.slice(0, 3).every(Number.isFinite)) {
+        const [red, green, blue] = parts;
+        return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+      }
+    }
+
+    return `rgba(0, 46, 70, ${alpha})`;
+  };
+
+  useEffect(() => {
+    const syncBrandVarsFromNavbar = () => {
+      const resolvedColor = navRef.current
+        ? window.getComputedStyle(navRef.current).backgroundColor
+        : backgroundColor;
+
+      document.documentElement.style.setProperty('--brand-navbar-color', resolvedColor);
+      document.documentElement.style.setProperty('--brand-navbar-soft', colorToRgba(resolvedColor, 0.12));
+      document.documentElement.style.setProperty('--brand-navbar-soft-strong', colorToRgba(resolvedColor, 0.2));
+    };
+
+    syncBrandVarsFromNavbar();
+
+    const observer = navRef.current
+      ? new MutationObserver(() => syncBrandVarsFromNavbar())
+      : null;
+
+    if (observer && navRef.current) {
+      observer.observe(navRef.current, { attributes: true, attributeFilter: ['style', 'class'] });
+    }
+
+    const intervalId = window.setInterval(syncBrandVarsFromNavbar, 1000);
+    window.addEventListener('resize', syncBrandVarsFromNavbar);
+
+    return () => {
+      if (observer) observer.disconnect();
+      window.clearInterval(intervalId);
+      window.removeEventListener('resize', syncBrandVarsFromNavbar);
+    };
+  }, [backgroundColor, currentTheme, isMobile, isCartOpen]);
+
   const sitelogo = LogoMain;
   const isDark = chroma(backgroundColor).luminance() < 0.5;
   const textColor = isDark ? '#fff' : '#fff';
@@ -252,6 +313,7 @@ const messages = [
   return (
     <>
       <nav
+        ref={navRef}
         className="navbar"
         style={{
           width: isMobile ? '100%' : isCartOpen ? 'calc(100% - 250px)' : '100%',

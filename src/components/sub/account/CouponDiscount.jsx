@@ -27,7 +27,7 @@ export default function CouponDiscount({ onApplyCoupon }) {
       formData.append('coupon_code', couponCode.trim());
 
       const response = await axios.post(
-        '/wp-admin/admin-ajax.php?action=check_coupon',
+        'https://db.store1920.com/wp-admin/admin-ajax.php?action=check_coupon',
         formData
       );
 

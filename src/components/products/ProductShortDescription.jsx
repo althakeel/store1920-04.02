@@ -26,11 +26,57 @@ const normalizeShortDescription = (html) => {
   return `<ul class="tick-list">${parts.map((p) => `<li>${p}</li>`).join('')}</ul>`;
 };
 
-export default function ProductShortDescription({ shortDescription, productSlug }) {
-  // Debug log
-  console.log('ProductShortDescription received:', shortDescription);
+const rewriteBackendLinks = (html) => {
+  if (!html || typeof window === 'undefined') return html || '';
 
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+    const links = doc.querySelectorAll('a[href]');
+
+    links.forEach((anchor) => {
+      const rawHref = anchor.getAttribute('href') || '';
+      if (!rawHref) return;
+
+      try {
+        const parsedUrl = new URL(rawHref, window.location.origin);
+        const host = parsedUrl.hostname.toLowerCase();
+        const isBackendHost = host === 'db.store1920.com' || host === 'www.db.store1920.com';
+
+        if (isBackendHost) {
+          anchor.setAttribute('href', `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`);
+        }
+      } catch (error) {
+        // Ignore malformed URLs and keep original href
+      }
+    });
+
+    return doc.body.firstElementChild?.innerHTML || html;
+  } catch (error) {
+    return html;
+  }
+};
+
+const stripHtmlToText = (html) => {
+  if (!html) return '';
+  if (typeof window === 'undefined') {
+    return String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+    return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+  } catch (error) {
+    return String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+};
+
+const SHORT_DESC_LIMIT = 150;
+
+export default function ProductShortDescription({ shortDescription, productSlug }) {
   const [resolvedDescription, setResolvedDescription] = useState(shortDescription || '');
+  const [expanded, setExpanded] = useState(false);
 
   const hasDescription = useMemo(
     () => hasMeaningfulHtml(resolvedDescription),
@@ -38,12 +84,20 @@ export default function ProductShortDescription({ shortDescription, productSlug 
   );
 
   const displayHtml = useMemo(
-    () => normalizeShortDescription(resolvedDescription),
+    () => rewriteBackendLinks(normalizeShortDescription(resolvedDescription)),
     [resolvedDescription]
   );
 
+  const plainText = useMemo(() => stripHtmlToText(displayHtml), [displayHtml]);
+  const shouldTruncate = plainText.length > SHORT_DESC_LIMIT;
+  const previewText = useMemo(() => {
+    if (!shouldTruncate) return plainText;
+    return `${plainText.slice(0, SHORT_DESC_LIMIT).trim()}...`;
+  }, [plainText, shouldTruncate]);
+
   useEffect(() => {
     setResolvedDescription(shortDescription || '');
+    setExpanded(false);
   }, [shortDescription]);
 
   useEffect(() => {
@@ -77,8 +131,21 @@ export default function ProductShortDescription({ shortDescription, productSlug 
 
   return (
     <section className="product-short-description">
-      <h4 className="short-desc-title">Short Description</h4>
-      <div className="wp-editor-content" dangerouslySetInnerHTML={{ __html: displayHtml }} />
+      <h4 className="short-desc-title">Overview</h4>
+      {expanded || !shouldTruncate ? (
+        <div className="wp-editor-content" dangerouslySetInnerHTML={{ __html: displayHtml }} />
+      ) : (
+        <div className="short-desc-preview-wrap">
+          <p className="short-desc-preview">{previewText}</p>
+          <button
+            type="button"
+            className="short-desc-toggle"
+            onClick={() => setExpanded(true)}
+          >
+            Read full description
+          </button>
+        </div>
+      )}
     </section>
   );
 }

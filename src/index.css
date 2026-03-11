@@ -48,6 +48,18 @@ body{
 .thin-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0,0,0,0.5);
 }
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 .phone-wrapper {
   position: relative;
   width: 100%;
