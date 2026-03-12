@@ -174,10 +174,10 @@ import Product199 from "../assets/images/staticproducts/drill-machine/3.webp";
 import Product200 from "../assets/images/staticproducts/drill-machine/4.webp";
 import Product201 from "../assets/images/staticproducts/drill-machine/5.webp";
 import Product202 from "../assets/images/staticproducts/drill-machine/6.webp";
-import Product203 from "../assets/images/staticproducts/drill-machine/7.webp";
-import Product204 from "../assets/images/staticproducts/drill-machine/8.webp";
-import Product205 from "../assets/images/staticproducts/drill-machine/9.webp";
-import Product218 from "../assets/images/staticproducts/drill-machine/12.png";
+// import Product203 from "../assets/images/staticproducts/drill-machine/7.webp";
+// import Product204 from "../assets/images/staticproducts/drill-machine/8.webp";
+// import Product205 from "../assets/images/staticproducts/drill-machine/9.webp";
+// import Product218 from "../assets/images/staticproducts/drill-machine/.png";
 // wrinkle remover
 import Product206 from "../assets/images/staticproducts/wrinkle-remover/1.webp";
 import Product207 from "../assets/images/staticproducts/wrinkle-remover/2.webp";
@@ -2551,14 +2551,14 @@ const staticProducts = [
 
   // ✅ Images same as before
   image: Product197,
-  thumb1: Product218,
+  thumb1: Product198,
   thumb2: Product199,
   thumb3: Product200,
   thumb4: Product201,
   thumb5: Product202,
-  thumb6: Product203,
-  thumb7: Product204,
-  thumb8: Product205,
+  // thumb6: Product203,
+  // thumb7: Product204,
+  // thumb8: Product205,
 
   // 🔹 Bundle / pricing section (top right)
   bundles: [
@@ -2677,7 +2677,7 @@ const staticProducts = [
     ],
   },
 
-  section5image: Product205,
+  section5image: Product201,
 
   // 🔹 Guarantee
   Guaranteetitle: "Worry-Free 1-Year Warranty",
