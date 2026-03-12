@@ -88,7 +88,9 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
     return acc + price * quantity;
   }, 0);
 
-  const subtotal = Math.max(0, itemsTotal - discount - coinDiscount);
+  // Cap total discount to itemsTotal to prevent negative totals
+  const totalDiscount = Math.min(discount + coinDiscount, itemsTotal);
+  const subtotal = Math.max(0, itemsTotal - totalDiscount);
   const totalWithDelivery = Math.max(0, subtotal); // Ensure total never goes below zero
   const amountToSend = Number(totalWithDelivery.toFixed(2));
   const hasCartItems = cartItems.some((item) => (parseInt(item.quantity, 10) || 0) > 0);
