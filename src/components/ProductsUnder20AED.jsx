@@ -95,15 +95,21 @@ const ProductsUnder20AED = () => {
             ? Array.from({ length: 8 }).map((_, i) => <div key={i} className="pu20-card pu20-skeleton" />)
             : products
                 .filter(
-                  (p) =>
-                    p.id &&
-                    p.images &&
-                    Array.isArray(p.images) &&
-                    p.images[0] &&
-                    p.images[0].src &&
-                    p.images[0].src.trim() !== '' &&
-                    p.price &&
-                    parseFloat(p.price) > 0
+                  (p) => {
+                    const hasValidImage =
+                      p.images &&
+                      Array.isArray(p.images) &&
+                      p.images[0] &&
+                      p.images[0].src &&
+                      p.images[0].src.trim() !== '' &&
+                      !/placeholder|noimage|default/i.test(p.images[0].src);
+                    return (
+                      p.id &&
+                      p.price &&
+                      parseFloat(p.price) > 0 &&
+                      hasValidImage
+                    );
+                  }
                 )
           ).map((p) => {
             if (p.id) {
@@ -119,21 +125,23 @@ const ProductsUnder20AED = () => {
                   <div className="pu20-image-wrapper">
                     {!loadedImages[p.id] && <div className="pu20-image-skeleton" />}
                     <img
-                      src={p.images?.[0]?.src || PlaceholderImage}
+                      src={p.images[0].src}
                       alt={decodeHTML(p.name)}
                       className={`pu20-image primary ${loadedImages[p.id] ? 'visible' : 'hidden'}`}
                       loading="lazy"
                       decoding="async"
                       onLoad={() => handleImageLoad(p.id)}
                     />
-                    <img
-                      src={p.images?.[1]?.src || PlaceholderImage}
-                      alt={decodeHTML(p.name)}
-                      className={`pu20-image secondary ${loadedImages[p.id] ? 'visible' : 'hidden'}`}
-                      loading="lazy"
-                      decoding="async"
-                      onLoad={() => handleImageLoad(p.id)}
-                    />
+                    {p.images[1] && p.images[1].src && p.images[1].src.trim() !== '' && (
+                      <img
+                        src={p.images[1].src}
+                        alt={decodeHTML(p.name)}
+                        className={`pu20-image secondary ${loadedImages[p.id] ? 'visible' : 'hidden'}`}
+                        loading="lazy"
+                        decoding="async"
+                        onLoad={() => handleImageLoad(p.id)}
+                      />
+                    )}
                   </div>
 
                   <div className="pu20-info">
