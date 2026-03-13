@@ -8,7 +8,7 @@ import "../assets/styles/OrderSuccess.css";
 
 const formatPrice = (value) => {
   const amount = Number.parseFloat(value);
-  const safeAmount = Number.isFinite(amount) ? amount : 0;
+  const safeAmount = Number.isFinite(amount) ? Math.max(0, amount) : 0;
   return `AED ${safeAmount.toFixed(2)}`;
 };
 
@@ -108,7 +108,7 @@ export default function OrderSuccess() {
         return;
       }
 
-      const value = Number.parseFloat(order.total) || 0;
+      const value = Math.max(0, Number.parseFloat(order.total) || 0);
       const currency = order.currency || 'AED';
       const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
       const numItems = lineItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);

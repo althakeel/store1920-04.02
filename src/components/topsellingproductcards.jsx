@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import '../assets/styles/New.css';
 import { useCart } from '../contexts/CartContext';
 import MiniCart from '../components/MiniCart';
+
 import AddCarticon from '../assets/images/addtocart.png';
 import AddedToCartIcon from '../assets/images/added-cart.png';
 import Adsicon from '../assets/images/summer-saving-coloured.png';
 import IconAED from '../assets/images/Dirham 2.png';
 import ProductCardReviews from '../components/temp/productcardreviews';
+import NoImagePlaceholder from './NoImagePlaceholder';
 
 import { getProductsByCategory, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
 // Set this to your actual 'topselling' category ID from WooCommerce
@@ -340,7 +342,11 @@ useEffect(() => {
                     >
                       {staticBadge}
                       <div className="pcus-image-wrapper1">
-                        <img src={p.images?.[0]?.src || ''} alt={decodeHTML(p.name)} className="pcus-prd-image1 primary-img" loading={imgLoading} decoding={imgDecoding} />
+                        {p.images?.[0]?.src ? (
+                          <img src={p.images[0].src} alt={decodeHTML(p.name)} className="pcus-prd-image1 primary-img" loading={imgLoading} decoding={imgDecoding} />
+                        ) : (
+                          <NoImagePlaceholder alt={decodeHTML(p.name)} className="pcus-prd-image1 primary-img" />
+                        )}
                         {p.images?.[1] && <img src={p.images[1].src} alt={`${decodeHTML(p.name)} - second`} className="pcus-prd-image1 secondary-img" loading="lazy" decoding="async" />}
                         {p.stock_status === 'outofstock' && <div className="pcus-stock-overlay10 out-of-stock">Out of Stock</div>}
                         {typeof p.stock_quantity === 'number' && p.stock_quantity < 50 && <div className="pcus-stock-overlay10 low-stock">Only {p.stock_quantity} left in stock</div>}

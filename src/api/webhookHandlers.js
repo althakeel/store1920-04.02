@@ -343,7 +343,7 @@ export const sendPaymentConfirmationEmail = async (orderId, orderData) => {
           order_id: orderId,
           customer_email: orderData.billing?.email,
           payment_method: orderData.payment_method,
-          amount: orderData.total,
+          amount: Math.max(0, Number.parseFloat(orderData.total) || 0),
           date: new Date().toISOString()
         })
       }

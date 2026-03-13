@@ -196,7 +196,7 @@ const categories = [
     id: 1,
     name: "Electronics & Smart Devices",
     subCategories: [
-      { id: 6535, name: "Mobile Phones", image: MobilePhones, path: "/category/mobile-phones", metaTitle: "Buy Electronics & Smart Devices Online | Store1920", metaDescription: "Shop the latest smartphones, laptops, cameras, and smart home devices at Store1920. Great prices, fast delivery, and trusted quality." },
+      // { id: 6535, name: "Mobile Phones", image: MobilePhones, path: "/category/mobile-phones", metaTitle: "Buy Electronics & Smart Devices Online | Store1920", metaDescription: "Shop the latest smartphones, laptops, cameras, and smart home devices at Store1920. Great prices, fast delivery, and trusted quality." },
       { id: 6536, name: "Phone Accessories", image: PhoneAccessories, path: "/category/phone-accessories" },
       { id: 6537, name: "Phone Parts & Repair", image: PhonePartsRepair, path: "/category/phone-parts-repair" },
       { id: 6538, name: "Smart Electronics & Smart Home", image: SmartHome, path: "/category/smart-electronics-smart-home" },
@@ -469,7 +469,7 @@ const categories = [
 ];
 
 const defaultRightCategories = [
-  { id: 6535, name: "Mobile Phones", image: MobilePhones, path: "/category/mobile-phones", metaTitle: "Buy Electronics & Smart Devices Online | Store1920", metaDescription: "Shop the latest smartphones, laptops, cameras, and smart home devices at Store1920. Great prices, fast delivery, and trusted quality." },
+  // { id: 6535, name: "Mobile Phones", image: MobilePhones, path: "/category/mobile-phones", metaTitle: "Buy Electronics & Smart Devices Online | Store1920", metaDescription: "Shop the latest smartphones, laptops, cameras, and smart home devices at Store1920. Great prices, fast delivery, and trusted quality." },
   { id: 204, name: "Heating & Cooling Appliances", image: HeatingCooling, path: "/category/heating-cooling-appliances" },
   { id: 404, name: "Office Furniture", image: OfficeFurniture, path: "/category/office-furniture" },
   { id: 809, name: "Bracelets & Bangles", image: BraceletsBangles, path: "/category/bracelets-bangles" },
