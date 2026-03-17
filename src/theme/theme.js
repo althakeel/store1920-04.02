@@ -3,7 +3,7 @@
 // import Logo3 from '../assets/images/theme/Orange@6x.png';
 // import Logo4 from '../assets/images/theme/Purple 2@6x.png';
 // import Logo5 from '../assets/images/theme/banner/HAlloween Logo V1.png';
-// import Logo6 from '../assets/images/theme/Asset 1@4x.png';
+import Logo6 from '../assets/images/theme/Asset 1@4x.png';
 import Logo8 from "../assets/images/theme/theme6/logo012.png";
 // import Logo9 from "../assets/images/theme/theme6/main-23-25.webp";
 // import banner1 from '../assets/images/theme/banner/Banners Yellow.webp';
@@ -11,30 +11,30 @@ import Logo8 from "../assets/images/theme/theme6/logo012.png";
 // import banner3 from '../assets/images/theme/banner/Banners-orange-2.webp';
 // import banner4 from '../assets/images/theme/banner/Banners-purple-2.webp';
 // import banner5 from '../assets/images/theme/banner/Banners Halloween 2.webp';
-// import banner6 from '../assets/images/theme/banner/Bannersmorron.webp';
-import Banner10 from "../assets/images/theme/theme6/Main-fab-17.webp";
+import banner6 from '../assets/images/theme/banner/Nexso_Banner.webp';
+import Banner10 from "../assets/images/theme/theme6/Main-17-march.webp";
 
 export const themes = {
   1: {
     logo: Logo8,
-    navbarBg: "#001E55",
+    navbarBg: "#191E3C",
     bannerKey: Banner10,
-    bannerBg: "#001E55",
+    bannerBg: "#191E3C",
     lightningBanner: {
-      backgroundColor: "#001E55",
-      textColor: "#001E55",
+      backgroundColor: "#191E3C",
+      textColor: "#191E3C",
     },
   },
-  // 3: {
-  //   logo: Logo6,
-  //   navbarBg: '#6F1123',
-  //   bannerKey: banner6,
-  //   bannerBg: '#6F1123',
-  //   lightningBanner: {
-  //     backgroundColor: '#FF3300',
-  //     textColor: '#000000'
-  //   }
-  // },
+  2: {
+    logo: Logo6,
+    navbarBg: '#04061B',
+    bannerKey: banner6,
+    bannerBg: '#04061B',
+    lightningBanner: {
+      backgroundColor: '#04061B',
+      textColor: '#000000'
+    }
+  },
   // 4: {
   //   logo: Logo2,
   //   navbarBg: '#37AADA',

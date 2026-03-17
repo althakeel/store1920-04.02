@@ -12,7 +12,7 @@ import CoinWidget from './CoinWidget';
 import { useCart } from '../contexts/CartContext';
 import { useTheme } from '../contexts/ThemeContext'; 
 import { useAuth } from '../contexts/AuthContext';
-import LogoMain from '../assets/images/Logo/logo-fab-17.png';
+import LogoMain from '../assets/images/Logo/logo-march.png';
 
 import Dirham from '../assets/images/language/aed (1).png';
 import Dollor from '../assets/images/language/dollor.png';

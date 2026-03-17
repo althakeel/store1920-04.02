@@ -18,6 +18,7 @@ export const ThemeProvider = ({ children }) => {
   // Default to theme 1 on first load
     return defaultThemeId;
   });
+  const intervalRef = useRef(null);
 
   const currentTheme = themes[currentThemeId];
 
@@ -69,7 +70,29 @@ export const ThemeProvider = ({ children }) => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('load', handleLoad);
     };
-  }, [currentThemeId]); // Add currentThemeId to dependencies
+  }, []); // Add currentThemeId to dependencies
+  // currentThemeId is needed to ensure the latest theme is used when the page is reopened
+useEffect(() => {
+  const themeIds = Object.keys(themes)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  if (themeIds.length <= 1) return;
+
+  intervalRef.current = setInterval(() => {
+    setCurrentThemeId((prevId) => {
+      const currentIndex = themeIds.indexOf(prevId);
+      const nextThemeId = themeIds[(currentIndex + 1) % themeIds.length];
+
+      localStorage.setItem('currentThemeId', nextThemeId.toString());
+      
+      return nextThemeId;
+    });
+  }, 4000); // 5 seconds
+
+  
+  return () => clearInterval(intervalRef.current);
+}, []);
 
   return (
     <ThemeContext.Provider value={{ currentTheme, setCurrentThemeId, currentThemeId }}>

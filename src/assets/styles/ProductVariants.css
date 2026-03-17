@@ -39,7 +39,7 @@
 
 .variant-title-selected {
   font-weight: 700;
-  color: var(--brand-navbar-color, #002E46);
+  color: var(--brand-navbar-color, #0D1026);
 }
 
 .variants-list {
