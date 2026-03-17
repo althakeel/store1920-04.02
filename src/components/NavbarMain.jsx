@@ -244,7 +244,7 @@ const messages = [
   };
 
   // const backgroundColor = currentTheme?.navbarBg || '#CCA000';
-  const backgroundColor ='#002E46';
+  const backgroundColor ='#0D1026';
 
   const colorToRgba = (color, alpha) => {
     if (!color) return `rgba(0, 46, 70, ${alpha})`;
