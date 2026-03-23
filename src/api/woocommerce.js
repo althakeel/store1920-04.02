@@ -212,7 +212,122 @@ const CATEGORY_SLUG_MAP = {
   'rating': 29685,
   'recommended': 29688,
   'season-sale': 29654,
-  'topseliing': 29686
+  'topseliing': 29686,
+
+  // ===== NEW MEGA MENU CATEGORIES =====
+
+// Home & Kitchen
+'kitchen-dining': 29747,
+'kitchen-tools': 29754,
+'kitchen-accessories': 29760,
+'food-storage': 29757,
+// 'drinkware': 0,
+// 'disposable-tableware': 0,
+
+// Home & Living
+'lighting': 29709,
+'storage-organization': 6573, // already exists maybe
+'gift-packaging': 29761,
+
+// Home & Garden
+'power-tools': 29742,
+
+
+// Beauty & Personal Care (NEW SLUGS)
+'hair-care-appliances': 29753,
+'hair-care-tools': 29759,
+'makeup-accessories': 29755,
+// 'bath-accessories': 0,
+
+// Baby & Kids
+'baby-travel-gear': 29745,
+'baby-care': 6634, // already exists maybe
+// 'feeding-accessories': 0,
+
+// Automotive
+'car-care-tools': 29748,
+
+// Electronics
+'computer-accessories': 29756,
+'mobile-accessories': 29728,
+
+// Pet Supplies
+'cat-accessories': 29758,
+// 'dog-care': 0,
+
+// Travel & Luggage
+'travel-accessories': 29752,
+
+// Fashion
+'womens-bags': 29763,
+// 'bags-backpacks': 0,
+
+// Fashion Accessories
+// 'watch-accessories': 0,
+// 'rain-accessories': 0,
+
+// Sports & Fitness
+// 'fitness-accessories': 0,
+
+// Health & Personal Care
+// 'sleep-aids': 0,
+
+// Home & Bathroom
+'bathroom-accessories': 29750,
+
+// Tools & Hardware
+'hand-tools': 6561,
+
+// ===== ERD PRODUCTS CATEGORY MAP =====
+'charger': 29730,
+'cables': 29718,
+'earphone': 29734,
+'earbuds': 29726,
+'power-bank': 29732,
+
+'car-accessories': 29714,
+'car-charger': 29731,
+// ===== MAIN + SUB CATEGORY SLUG MAP =====
+
+// Mobile Accessories
+
+
+
+
+
+
+// Smart Gadgets & Electronics
+'smart-gadgets-electronics': 29705,
+'wireless-earbuds': 29726,
+'headphones': 29768,
+'smart-watches': 29725,
+
+// Computer & Office Accessories
+'computer-office-accessories': 29703,
+'keyboards': 29727,
+'mouse': 29737,
+
+// Gaming Accessories
+'gaming-accessories': 29699,
+'ps5-accessories': 29700,
+'speakers': 29735,
+
+// Cables & Connectivity
+'cables-connectivity': 29717,
+
+// Power & Energy
+'power-energy': 29710,
+'power-banks': 29711,
+'chargers': 29712,
+
+// Audio & Sound
+'audio-sound': 29721,
+
+// Home & Living Electronics
+'home-living-electronics': 29708,
+
+// Shared (used across but single slug)
+'lighting': 29709,
 };
 
 // Clear cache function (useful for debugging)
@@ -486,7 +601,9 @@ export const getProductById = async (id) => {
   const product = await fetchAPI(`/products/${id}?_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle,cod_available`);
   return enrichWithShortDescription(product);
 };
-export const searchProducts = (term) => fetchAPI(`/products?search=${encodeURIComponent(term)}`);
+export const searchProducts = (term) => fetchAPI(
+    `/products?search=${encodeURIComponent(term)}&status=publish&catalog_visibility=visible`
+  );
 export const getProductsByIds = (ids = []) => {
   if (!Array.isArray(ids) || !ids.length) return [];
   return fetchAPI(`/products?include=${ids.join(",")}`);

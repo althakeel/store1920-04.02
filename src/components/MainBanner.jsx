@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/MainBanner.css';
 
-const MainBanner = ({ banners = [], bannerKey }) => {
+const MainBanner = ({ banners = [], bannerKey, themeLink }) => {
   const [currentBanner, setCurrentBanner] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
@@ -25,10 +25,26 @@ const MainBanner = ({ banners = [], bannerKey }) => {
 
   const handleImageLoad = () => {};
 
- const handleClick = () => {
-    // navigate('/season-sale'); git 
-  };
-
+//  const handleClick = () => {
+//     // navigate('/season-sale'); git 
+//   };
+// const handleClick = () => {
+//   console.log("banners:", banners);
+//   if (currentBanner?.link) {
+//     if (currentBanner.link.startsWith("http")) {
+//       window.open(currentBanner.link, "_blank"); // external link
+//     } else {
+//       navigate(currentBanner.link); // internal route
+//     }
+//   }
+// };
+const handleClick = () => {
+  if (currentBanner?.link) {
+    window.open(currentBanner.link, "_blank");
+  } else if (themeLink) {
+    window.open(themeLink, "_blank");
+  }
+};
   if (!currentBanner) {
     return null;
   }
@@ -42,7 +58,7 @@ const MainBanner = ({ banners = [], bannerKey }) => {
       aria-label="Homepage Banner"
       style={{
         backgroundColor: currentBanner.bgColor || 'transparent', // 👈 single background color
-        cursor: currentBanner.category ? 'pointer' : 'default',
+       cursor: currentBanner.link ? 'pointer' : 'default',
       }}
      onClick={handleClick}
     >

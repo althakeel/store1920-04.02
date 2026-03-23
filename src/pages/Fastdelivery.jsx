@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { API_BASE, CONSUMER_KEY, CONSUMER_SECRET } from "../api/woocommerce";
 import Product1 from '../assets/images/staticproducts/pressurewasher/1.webp';
 import Product2 from '../assets/images/staticproducts/airbed/1.webp';
 import Product3 from '../assets/images/staticproducts/paintspray/14.webp';
@@ -220,7 +222,7 @@ const staticProducts = [
     sold: 195,
   },
 
-  ,
+  
    {
     id: "13",
     name: "Quran Magnet Speaker with Built-In  Quran",
@@ -270,9 +272,110 @@ const staticProducts = [
     sold: 195,
   },
 ];
+const SkeletonCard = ({ isMobile }) => {
+  return (
+    <div style={{
+      background: "#fff",
+      borderRadius: "12px",
+      overflow: "hidden",
+      boxShadow: "0 3px 10px rgba(0,0,0,0.08)",
+      animation: "pulse 1.5s infinite"
+    }}>
+      {/* Image */}
+      <div style={{
+        width: "100%",
+        height: isMobile ? "160px" : "220px",
+        background: "#eee"
+      }} />
+
+      {/* Content */}
+      <div style={{ padding: "12px" }}>
+        <div style={{
+          height: "12px",
+          background: "#eee",
+          marginBottom: "8px",
+          borderRadius: "4px"
+        }} />
+
+        <div style={{
+          height: "12px",
+          width: "60%",
+          background: "#eee",
+          marginBottom: "10px",
+          borderRadius: "4px"
+        }} />
+
+        <div style={{
+          height: "14px",
+          width: "40%",
+          background: "#ddd",
+          borderRadius: "4px"
+        }} />
+      </div>
+    </div>
+  );
+};
+//shuffle productcs 
+const shuffleArray = (array) => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
 
 const Fastdelivery = () => {
   const navigate = useNavigate();
+  const [apiProducts, setApiProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+ useEffect(() => {
+  fetchProducts(page);
+}, [page]);
+useEffect(() => {
+  setApiProducts((prev) => shuffleArray(prev));
+}, []);
+
+const fetchProducts = async (currentPage) => {
+  
+  try {
+    const res = await fetch(
+      `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&status=publish&_fields=id,name,price,regular_price,sale_price,images,slug`
+    );
+
+    const data = await res.json();
+
+    const formatted = data
+      .filter((p) => p && p.images && p.images.length > 0)
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        sale_price: p.sale_price || p.price,
+        regular_price: p.regular_price,
+        images: p.images,
+        path: `/product/${p.slug}`,
+        rating: 5,
+        reviews: 0,
+        sold: 0,
+      }));
+
+    if (formatted.length < 10) {
+      setHasMore(false); // no more products
+    }
+
+   setApiProducts((prev) => {
+  const combined = [...prev, ...formatted];
+  return shuffleArray(combined);
+});
+  } catch (err) {
+    console.error("Error fetching products:", err);
+  } finally {
+    setLoading(false);
+  }
+};
   
   const truncateName = (name) => {
     const isMobile = window.innerWidth <= 768;
@@ -281,6 +384,10 @@ const Fastdelivery = () => {
   };
 
   const isMobile = window.innerWidth <= 768;
+const mergedProducts = [
+  ...staticProducts,
+  ...apiProducts
+].filter(p => p && p.images);
 
   return (
     <div style={{ background: '#fff', padding: '10px 0 40px' }}>
@@ -317,25 +424,40 @@ const Fastdelivery = () => {
         gap: isMobile ? '12px' : '20px',
         padding: '0 12px',
       }}>
-        {staticProducts.map((product) => (
-          <div
-            key={product.id}
-            onClick={() => navigate(product.path)}
-            style={{
-              position: 'relative',
-              background: '#fff',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 3px 10px rgba(0,0,0,0.10)',
-              cursor: 'pointer',
-              transition: 'transform 0.25s ease',
-            }}
-            onMouseEnter={(e) => !isMobile && (e.currentTarget.style.transform = 'translateY(-5px)')}
-            onMouseLeave={(e) => !isMobile && (e.currentTarget.style.transform = 'translateY(0)')}
-          >
+       {mergedProducts.length === 0 ? (
+  // 🔹 First Load Skeletons
+  Array.from({ length: 8 }).map((_, index) => (
+    <SkeletonCard key={index} isMobile={isMobile} />
+  ))
+) : (
+  <>
+    {/* 🔹 Real Products */}
+    {mergedProducts.map((product, index) => {
+      if (!product) return null;
 
-            {/* FAST MOVING BADGE */}
-            <div style={{
+      return (
+        <div
+          key={product.id || index}
+          onClick={() => navigate(product.path)}
+          style={{
+            position: 'relative',
+            background: '#fff',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 3px 10px rgba(0,0,0,0.10)',
+            cursor: 'pointer',
+            transition: 'transform 0.25s ease',
+          }}
+          onMouseEnter={(e) =>
+            !isMobile && (e.currentTarget.style.transform = 'translateY(-5px)')
+          }
+          onMouseLeave={(e) =>
+            !isMobile && (e.currentTarget.style.transform = 'translateY(0)')
+          }
+        >
+          {/* 🔸 BADGE */}
+          <div
+            style={{
               position: 'absolute',
               top: '8px',
               right: '8px',
@@ -345,26 +467,33 @@ const Fastdelivery = () => {
               borderRadius: '6px',
               fontSize: isMobile ? '10px' : '12px',
               fontWeight: 'bold',
-              zIndex: 3
-            }}>
-              Fast Moving
-            </div>
+              zIndex: 3,
+            }}
+          >
+            Fast Moving
+          </div>
 
-            {/* IMAGE */}
-            <img
-              src={product.images[0].src}
-              alt={product.name}
+          {/* 🔸 IMAGE */}
+          <img
+            src={product.images?.[0]?.src || "/placeholder.png"}
+            alt={product.name || "Product"}
+            style={{
+              width: '100%',
+              height: isMobile ? '160px' : '220px',
+              objectFit: 'cover',
+              borderBottom: '1px solid #f0f0f0',
+            }}
+          />
+
+          {/* 🔸 CONTENT */}
+          <div
+            style={{
+              padding: isMobile ? '10px' : '14px',
+              paddingBottom: isMobile ? '60px' : '70px',
+            }}
+          >
+            <h3
               style={{
-                width: '100%',
-                height: isMobile ? '160px' : '220px',
-                objectFit: 'cover',
-                borderBottom: '1px solid #f0f0f0',
-              }}
-            />
-
-            {/* CONTENT */}
-            <div style={{ padding: isMobile ? '10px' : '14px', paddingBottom: isMobile ? '60px' : '70px' }}>
-              <h3 style={{
                 fontSize: isMobile ? '12px' : '14px',
                 fontWeight: '600',
                 color: '#333',
@@ -372,34 +501,50 @@ const Fastdelivery = () => {
                 marginBottom: '8px',
                 overflow: 'hidden',
                 lineHeight: '1.4em',
-              }}>
-                {truncateName(product.name)}
-              </h3>
+              }}
+            >
+              {truncateName(product.name || "")}
+            </h3>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ fontWeight: 'bold', color: '#ff6b00', fontSize: isMobile ? '12px' : '14px' }}>
-                  AED {product.sale_price}
-                </span>
-                <span style={{
-                  textDecoration: 'line-through',
-                  color: '#999',
-                  fontSize: isMobile ? '10px' : '12px'
-                }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span
+                style={{
+                  fontWeight: 'bold',
+                  color: '#ff6b00',
+                  fontSize: isMobile ? '12px' : '14px',
+                }}
+              >
+                AED {product.sale_price || product.price}
+              </span>
+
+              {product.regular_price && (
+                <span
+                  style={{
+                    textDecoration: 'line-through',
+                    color: '#999',
+                    fontSize: isMobile ? '10px' : '12px',
+                  }}
+                >
                   AED {product.regular_price}
                 </span>
-              </div>
-
-              <div style={{
-                fontSize: isMobile ? '10px' : '12px',
-                color: '#666',
-                marginTop: '5px'
-              }}>
-                ⭐ {product.rating} ({product.reviews}) • Sold {product.sold}
-              </div>
+              )}
             </div>
 
-            {/* BOTTOM OVERLAY */}
-            <div style={{
+            <div
+              style={{
+                fontSize: isMobile ? '10px' : '12px',
+                color: '#666',
+                marginTop: '5px',
+              }}
+            >
+              ⭐ {product.rating || 0} ({product.reviews || 0}) • Sold{" "}
+              {product.sold || 0}
+            </div>
+          </div>
+
+          {/* 🔸 BOTTOM ACTION */}
+          <div
+            style={{
               position: 'absolute',
               bottom: '10px',
               left: '10px',
@@ -407,39 +552,71 @@ const Fastdelivery = () => {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-            }}>
-              <div style={{
+            }}
+          >
+            <div
+              style={{
                 background: '#ffcc00',
                 padding: '4px 8px',
                 borderRadius: '6px',
                 fontSize: isMobile ? '9px' : '11px',
                 fontWeight: 'bold',
-                color: '#000'
-              }}>
-                Fast Delivery
-              </div>
-
-              <div
-                onClick={(e) => { e.stopPropagation(); navigate(product.path); }}
-                style={{
-                  background: '#ff6b00',
-                  color: '#fff',
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  fontSize: isMobile ? '10px' : '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  transition: '0.3s ease',
-                }}
-              >
-                Buy Now
-              </div>
+                color: '#000',
+              }}
+            >
+              Fast Delivery
             </div>
 
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(product.path);
+              }}
+              style={{
+                background: '#ff6b00',
+                color: '#fff',
+                padding: '6px 10px',
+                borderRadius: '8px',
+                fontSize: isMobile ? '10px' : '12px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}
+            >
+              Buy Now
+            </div>
           </div>
-        ))}
+        </div>
+      );
+    })}
+
+    {/* 🔹 Loading More Skeletons */}
+    {loading &&
+      Array.from({ length: 4 }).map((_, index) => (
+        <SkeletonCard key={`load-${index}`} isMobile={isMobile} />
+      ))}
+  </>
+)}
       </div>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+  {hasMore && (
+    <button
+      onClick={() => setPage(prev => prev + 1)}
+      style={{
+        padding: "10px 20px",
+        background: "#ff6b00",
+        color: "#fff",
+        border: "none",
+        borderRadius: "8px",
+        cursor: "pointer",
+        fontWeight: "bold"
+      }}
+    >
+      Load More
+    </button>
+  )}
+</div>
     </div>
+    
   );
 };
 
