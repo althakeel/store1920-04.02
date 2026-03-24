@@ -28,6 +28,29 @@ import Static15 from '../../../assets/images/megamenu/Main catogory webp/Securit
 import Static16 from '../../../assets/images/megamenu/Main catogory webp/Pet Supplies.webp';
 import Static17 from '../../../assets/images/megamenu/Main catogory webp/Special Occasion & Costumes.webp';
 
+import Static18 from '../../../assets/images/megamenu/Main catogory webp/Home & Kitchen.webp';
+import Static19 from '../../../assets/images/megamenu/Main catogory webp/Home & Living.webp';
+import Static20 from '../../../assets/images/megamenu/Main catogory webp/Home & Garden.webp';
+import Static21 from '../../../assets/images/megamenu/Main catogory webp/Baby & Kids.webp';
+import Static22 from '../../../assets/images/megamenu/Main catogory webp/Automotive.webp';
+import Static23 from '../../../assets/images/megamenu/Main catogory webp/Electronics.webp';
+import Static24 from '../../../assets/images/megamenu/Main catogory webp/Pet Supplies.webp';
+import Static26 from '../../../assets/images/megamenu/Main catogory webp/Travel & Luggage.webp';
+import Static27 from '../../../assets/images/megamenu/Main catogory webp/Fashion.webp';
+import Static28 from '../../../assets/images/megamenu/Main catogory webp/Home & Bathroom.webp';
+import Static29 from '../../../assets/images/megamenu/Main catogory webp/Tools & Hardware.webp';
+import Static30 from '../../../assets/images/megamenu/Main catogory webp/Mobile Accessories.webp';
+import Static31 from '../../../assets/images/megamenu/Main catogory webp/Car Accessories.webp';
+import Static32 from '../../../assets/images/megamenu/Main catogory webp/Smart Gadgets & Electronics.webp';
+import Static33 from '../../../assets/images/megamenu/Main catogory webp/Computer & Office Accessories.webp';
+import Static34 from '../../../assets/images/megamenu/Main catogory webp/Gaming Accessories.webp';
+import Static35 from '../../../assets/images/megamenu/Main catogory webp/Cables & Connectivity.webp';
+import Static36 from '../../../assets/images/megamenu/Main catogory webp/Power & Energy.webp';
+import Static37 from '../../../assets/images/megamenu/Main catogory webp/Audio & Sound.webp';
+import Static38 from '../../../assets/images/megamenu/Main catogory webp/Home & Living Electronics.webp';
+
+
+
 // WooCommerce API credentials
 const API_BASE = "https://db.store1920.com/wp-json/wc/v3";
 const CK = "ck_408d890799d9dc59267dd9b1d12faf2b50f9ccc8";
@@ -50,20 +73,40 @@ const STATIC_CATEGORIES = [
   { id: "498", name: "Electronics & Smart Devices", image: Static1, path: "/category/electronics-smart-devices", slug: "electronics-smart-devices" },
   { id: "6519", name: "Home Appliances", image: Static2, path: "/category/home-appliances", slug: "home-appliances" },
   { id: "6520", name: "Home Improvement & Tools", image: Static3, path: "/category/home-improvement-tools", slug: "home-improvement-tools" },
-  { id: "6521", name: "Furniture & Home Living", image: Static4, path: "/category/furniture-home-living", slug: "furniture-home-living" },
-  { id: "6522", name: "Men's Clothing", image: Static5, path: "/category/mens-clothing", slug: "mens-clothing" },
-  { id: "6523", name: "Women's Clothing", image: Static6, path: "/category/womens-clothing", slug: "womens-clothing" },
-  { id: "6524", name: "Lingerie & Loungewear", image: Static7, path: "/category/lingerie-loungewear", slug: "lingerie-loungewear" },
-  { id: "6525", name: "Accessories", image: Static8, path: "/category/accessories", slug: "accessories" },
+  { id: "6520", name: "Home & Kitchen", image: Static18, path: "/category/home-kitchen", slug: "home-kitchen" },
+  { id: "6520", name: "Home & Living", image: Static19, path: "/category/home-living-electronics", slug: "home-living-electronics" },
+  { id: "6520", name: "Home & Garden", image: Static20, path: "/category/home-garden", slug: "home-garden" },
+  { id: "6520", name: "Baby & Kids", image: Static21, path: "/category/baby-kids", slug: "baby-kids" },
+  { id: "6520", name: "Automotive", image: Static22, path: "/category/automotive", slug: "automotive" },
+  { id: "6520", name: "Electronics", image: Static23, path: "/category/electronics", slug: "electronics" },
+  { id: "6520", name: "Pet Supplies", image: Static24, path: "/category/pet-supplies", slug: "pet-supplies" },
+  { id: "6520", name: "Travel & Luggage", image: Static26, path: "/category/travel-luggage", slug: "travel-luggage" },
+  { id: "6520", name: "Fashion", image: Static27, path: "/category/fashion", slug: "fashion" },
+  { id: "6520", name: "Home & Bathroom", image: Static28, path: "/category/home-bathroom", slug: "home-bathroom" },
+  { id: "6520", name: "Tools & Hardware", image: Static29, path: "/category/hand-tools-power-tools", slug: "hand-tools-power-tools" },
+  { id: "6520", name: "Mobile Accessories", image: Static30, path: "/category/mobile-accessories", slug: "mobile-accessories" },
+  { id: "6520", name: "Car Accessories", image: Static31, path: "/category/car-accessories", slug: "car-accessories" },
+  { id: "6520", name: "Smart Gadgets & Electronics", image: Static32, path: "/category/smart-gadgets-electronics", slug: "smart-gadgets-electronics" },
+  { id: "6520", name: "Computer & Office Accessories", image: Static33, path: "/category/computer-office-accessories", slug: "computer-office-accessories" },
+  { id: "6520", name: "Gaming Accessories", image: Static34, path: "/category/gaming-accessories", slug: "gaming-accessories" },
+  { id: "6520", name: "Cables & Connectivity", image: Static35, path: "/category/cables-connectivity", slug: "cables-connectivity" },
+  { id: "6520", name: "Power & Energy", image: Static36, path: "/category/power-energy", slug: "power-energy" },
+  { id: "6520", name: "Audio & Sound", image: Static37, path: "/category/audio-sound", slug: "audio-sound" },
+  { id: "6520", name: "Home & Living Electronics", image: Static38, path: "/category/home-living-electronics", slug: "home-living-electronics" },
+  // { id: "6521", name: "Furniture & Home Living", image: Static4, path: "/category/furniture-home-living", slug: "furniture-home-living" },
+  // { id: "6522", name: "Men's Clothing", image: Static5, path: "/category/mens-clothing", slug: "mens-clothing" },
+  // { id: "6523", name: "Women's Clothing", image: Static6, path: "/category/womens-clothing", slug: "womens-clothing" },
+  // { id: "6524", name: "Lingerie & Loungewear", image: Static7, path: "/category/lingerie-loungewear", slug: "lingerie-loungewear" },
+  // { id: "6525", name: "Accessories", image: Static8, path: "/category/accessories", slug: "accessories" },
   { id: "6526", name: "Beauty & Personal Care", image: Static9, path: "/category/beauty-personal-care", slug: "beauty-personal-care" },
-  { id: "6527", name: "Shoes & Footwear", image: Static10, path: "/category/shoes-footwear", slug: "shoes-footwear" },
+  // { id: "6527", name: "Shoes & Footwear", image: Static10, path: "/category/shoes-footwear", slug: "shoes-footwear" },
   { id: "6528", name: "Baby, Kids & Maternity", image: Static11, path: "/category/baby-kids-maternity", slug: "baby-kids-maternity" },
-  { id: "6529", name: "Toys, Games & Entertainment", image: Static12, path: "/category/toys-games-entertainment", slug: "toys-games-entertainment" },
-  { id: "6530", name: "Sports, Outdoors & Hobbies", image: Static13, path: "/category/sports-outdoors-hobbies", slug: "sports-outdoors-hobbies" },
+  // { id: "6529", name: "Toys, Games & Entertainment", image: Static12, path: "/category/toys-games-entertainment", slug: "toys-games-entertainment" },
+  // { id: "6530", name: "Sports, Outdoors & Hobbies", image: Static13, path: "/category/sports-outdoors-hobbies", slug: "sports-outdoors-hobbies" },
   { id: "6531", name: "Automotive & Motorcycle", image: Static14, path: "/category/automotive-motorcycle", slug: "automotive-motorcycle" },
-  { id: "6532", name: "Security & Safety", image: Static15, path: "/category/security-safety", slug: "security-safety" },
+  // { id: "6532", name: "Security & Safety", image: Static15, path: "/category/security-safety", slug: "security-safety" },
   { id: "6533", name: "Pet Supplies", image: Static16, path: "/category/pet-supplies", slug: "pet-supplies" },
-  { id: "6591", name: "Special Occasion & Costumes", image: Static17, path: "/category/special-occasion-costumes", slug: "special-occasion-costumes" },
+  // { id: "6591", name: "Special Occasion & Costumes", image: Static17, path: "/category/special-occasion-costumes", slug: "special-occasion-costumes" },
 ];
 
 const CategorySlider = () => {

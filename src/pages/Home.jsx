@@ -49,7 +49,7 @@ const Home = ({ setNavbarColor }) => {
   return (
     <div style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       {/* Main Banner */}
-      <MainBanner banners={banners} bannerKey={currentTheme?.bannerKey} />
+      <MainBanner banners={banners} themeLink={currentTheme.link}  bannerKey={currentTheme?.bannerKey} />
 
       {/* Conditional mobile/desktop sections */}
       {isMobile ? <Shippingmobile /> : <Whychoose />}

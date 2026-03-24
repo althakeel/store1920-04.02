@@ -184,7 +184,70 @@ import CosplayCostumes from '../../assets/images/megamenu/Sub catogory Webp/Cosp
 import DancewearStage from '../../assets/images/megamenu/Sub catogory Webp/Dancewear & Stage Outfits copy.webp';
 import CulturalTraditional from '../../assets/images/megamenu/Sub catogory Webp/Cultural & Traditional Clothing copy.webp';
 import WorkwearUniforms from '../../assets/images/megamenu/Sub catogory Webp/Workwear & Uniforms copy.webp';
+// new categories and their images can be added here following the same pattern
+// ===== Sheet Categories Images (Dummy for now) =====
+import KitchenDining from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
+import KitchenTools from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
+import FoodStorage from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
+import Drinkware from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
+import DisposableTableware from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
 
+import LightingImg from '../../assets/images/megamenu/Sub catogory Webp/Lighting & Light Bulbs copy.webp';
+import StorageOrgImg from '../../assets/images/megamenu/Sub catogory Webp/Storage & Organization copy.webp';
+
+import PowerToolsImg from '../../assets/images/megamenu/Sub catogory Webp/Hand Tools & Power Tools copy.webp';
+
+import HairCareAppliancesImg from '../../assets/images/megamenu/Sub catogory Webp/Personal Care Appliances copy.webp';
+import MakeupAccessoriesImg from '../../assets/images/megamenu/Sub catogory Webp/Makeup & Cosmetics copy.webp';
+
+import BabyCareImg from '../../assets/images/megamenu/Sub catogory Webp/Baby Care & Hygiene copy.webp';
+
+import CarToolsImg from '../../assets/images/megamenu/Sub catogory Webp/Car Repair Tools copy.webp';
+
+import ComputerAccessoriesImg from '../../assets/images/megamenu/Sub catogory Webp/Computer Components & Desktops copy.webp';
+import MobileAccessoriesImg from '../../assets/images/megamenu/Sub catogory Webp/Phone Accessories copy.webp';
+
+import PetImg from '../../assets/images/megamenu/Sub catogory Webp/Cats copy.webp';
+
+import TravelImg from '../../assets/images/megamenu/Sub catogory Webp/Bags (Handbags, Shoulder Bags, Travel Bags, Wallets, Backpacks, Multi-purpose Bags) copy.webp';
+
+import FashionBagImg from '../../assets/images/megamenu/Sub catogory Webp/Bags (Handbags, Shoulder Bags, Travel Bags, Wallets, Backpacks, Multi-purpose Bags) copy.webp';
+
+import WatchImg from '../../assets/images/megamenu/Sub catogory Webp/Jewelry & Watches copy.webp';
+
+import FitnessImg from '../../assets/images/megamenu/Sub catogory Webp/Strength Training & Gym Equipment copy.webp';
+
+import SleepAidImg from '../../assets/images/megamenu/Sub catogory Webp/Massage & Relaxation copy.webp';
+
+import BathroomImg from '../../assets/images/megamenu/Sub catogory Webp/Bathroom Fixtures & Accessories copy.webp';
+
+import HandToolsImg from '../../assets/images/megamenu/Sub catogory Webp/Hardware Tools & Fasteners copy.webp';
+// new categories and their images can be added here following the same pattern
+
+import Charger from '../../assets/images/megamenu/Sub catogory Webp/charger.webp';
+import Cables from '../../assets/images/megamenu/Sub catogory Webp/cables.webp';
+import Earphone from '../../assets/images/megamenu/Sub catogory Webp/earphone.webp';
+import Earbuds from '../../assets/images/megamenu/Sub catogory Webp/earbuds.webp';
+import Power_Bank from '../../assets/images/megamenu/Sub catogory Webp/power-bank.webp';
+
+import Car_Charger from '../../assets/images/megamenu/Sub catogory Webp/car-charger.webp';
+
+import Wireless_Earbuds from '../../assets/images/megamenu/Sub catogory Webp/wireless-earbuds.webp';
+
+import Headphones from '../../assets/images/megamenu/Sub catogory Webp/headphones.webp';
+
+import Smart_Watches from '../../assets/images/megamenu/Sub catogory Webp/smart-watches.webp';
+
+import Car_Accessories from '../../assets/images/megamenu/Sub catogory Webp/car-accessories.webp';
+
+import Chargers from '../../assets/images/megamenu/Sub catogory Webp/charger.webp';
+
+import Keyboards from '../../assets/images/megamenu/Sub catogory Webp/keyboards.webp';
+import Mouse from '../../assets/images/megamenu/Sub catogory Webp/mouse.webp';
+import PS5_Accessories from '../../assets/images/megamenu/Sub catogory Webp/ps5-accessories.webp';
+import Car_Accessorie from '../../assets/images/megamenu/Sub catogory Webp/car-accessories.webp';
+import Power_Banks from '../../assets/images/megamenu/Sub catogory Webp/power-bank.webp';
+import Speakers from '../../assets/images/megamenu/Sub catogory Webp/speakers.webp';
 
 
 
@@ -327,7 +390,8 @@ const categories = [
       { id: 809, name: "Bracelets & Bangles", image: BraceletsBangles, path: "/category/bracelets-bangles" },
       { id: 810, name: "Men's Watches", image: MensWatches, path: "/category/mens-watches" },
       { id: 811, name: "Women's Watches", image: WomensWatches, path: "/category/womens-watches" },
-      { id: 812, name: "Body Jewelry", image: BodyJewelry, path: "/category/body-jewelry" }
+      { id: 812, name: "Body Jewelry", image: BodyJewelry, path: "/category/body-jewelry" },
+    
     ]
   },
 
@@ -462,6 +526,253 @@ const categories = [
       { id: 1702, name: "Dancewear & Stage Outfits", image: DancewearStage, path: "/category/dancewear-stage" },
       { id: 1703, name: "Cultural & Traditional Clothing", image: CulturalTraditional, path: "/category/cultural-traditional" },
       { id: 1704, name: "Workwear & Uniforms", image: WorkwearUniforms, path: "/category/workwear-uniforms" }
+    ]
+  }
+  ,// ===== SHEET DATA START =====
+
+{
+  id: 200,
+  name: "Home & Kitchen",
+  //slug /home-kitchen
+  subCategories: [
+    { id: 2001, name: "Kitchen & Dining", image: KitchenDining, path: "/category/kitchen-dining" },
+    { id: 2002, name: "Kitchen Tools", image: KitchenTools, path: "/category/kitchen-tools" },
+    { id: 2003, name: "Kitchen Accessories", image: KitchenTools, path: "/category/kitchen-accessories" },
+    { id: 2004, name: "Food Storage", image: FoodStorage, path: "/category/food-storage" },
+    // { id: 2005, name: "Drinkware", image: Drinkware, path: "/category/drinkware" },
+    // { id: 2006, name: "Disposable Tableware", image: DisposableTableware, path: "/category/disposable-tableware" },
+  ]
+},
+
+{
+  id: 201,
+  //sluig /home-living-electronics
+  name: "Home & Living",
+  subCategories: [
+    { id: 2011, name: "Lighting", image: LightingImg, path: "/category/lighting" },
+    { id: 2012, name: "Storage & Organization", image: StorageOrgImg, path: "/category/storage-organization" },
+    { id: 2013, name: "Gift & Packaging", image: StorageOrgImg, path: "/category/gift-packaging" },
+  ]
+},
+
+{
+  id: 202,
+  name: "Home & Garden",
+  //slug /home-garden
+  subCategories: [
+    { id: 29747, name: "Power Tools", image: PowerToolsImg, path: "/category/power-tools" },
+  ]
+},
+
+{
+  id: 203,
+  name: "Beauty & Personal Care",
+  //slug /beauty-personal-care
+  subCategories: [
+    { id: 2031, name: "Hair Care Appliances", image: HairCareAppliancesImg, path: "/category/hair-care-appliances" },
+    { id: 2032, name: "Hair Care Tools", image: HairCareAppliancesImg, path: "/category/hair-care-tools" },
+    { id: 2033, name: "Makeup Accessories", image: MakeupAccessoriesImg, path: "/category/makeup-accessories" },
+    // { id: 2034, name: "Bath Accessories", image: MakeupAccessoriesImg, path: "/category/bath-accessories" },
+  ]
+},
+
+{
+  id: 204,
+  name: "Baby & Kids",
+  //slug /baby-kids
+  subCategories: [
+    { id: 2041, name: "Baby Travel Gear", image: BabyCareImg, path: "/category/baby-travel-gear" },
+    { id: 2042, name: "Baby Care", image: BabyCareImg, path: "/category/baby-care" },
+    // { id: 2043, name: "Feeding Accessories", image: BabyCareImg, path: "/category/feeding-accessories" },
+  ]
+},
+
+{
+  id: 205,
+  name: "Automotive",
+  //slug /automotive
+  subCategories: [
+    { id: 2051, name: "Car Care Tools", image: CarToolsImg, path: "/category/car-care-tools" },
+  ]
+},
+
+{
+  id: 206,
+  name: "Electronics",
+  //slug /electronics
+  subCategories: [
+    { id: 2061, name: "Computer Accessories", image: ComputerAccessoriesImg, path: "/category/computer-accessories" },
+    { id: 2062, name: "Mobile Accessories", image: MobileAccessoriesImg, path: "/category/mobile-accessories" },
+    
+  ]
+},
+
+{
+  id: 207,
+  name: "Pet Supplies",
+  //slug /pet-supplies
+  subCategories: [
+    { id: 2071, name: "Cat Accessories", image: PetImg, path: "/category/cat-accessories" },
+    // { id: 2072, name: "Dog Care", image: PetImg, path: "/category/dog-care" },
+  ]
+},
+
+{
+  id: 208,
+  name: "Travel & Luggage",
+  //slug /travel-luggage
+  subCategories: [
+    { id: 2081, name: "Travel Accessories", image: TravelImg, path: "/category/travel-accessories" },
+  ]
+},
+
+{
+  id: 209,
+  name: "Fashion",
+  //slug /fashion
+  subCategories: [
+    { id: 2091, name: "Women's Bags", image: FashionBagImg, path: "/category/womens-bags" },
+    { id: 2092, name: "Bags & Backpacks", image: FashionBagImg, path: "/category/bags-backpacks" },
+  ]
+},
+
+// {
+//   id: 210,
+//   name: "Fashion Accessories",
+//   subCategories: [
+//     { id: 2101, name: "Watch Accessories", image: WatchImg, path: "/category/watch-accessories" },
+//     { id: 2102, name: "Rain Accessories", image: WatchImg, path: "/category/rain-accessories" },
+//   ]
+// },
+
+// {
+//   id: 211,
+//   name: "Sports & Fitness",
+//   subCategories: [
+//     { id: 2111, name: "Fitness Accessories", image: FitnessImg, path: "/category/fitness-accessories" },
+//   ]
+// },
+
+// {
+//   id: 212,
+//   name: "Health & Personal Care",
+//   //slug /health-personal-care
+//   subCategories: [
+//     { id: 2121, name: "Sleep Aids", image: SleepAidImg, path: "/category/sleep-aids" },
+//   ]
+// },
+
+{
+  id: 213,
+  name: "Home & Bathroom",
+  //slug /home-bathroom
+  subCategories: [
+    { id: 2131, name: "Bathroom Accessories", image: BathroomImg, path: "/category/bathroom-accessories" },
+  ]
+},
+
+{
+  id: 214,
+  name: "Tools & Hardware",
+  //slug /hand-tools-power-tools
+  subCategories: [
+    { id: 2141, name: "Hand Tools", image: HandToolsImg, path: "/category/hand-tools" },
+  ]
+},
+
+// ===== SHEET DATA END =====
+// ==== ERD Sheet ====
+{
+  id: 300,
+  name: "Mobile Accessories",
+  //slug /mobile-accessories
+  subCategories: [
+    { id: 3001, name: "Charger",image: Charger, path: "/category/charger" },
+    { id: 3002, name: "Cables",image: Cables, path: "/category/cables" },
+    { id: 3003, name: "Earphone",image: Earphone, path: "/category/earphone" },
+    { id: 3004, name: "Earbuds", image: Earbuds, path: "/category/earbuds" },
+    { id: 3005, name: "Power Bank", image: Power_Bank, path: "/category/power-bank" },
+  ]
+},
+{
+  id: 301,
+  name: "Car Accessories",
+  //slug /car-accessories
+  subCategories: [
+    { id: 3011, name: "Car Charger", image: Car_Charger, path: "/category/car-charger" },
+    
+  ]
+},
+//new sheet
+{  id: 302,
+    name: "Smart Gadgets & Electronics",
+    //slug /smart-gadgets-electronics
+    subCategories: [
+      { name: "Wireless Earbuds",image: Wireless_Earbuds, path: "/category/wireless-earbuds" },
+      { name: "Headphones", image: Headphones, path: "/category/headphones" },
+      { name: "Smart Watches", image: Smart_Watches, path: "/category/smart-watches" },
+      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+      { name: "Lighting",image: Lighting, path: "/category/lighting" },
+      { name: "Chargers", image: Charger, path: "/category/chargers" },
+    ]
+  },
+  {  id: 303,
+    name: "Computer & Office Accessories",
+    //slug /computer-office-accessories
+    subCategories: [
+      { name: "Keyboards", image: Keyboards, path: "/category/keyboards" },
+      { name: "Mouse", image: Mouse, path: "/category/mouse" },
+      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+    ]
+  },
+  {  id: 304,
+    name: "Gaming Accessories",
+    //slug /gaming-accessories
+    subCategories: [
+      { name: "PS5 Accessories",image: PS5_Accessories, path: "/category/ps5-accessories" },
+      { name: "Keyboards", image: Keyboards, path: "/category/keyboards" },
+      { name: "Speakers", image: Speakers, path: "/category/speakers" },
+    ]
+  },
+  {  id: 305,
+    name: "Car Accessories",
+    //slug /car-accessories
+    subCategories: [
+      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+    ]
+  },
+  {  id: 306,
+    name: "Cables & Connectivity",
+    //slug /cables-connectivity
+    subCategories: [
+      { name: "Cables", image: Cables, path: "/category/cables" },
+      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+    ]
+  },
+  {  id: 307,
+    name: "Power & Energy",
+    //slug /power-energy
+    subCategories: [
+      { name: "Power Banks", image: Power_Bank, path: "/category/power-banks" },
+      { name: "Chargers", image: Charger, path: "/category/chargers" },
+      { name: "Cables", image: Cables, path: "/category/cables" },
+    ]
+  },
+  {  id: 308,
+    name: "Audio & Sound",
+    //slug /audio-sound
+    subCategories: [
+      { name: "Speakers", image: Speakers, path: "/category/speakers" },
+      { name: "Headphones", image: Headphones, path: "/category/headphones" },
+
+      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+    ]
+  },
+  {  id: 309,
+    name: "Home & Living Electronics",
+    //slug /home-living-electronics
+    subCategories: [
+      { name: "Lighting", image: Lighting, path: "/category/lighting" },
     ]
   }
 
