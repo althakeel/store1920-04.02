@@ -29,7 +29,7 @@ export const themes = {
     logo: Logo6,
     navbarBg: '#04061B',
     bannerKey: banner6,
-    link: "http://localhost:3000/search?q=nexso",
+    link: "https://www.store1920.com/search?q=nexso",
     bannerBg: '#04061B',
     lightningBanner: {
       backgroundColor: '#04061B',
