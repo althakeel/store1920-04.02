@@ -322,11 +322,11 @@ const ProductCategory = () => {
     { name: 'Gaming Accessories', id: 6542 },
     { name: 'Power & Energy', id: 29710 },
     { name: 'Audio & Sound', id: 29721 },
-    { name: 'Home & Living Electronics', id: 29708 },
+    // { name: 'Home & Living Electronics', id: 29708 },
     { name: 'Electronics & Smart Devices', id: 498 },
     { name: 'Beauty & Personal Care', id: 6526 },
     { name: 'Baby, Kids & Maternity', id: 6528 },
-    { name: 'Automotive & Motorcycle', id: 6531 },
+    // { name: 'Automotive & Motorcycle', id: 6531 },
     // { name: 'Women\'s Clothing', id: 6523 },
     // { name: 'Shoes & Footwear', id: 6527 },
   

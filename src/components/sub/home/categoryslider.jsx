@@ -49,8 +49,6 @@ import Static36 from '../../../assets/images/megamenu/Main catogory webp/Power &
 import Static37 from '../../../assets/images/megamenu/Main catogory webp/Audio & Sound.webp';
 import Static38 from '../../../assets/images/megamenu/Main catogory webp/Home & Living Electronics.webp';
 
-
-
 // WooCommerce API credentials
 const API_BASE = "https://db.store1920.com/wp-json/wc/v3";
 const CK = "ck_408d890799d9dc59267dd9b1d12faf2b50f9ccc8";
@@ -73,26 +71,26 @@ const STATIC_CATEGORIES = [
   { id: "498", name: "Electronics & Smart Devices", image: Static1, path: "/category/electronics-smart-devices", slug: "electronics-smart-devices" },
   { id: "6519", name: "Home Appliances", image: Static2, path: "/category/home-appliances", slug: "home-appliances" },
   { id: "6520", name: "Home Improvement & Tools", image: Static3, path: "/category/home-improvement-tools", slug: "home-improvement-tools" },
-  { id: "6520", name: "Home & Kitchen", image: Static18, path: "/category/home-kitchen", slug: "home-kitchen" },
-  { id: "6520", name: "Home & Living", image: Static19, path: "/category/home-living-electronics", slug: "home-living-electronics" },
-  { id: "6520", name: "Home & Garden", image: Static20, path: "/category/home-garden", slug: "home-garden" },
-  { id: "6520", name: "Baby & Kids", image: Static21, path: "/category/baby-kids", slug: "baby-kids" },
-  { id: "6520", name: "Automotive", image: Static22, path: "/category/automotive", slug: "automotive" },
-  { id: "6520", name: "Electronics", image: Static23, path: "/category/electronics", slug: "electronics" },
-  { id: "6520", name: "Pet Supplies", image: Static24, path: "/category/pet-supplies", slug: "pet-supplies" },
-  { id: "6520", name: "Travel & Luggage", image: Static26, path: "/category/travel-luggage", slug: "travel-luggage" },
-  { id: "6520", name: "Fashion", image: Static27, path: "/category/fashion", slug: "fashion" },
-  { id: "6520", name: "Home & Bathroom", image: Static28, path: "/category/home-bathroom", slug: "home-bathroom" },
-  { id: "6520", name: "Tools & Hardware", image: Static29, path: "/category/hand-tools-power-tools", slug: "hand-tools-power-tools" },
-  { id: "6520", name: "Mobile Accessories", image: Static30, path: "/category/mobile-accessories", slug: "mobile-accessories" },
-  { id: "6520", name: "Car Accessories", image: Static31, path: "/category/car-accessories", slug: "car-accessories" },
-  { id: "6520", name: "Smart Gadgets & Electronics", image: Static32, path: "/category/smart-gadgets-electronics", slug: "smart-gadgets-electronics" },
-  { id: "6520", name: "Computer & Office Accessories", image: Static33, path: "/category/computer-office-accessories", slug: "computer-office-accessories" },
-  { id: "6520", name: "Gaming Accessories", image: Static34, path: "/category/gaming-accessories", slug: "gaming-accessories" },
-  { id: "6520", name: "Cables & Connectivity", image: Static35, path: "/category/cables-connectivity", slug: "cables-connectivity" },
-  { id: "6520", name: "Power & Energy", image: Static36, path: "/category/power-energy", slug: "power-energy" },
-  { id: "6520", name: "Audio & Sound", image: Static37, path: "/category/audio-sound", slug: "audio-sound" },
-  { id: "6520", name: "Home & Living Electronics", image: Static38, path: "/category/home-living-electronics", slug: "home-living-electronics" },
+  { id: "6534", name: "Home & Kitchen", image: Static18, path: "/category/home-kitchen", slug: "home-kitchen" },
+  { id: "6535", name: "Home & Living", image: Static19, path: "/category/home-living-electronics", slug: "home-living-electronics" },
+  { id: "6536", name: "Home & Garden", image: Static20, path: "/category/home-garden", slug: "home-garden" },
+  { id: "6537", name: "Baby & Kids", image: Static21, path: "/category/baby-kids", slug: "baby-kids" },
+  { id: "6538", name: "Automotive", image: Static22, path: "/category/automotive", slug: "automotive" },
+  { id: "6539", name: "Electronics", image: Static23, path: "/category/electronics", slug: "electronics" },
+  { id: "6540", name: "Pet Supplies", image: Static24, path: "/category/pet-supplies", slug: "pet-supplies" },
+  { id: "6541", name: "Travel & Luggage", image: Static26, path: "/category/travel-luggage", slug: "travel-luggage" },
+  { id: "6542", name: "Fashion", image: Static27, path: "/category/fashion", slug: "fashion" },
+  { id: "6543", name: "Home & Bathroom", image: Static28, path: "/category/home-bathroom", slug: "home-bathroom" },
+  { id: "6544", name: "Tools & Hardware", image: Static29, path: "/category/hand-tools-power-tools", slug: "hand-tools-power-tools" },
+  { id: "6545", name: "Mobile Accessories", image: Static30, path: "/category/mobile-accessories", slug: "mobile-accessories" },
+  { id: "6546", name: "Car Accessories", image: Static31, path: "/category/car-accessories", slug: "car-accessories" },
+  { id: "6547", name: "Smart Gadgets & Electronics", image: Static32, path: "/category/smart-gadgets-electronics", slug: "smart-gadgets-electronics" },
+  { id: "6548", name: "Computer & Office Accessories", image: Static33, path: "/category/computer-office-accessories", slug: "computer-office-accessories" },
+  { id: "6549", name: "Gaming Accessories", image: Static34, path: "/category/gaming-accessories", slug: "gaming-accessories" },
+  { id: "6550", name: "Cables & Connectivity", image: Static35, path: "/category/cables-connectivity", slug: "cables-connectivity" },
+  { id: "6551", name: "Power & Energy", image: Static36, path: "/category/power-energy", slug: "power-energy" },
+  { id: "6552", name: "Audio & Sound", image: Static37, path: "/category/audio-sound", slug: "audio-sound" },
+  // { id: "6553", name: "Home & Living Electronics", image: Static38, path: "/category/home-living-electronics", slug: "home-living-electronics" },
   // { id: "6521", name: "Furniture & Home Living", image: Static4, path: "/category/furniture-home-living", slug: "furniture-home-living" },
   // { id: "6522", name: "Men's Clothing", image: Static5, path: "/category/mens-clothing", slug: "mens-clothing" },
   // { id: "6523", name: "Women's Clothing", image: Static6, path: "/category/womens-clothing", slug: "womens-clothing" },
@@ -105,7 +103,7 @@ const STATIC_CATEGORIES = [
   // { id: "6530", name: "Sports, Outdoors & Hobbies", image: Static13, path: "/category/sports-outdoors-hobbies", slug: "sports-outdoors-hobbies" },
   { id: "6531", name: "Automotive & Motorcycle", image: Static14, path: "/category/automotive-motorcycle", slug: "automotive-motorcycle" },
   // { id: "6532", name: "Security & Safety", image: Static15, path: "/category/security-safety", slug: "security-safety" },
-  { id: "6533", name: "Pet Supplies", image: Static16, path: "/category/pet-supplies", slug: "pet-supplies" },
+  // { id: "6533", name: "Pet Supplies", image: Static16, path: "/category/pet-supplies", slug: "pet-supplies" },
   // { id: "6591", name: "Special Occasion & Costumes", image: Static17, path: "/category/special-occasion-costumes", slug: "special-occasion-costumes" },
 ];
 
@@ -214,7 +212,7 @@ const CategorySlider = () => {
     autoplaySpeed: 3500,
     swipeToSlide: true,
     arrows: false,
-    lazyLoad: "ondemand",
+   lazyLoad: "progressive",
     pauseOnHover: true, // Better UX
     responsive: [
       { breakpoint: 1536, settings: { slidesToShow: Math.min(7, categories.length) } },
@@ -236,13 +234,13 @@ const CategorySlider = () => {
       <button className="custom-next-arrow" onClick={goNext}>{">"}</button>
 
       <Slider {...settings} ref={sliderRef}>
-        {categories.map((cat) => (
-          <CategorySlide 
-            key={cat.id} 
-            category={cat} 
-            decodeHTML={decodeHTML}
-          />
-        ))}
+        {categories.map((cat, index) => (
+        <CategorySlide 
+          key={`${cat.id}-${index}`} 
+          category={cat} 
+          decodeHTML={decodeHTML}
+        />
+          ))}
       </Slider>
     </section>
   );
@@ -273,13 +271,18 @@ const CategorySlide = React.memo(({ category, decodeHTML }) => {
         style={{ textDecoration: "none", color: "#333" }}
       >
         <div style={{ position: "relative", width: "100%" }}>
-          <img
-            src={category.image?.src || category.image || placeholderImg}
-            alt={decodedName}
-            className="category-image"
-            loading="lazy" // Lazy loading for better performance
-            decoding="async" // Async decoding
-          />
+        <div className="category-image-wrapper">
+                <img
+                  src={
+                    typeof category.image === "string"
+                      ? category.image
+                      : category.image?.src || placeholderImg
+                  }
+                  alt={decodedName}
+                  className="category-image"
+                  onError={(e) => (e.target.src = placeholderImg)}
+                />
+          </div>
           {category.megaSale && <div className="mega-sale-badge">Mega Sale</div>}
           {category.isDeal && <ProgressBar totalDuration={category.dealTime} />}
         </div>
