@@ -107,27 +107,49 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  position: relative;
   /* padding: 0 15px; */
 }
 
 /* Image */
-.banner-inner img {
+.banner-image {
   width: 100%;
   height: auto;
   display: block;
-  transition: opacity 0.9s ease-in-out;
 }
 
-.banner-inner img.fade-out {
-  opacity: 0;
+.banner-image-current {
+  position: relative;
+  z-index: 1;
 }
 
-.banner-inner img.fade-in {
+.banner-image-previous {
+  left: 0;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
+.banner-image.is-entering,
+.banner-image.is-leaving,
+.banner-image.is-visible {
+  transition: opacity 0.45s ease-in-out;
+}
+
+.banner-image.is-entering {
   opacity: 1;
 }
 
+.banner-image.is-visible {
+  opacity: 1;
+}
+
+.banner-image.is-leaving {
+  opacity: 0;
+}
+
 /* Optional hover zoom */
-.banner-inner img:hover {
+.banner-image:hover {
   transform: scale(1.01);
 }
 

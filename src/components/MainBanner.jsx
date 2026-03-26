@@ -1,86 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import '../assets/styles/MainBanner.css';
 
-const MainBanner = ({ banners = [], bannerKey, themeLink }) => {
+const MainBanner = ({ banners = [], themeLink }) => {
   const [currentBanner, setCurrentBanner] = useState(null);
+  const [previousBanner, setPreviousBanner] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [fade, setFade] = useState(false);
-  const navigate = useNavigate();
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-const [nextBanner, setNextBanner] = useState(null);
-const [isLoading, setIsLoading] = useState(false);
-  
-useEffect(() => {
-  if (!banners || banners.length === 0) return;
-
-  const banner = banners[0];
-
-  const img = new Image();
-  setIsLoading(true);
-
-  img.src = banner.url;
-
-  img.onload = () => {
-    setCurrentBanner(banner);
-    setIsLoading(false);
-  };
-
-}, [banners]);
-  // Update mobile flag on resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  useEffect(() => {
-  setFade(false);
 
-  const timer = setTimeout(() => {
-    setCurrentBanner(banners[0]);
-    setFade(true);
-  }, 100);
-
-  return () => clearTimeout(timer);
-
-}, [banners]);
-
-  // Use the first banner from the static banners array
   useEffect(() => {
     if (!banners || banners.length === 0) {
       setCurrentBanner(null);
+      setPreviousBanner(null);
+      setIsTransitioning(false);
       return;
     }
-  setCurrentBanner(banners[0]);
-  }, [banners]);
 
-  const handleImageLoad = () => {};
+    const nextBanner = banners[0];
+    const resolvedUrl = isMobile ? nextBanner.mobileUrl || nextBanner.url : nextBanner.url;
+    const bannerToShow = { ...nextBanner, resolvedUrl };
 
-//  const handleClick = () => {
-//     // navigate('/season-sale'); git 
-//   };
-// const handleClick = () => {
-//   console.log("banners:", banners);
-//   if (currentBanner?.link) {
-//     if (currentBanner.link.startsWith("http")) {
-//       window.open(currentBanner.link, "_blank"); // external link
-//     } else {
-//       navigate(currentBanner.link); // internal route
-//     }
-//   }
-// };
-const handleClick = () => {
-  if (currentBanner?.link) {
-    window.open(currentBanner.link, "_blank");
-  } else if (themeLink) {
-    window.open(themeLink, "_blank");
-  }
-};
+    if (
+      currentBanner &&
+      currentBanner.resolvedUrl === bannerToShow.resolvedUrl &&
+      currentBanner.bgColor === bannerToShow.bgColor &&
+      currentBanner.link === bannerToShow.link
+    ) {
+      return;
+    }
+
+    let isCancelled = false;
+    const img = new Image();
+
+    const commitBanner = () => {
+      if (isCancelled) return;
+
+      setPreviousBanner(currentBanner);
+      setCurrentBanner(bannerToShow);
+      setIsTransitioning(Boolean(currentBanner));
+    };
+
+    img.onload = commitBanner;
+    img.onerror = commitBanner;
+    img.src = resolvedUrl;
+
+    if (img.complete) {
+      commitBanner();
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [banners, isMobile, currentBanner]);
+
+  useEffect(() => {
+    if (!isTransitioning) return;
+
+    const timer = setTimeout(() => {
+      setPreviousBanner(null);
+      setIsTransitioning(false);
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [isTransitioning]);
+
+  const handleClick = () => {
+    if (currentBanner?.link) {
+      window.open(currentBanner.link, '_blank');
+    } else if (themeLink) {
+      window.open(themeLink, '_blank');
+    }
+  };
+
   if (!currentBanner) {
     return null;
   }
-
-  const bannerUrl = isMobile ? currentBanner.mobileUrl || currentBanner.url : currentBanner.url;
 
   return (
     <div
@@ -88,18 +87,25 @@ const handleClick = () => {
       role="region"
       aria-label="Homepage Banner"
       style={{
-        backgroundColor: currentBanner.bgColor || 'transparent', // 👈 single background color
-       cursor: currentBanner.link ? 'pointer' : 'default',
+        backgroundColor: currentBanner.bgColor || 'transparent',
+        cursor: currentBanner.link || themeLink ? 'pointer' : 'default',
       }}
-     onClick={handleClick}
+      onClick={handleClick}
     >
       <div className="banner-inner">
-        <img 
-          src={bannerUrl} 
+        {previousBanner && (
+          <img
+            src={previousBanner.resolvedUrl}
+            alt="Previous Main Banner"
+            className={`banner-image banner-image-previous ${isTransitioning ? 'is-leaving' : ''}`}
+            loading="eager"
+          />
+        )}
+        <img
+          src={currentBanner.resolvedUrl}
           alt="Main Banner"
-          className={fade ? "fade-in" : "fade-out"}
+          className={`banner-image banner-image-current ${isTransitioning ? 'is-entering' : 'is-visible'}`}
           loading="eager"
-          onLoad={handleImageLoad}
         />
       </div>
     </div>
