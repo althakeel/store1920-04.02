@@ -7,6 +7,7 @@ const MainBanner = ({ banners = [], bannerKey, themeLink }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [fade, setFade] = useState(false);
   const navigate = useNavigate();
+  
 
   // Update mobile flag on resize
   useEffect(() => {
