@@ -72,6 +72,15 @@ export const ThemeProvider = ({ children }) => {
     };
   }, []); // Add currentThemeId to dependencies
   // currentThemeId is needed to ensure the latest theme is used when the page is reopened
+  // Preload banner images (Fix live flicker issue)
+useEffect(() => {
+  Object.values(themes).forEach((theme) => {
+    if (theme.bannerKey) {
+      const img = new Image();
+      img.src = theme.bannerKey;
+    }
+  });
+}, []);
 useEffect(() => {
   const themeIds = Object.keys(themes)
     .map(Number)

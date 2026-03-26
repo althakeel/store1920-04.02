@@ -5,6 +5,7 @@ import '../assets/styles/MainBanner.css';
 const MainBanner = ({ banners = [], bannerKey, themeLink }) => {
   const [currentBanner, setCurrentBanner] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [fade, setFade] = useState(false);
   const navigate = useNavigate();
 
   // Update mobile flag on resize
@@ -13,6 +14,17 @@ const MainBanner = ({ banners = [], bannerKey, themeLink }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  useEffect(() => {
+  setFade(false);
+
+  const timer = setTimeout(() => {
+    setCurrentBanner(banners[0]);
+    setFade(true);
+  }, 100);
+
+  return () => clearTimeout(timer);
+
+}, [banners]);
 
   // Use the first banner from the static banners array
   useEffect(() => {
@@ -65,7 +77,8 @@ const handleClick = () => {
       <div className="banner-inner">
         <img 
           src={bannerUrl} 
-          alt="Main Banner" 
+          alt="Main Banner"
+          className={fade ? "fade-in" : "fade-out"}
           loading="eager"
           onLoad={handleImageLoad}
         />
