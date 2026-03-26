@@ -13,6 +13,8 @@ import Logo8 from "../assets/images/theme/theme6/logo012.png";
 // import banner5 from '../assets/images/theme/banner/Banners Halloween 2.webp';
 import banner6 from '../assets/images/theme/banner/Nexso_Banner.webp';
 import Banner10 from "../assets/images/theme/theme6/Main-after-eid.webp";
+import Banner11 from "../assets/images/theme/banner/main23rd.webp";
+
 
 export const themes = {
   1: {
@@ -35,6 +37,16 @@ export const themes = {
       backgroundColor: '#04061B',
       textColor: '#000000'
     }
+  },
+    3: {
+    logo: Logo8,
+    navbarBg: "#026D7D",
+    bannerKey: Banner11,
+    bannerBg: "#026D7D",
+    lightningBanner: {
+      backgroundColor: "#026D7D",
+      textColor: "#026D7D",
+    },
   },
   // 4: {
   //   logo: Logo2,
