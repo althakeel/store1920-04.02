@@ -7,8 +7,26 @@ const MainBanner = ({ banners = [], bannerKey, themeLink }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [fade, setFade] = useState(false);
   const navigate = useNavigate();
-  
 
+const [nextBanner, setNextBanner] = useState(null);
+const [isLoading, setIsLoading] = useState(false);
+  
+useEffect(() => {
+  if (!banners || banners.length === 0) return;
+
+  const banner = banners[0];
+
+  const img = new Image();
+  setIsLoading(true);
+
+  img.src = banner.url;
+
+  img.onload = () => {
+    setCurrentBanner(banner);
+    setIsLoading(false);
+  };
+
+}, [banners]);
   // Update mobile flag on resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);

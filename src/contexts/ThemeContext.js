@@ -97,7 +97,7 @@ useEffect(() => {
       
       return nextThemeId;
     });
-  }, 6000); // 5 seconds
+  }, 8000); // 5 seconds
 
   
   return () => clearInterval(intervalRef.current);
