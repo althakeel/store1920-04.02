@@ -116,7 +116,7 @@
   height: auto;
   /* border-radius: 6px; */
   display: block;
-  transition: transform 0.6s ease, opacity 0.6s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease;
   cursor: pointer;
 }
 
