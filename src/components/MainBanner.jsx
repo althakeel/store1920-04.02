@@ -1,11 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../assets/styles/MainBanner.css';
+
+const preloadImage = (src) =>
+  new Promise((resolve) => {
+    if (!src) {
+      resolve();
+      return;
+    }
+
+    const img = new Image();
+
+    const finish = () => {
+      if (typeof img.decode === 'function') {
+        img.decode().catch(() => {}).finally(resolve);
+        return;
+      }
+
+      resolve();
+    };
+
+    img.onload = finish;
+    img.onerror = resolve;
+    img.src = src;
+
+    if (img.complete) {
+      finish();
+    }
+  });
 
 const MainBanner = ({ banners = [], themeLink }) => {
   const [currentBanner, setCurrentBanner] = useState(null);
   const [previousBanner, setPreviousBanner] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const currentBannerRef = useRef(null);
+
+  useEffect(() => {
+    currentBannerRef.current = currentBanner;
+  }, [currentBanner]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -24,39 +56,36 @@ const MainBanner = ({ banners = [], themeLink }) => {
     const nextBanner = banners[0];
     const resolvedUrl = isMobile ? nextBanner.mobileUrl || nextBanner.url : nextBanner.url;
     const bannerToShow = { ...nextBanner, resolvedUrl };
+    const current = currentBannerRef.current;
 
     if (
-      currentBanner &&
-      currentBanner.resolvedUrl === bannerToShow.resolvedUrl &&
-      currentBanner.bgColor === bannerToShow.bgColor &&
-      currentBanner.link === bannerToShow.link
+      current &&
+      current.resolvedUrl === bannerToShow.resolvedUrl &&
+      current.bgColor === bannerToShow.bgColor &&
+      current.link === bannerToShow.link
     ) {
       return;
     }
 
     let isCancelled = false;
-    const img = new Image();
 
-    const commitBanner = () => {
+    const loadNextBanner = async () => {
+      await preloadImage(resolvedUrl);
+
       if (isCancelled) return;
 
-      setPreviousBanner(currentBanner);
+      const previous = currentBannerRef.current;
+      setPreviousBanner(previous);
       setCurrentBanner(bannerToShow);
-      setIsTransitioning(Boolean(currentBanner));
+      setIsTransitioning(Boolean(previous));
     };
 
-    img.onload = commitBanner;
-    img.onerror = commitBanner;
-    img.src = resolvedUrl;
-
-    if (img.complete) {
-      commitBanner();
-    }
+    loadNextBanner();
 
     return () => {
       isCancelled = true;
     };
-  }, [banners, isMobile, currentBanner]);
+  }, [banners, isMobile]);
 
   useEffect(() => {
     if (!isTransitioning) return;
@@ -99,6 +128,8 @@ const MainBanner = ({ banners = [], themeLink }) => {
             alt="Previous Main Banner"
             className={`banner-image banner-image-previous ${isTransitioning ? 'is-leaving' : ''}`}
             loading="eager"
+            fetchPriority="high"
+            decoding="sync"
           />
         )}
         <img
@@ -106,6 +137,8 @@ const MainBanner = ({ banners = [], themeLink }) => {
           alt="Main Banner"
           className={`banner-image banner-image-current ${isTransitioning ? 'is-entering' : 'is-visible'}`}
           loading="eager"
+          fetchPriority="high"
+          decoding="sync"
         />
       </div>
     </div>

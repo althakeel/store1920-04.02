@@ -2,6 +2,16 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import { themes } from '../theme/theme';
 
 const ThemeContext = createContext();
+const preloadImage = (src) => {
+  if (!src) return;
+
+  const img = new Image();
+  img.src = src;
+
+  if (typeof img.decode === 'function') {
+    img.decode().catch(() => {});
+  }
+};
 
 export const ThemeProvider = ({ children }) => {
   const defaultThemeId = 1;
@@ -72,16 +82,15 @@ export const ThemeProvider = ({ children }) => {
     };
   }, []); // Add currentThemeId to dependencies
   // currentThemeId is needed to ensure the latest theme is used when the page is reopened
-  // Preload banner images (Fix live flicker issue)
-useEffect(() => {
-  Object.values(themes).forEach((theme) => {
-    if (theme.bannerKey) {
-      const img = new Image();
-      img.src = theme.bannerKey;
-    }
-  });
-}, []);
-useEffect(() => {
+  // Warm the browser cache for all theme assets so production theme switches stay smooth.
+  useEffect(() => {
+    Object.values(themes).forEach((theme) => {
+      preloadImage(theme.logo);
+      preloadImage(theme.bannerKey);
+    });
+  }, []);
+
+  useEffect(() => {
   const themeIds = Object.keys(themes)
     .map(Number)
     .sort((a, b) => a - b);
