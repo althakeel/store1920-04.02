@@ -1,6 +1,6 @@
 import React from "react";
 import "../assets/styles/Footer.css";
-import { FaInstagram, FaFacebookF } from "react-icons/fa6";
+import { FaInstagram, FaFacebookF, FaTiktok } from "react-icons/fa6";
 import { useCart } from "../contexts/CartContext";
 import { Link } from "react-router-dom";
 
@@ -117,6 +117,9 @@ const Footer = () => {
               </a>
               <a href="https://www.facebook.com/thestore1920" target="_blank" rel="noopener noreferrer">
                 <FaFacebookF />
+              </a>
+              <a href="https://www.tiktok.com/@thestore1920" target="_blank" rel="noopener noreferrer">
+                <FaTiktok />
               </a>
             </div>
           </div>
