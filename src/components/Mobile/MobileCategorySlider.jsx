@@ -35,7 +35,7 @@ const decodeHTML = (html) => {
   return txt.value;
 };
 
-const MOBILE_CATEGORY_CACHE_KEY = "mobile-categories-v2";
+const MOBILE_CATEGORY_CACHE_KEY = "mobile-categories-v3";
 
 const STATIC_CATEGORIES = [
   { id: "498", name: "Electronics & Smart Devices", image: Static1, path: "/category/electronics-smart-devices", slug: "electronics-smart-devices" },
@@ -87,9 +87,9 @@ const mergeCategoriesWithStaticImages = (apiCategories = []) => {
       ...matchedCategory,
       ...staticCategory,
       image:
+        staticCategory.image ||
         matchedCategory?.image?.src ||
-        matchedCategory?.image ||
-        staticCategory.image,
+        matchedCategory?.image,
     };
   });
 };
@@ -102,7 +102,13 @@ const CategorySlider = () => {
       try {
         const cached = localStorage.getItem(MOBILE_CATEGORY_CACHE_KEY);
         if (cached) {
-          setCategories(JSON.parse(cached));
+          const parsedCached = JSON.parse(cached);
+          const mergedCachedCategories = mergeCategoriesWithStaticImages(parsedCached);
+          setCategories(mergedCachedCategories);
+          localStorage.setItem(
+            MOBILE_CATEGORY_CACHE_KEY,
+            JSON.stringify(mergedCachedCategories)
+          );
           return;
         }
 
@@ -159,9 +165,9 @@ const CategorySlider = () => {
               const staticCategory =
                 STATIC_CATEGORY_MAP[cat.slug] || STATIC_CATEGORY_MAP[String(cat.id)];
               const imgSrc =
+                staticCategory?.image ||
                 cat.image?.src ||
                 cat.image ||
-                staticCategory?.image ||
                 placeholderImg;
 
               return (
