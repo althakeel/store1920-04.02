@@ -11,13 +11,15 @@ import IconAED from '../assets/images/Dirham 2.png';
 import ProductCardReviews from '../components/temp/productcardreviews';
 import NoImagePlaceholder from './NoImagePlaceholder';
 
-import { getProductsByCategory, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
+import { getProductsByCategory, getFirstVariation, getCurrencySymbol, getPopularProducts } from '../api/woocommerce';
 // Set this to your actual 'topselling' category ID from WooCommerce
 const TOPSELLING_CATEGORY_ID = 29686;
 
 const PRODUCTS_PER_PAGE = 24;
 const TITLE_LIMIT = 35;
 const INITIAL_LOAD = 12; // Load only 12 products initially for faster LCP
+const FALLBACK_RANDOM_COUNT = 20;
+const FALLBACK_FETCH_SIZE = 60;
 
 // ===================== Utility functions =====================
 const decodeHTML = (html) => {
@@ -54,6 +56,7 @@ const New = () => {
   const [productsPage, setProductsPage] = useState(1);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [usingFallbackProducts, setUsingFallbackProducts] = useState(false);
 
 
 
@@ -76,15 +79,39 @@ const New = () => {
 
 
   // ===================== Fetch products OPTIMIZED =====================
+  const loadFallbackProducts = useCallback(async () => {
+    try {
+      const data = await getPopularProducts(1, FALLBACK_FETCH_SIZE);
+      const validData = Array.isArray(data) ? data : [];
+      const randomProducts = shuffleArray(validData).slice(0, FALLBACK_RANDOM_COUNT);
+
+      setProducts(randomProducts);
+      setProductsPage(1);
+      setHasMoreProducts(false);
+      setUsingFallbackProducts(true);
+      setInitialLoadDone(true);
+    } catch (error) {
+      console.error('Error fetching fallback products:', error);
+      setProducts([]);
+      setHasMoreProducts(false);
+    }
+  }, []);
+
   const fetchProducts = useCallback(async (page = 1) => {
     setLoadingProducts(true);
     try {
       const perPage = page === 1 ? INITIAL_LOAD : PRODUCTS_PER_PAGE;
       const data = await getProductsByCategory(TOPSELLING_CATEGORY_ID, page, perPage);
       const validData = Array.isArray(data) ? data : [];
+
+      if (page === 1 && validData.length === 0) {
+        await loadFallbackProducts();
+        return;
+      }
       
       setProducts(prev => page === 1 ? validData : [...prev, ...validData]);
       setHasMoreProducts(validData.length >= perPage);
+      setUsingFallbackProducts(false);
       
       if (page === 1) {
         setInitialLoadDone(true);
@@ -97,19 +124,20 @@ const New = () => {
       }
     } catch (error) {
       console.error('Error fetching products:', error);
-      setProducts([]);
-      setHasMoreProducts(false);
+      await loadFallbackProducts();
     } finally {
       setLoadingProducts(false);
     }
-  }, []);
+  }, [loadFallbackProducts]);
 
   // Background fetch for remaining first page products
   const fetchMoreInBackground = async () => {
     try {
       const data = await getProductsByCategory(TOPSELLING_CATEGORY_ID, 1, PRODUCTS_PER_PAGE);
       const validData = Array.isArray(data) ? data : [];
-      setProducts(validData);
+      if (validData.length > 0) {
+        setProducts(validData);
+      }
     } catch (error) {
       console.error('Error fetching more products:', error);
     }
@@ -176,7 +204,7 @@ const New = () => {
 
   // Optimized Load More
   const loadMoreProducts = useCallback(() => {
-    if (!hasMoreProducts || loadingProducts) return;
+    if (!hasMoreProducts || loadingProducts || usingFallbackProducts) return;
     const nextPage = productsPage + 1;
     setProductsPage(nextPage);
     setLoadingProducts(true);
@@ -194,7 +222,7 @@ const New = () => {
       .finally(() => {
         setLoadingProducts(false);
       });
-  }, [hasMoreProducts, loadingProducts, productsPage]);
+  }, [hasMoreProducts, loadingProducts, productsPage, usingFallbackProducts]);
 
   // ===================== Fetch first variation prices - OPTIMIZED =====================
   const fetchFirstVariationPrice = useCallback(async (productId) => {

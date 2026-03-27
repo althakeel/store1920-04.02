@@ -9,11 +9,10 @@ import Adsicon from '../assets/images/summer-saving-coloured.png';
 import IconAED from '../assets/images/Dirham 2.png';
 import ProductCardReviews from '../components/temp/productcardreviews';
 
-import { getProductsByCategory, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
+import { getLatestPublishedProducts, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
 
-const PRODUCTS_PER_PAGE = 24;
+const PRODUCTS_PER_PAGE = 20;
 const TITLE_LIMIT = 35;
-const NEW_CATEGORY_ID = 29687; // WooCommerce 'new' category ID
 
 // ===================== Utility functions =====================
 const decodeHTML = (html) => {
@@ -57,11 +56,11 @@ const New = () => {
   const [badgeText, setBadgeText] = useState("HURRY UP");
   const [animateBadge, setAnimateBadge] = useState(true);
 
-  // Fetch products from 'new' category only
+  // Fetch latest published products directly from WooCommerce
   const fetchProducts = useCallback(async (page = 1) => {
     setLoadingProducts(true);
     try {
-      const data = await getProductsByCategory(NEW_CATEGORY_ID, page, PRODUCTS_PER_PAGE);
+      const data = await getLatestPublishedProducts(page, PRODUCTS_PER_PAGE);
       const validData = Array.isArray(data) ? data : [];
       setProducts(prev => page === 1 ? validData : [...prev, ...validData]);
       setHasMoreProducts(validData.length >= PRODUCTS_PER_PAGE);

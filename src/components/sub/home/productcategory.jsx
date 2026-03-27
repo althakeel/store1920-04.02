@@ -30,15 +30,12 @@ import Product16 from '../../../assets/images/staticproducts/wrinkle-remover/1.w
 
 
 const PAGE_SIZE = 10;
-const INITIAL_VISIBLE = 84;
-const QUICK_LOAD_COUNT = 10; // Load 10 products quickly first
+const INITIAL_VISIBLE = 24;
+const QUICK_LOAD_COUNT = INITIAL_VISIBLE; // Load the full first page immediately
 const PRODUCT_FETCH_LIMIT = 24;
 const RECOMMENDED_CATEGORY_LIMIT = 8;
 const CATEGORY_PAGE_LIMIT = 4;
 const MAX_PRODUCTS = 580;
-const ITEMS_PER_ROW = 4;
-
-
 // Utility to decode HTML entities
 const decodeHTML = (html) => {
   const txt = document.createElement("textarea");
@@ -363,14 +360,6 @@ const ProductCategory = () => {
   const [shuffleTrigger, setShuffleTrigger] = useState(0); // Trigger shuffle
   const shuffleIntervalRef = useRef(null);
   // No need for apiLoaded state anymore
-  // For 'Recommended', hasMoreProducts should consider both API and static products
-  const getTotalProducts = () => {
-    if (selectedCategoryId === "29688") {
-      return allProducts.length + staticProducts.length;
-    }
-    return allProducts.length;
-  };
-  const hasMoreProducts = visibleCount < getTotalProducts();
 
 
   const [categoryProducts, setCategoryProducts] = useState([]); // products for selected category
@@ -614,7 +603,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
 
   // Load more products
   const loadMoreProducts = () => {
-    setVisibleCount(prev => Math.min(prev + PAGE_SIZE, getTotalProducts()));
+    setVisibleCount(prev => Math.min(prev + PAGE_SIZE, mergedProducts.length));
   };
 
   // Fly to cart animation
@@ -693,6 +682,10 @@ const getMergedProducts = () => {
   }
 };
 
+const mergedProducts = getMergedProducts();
+const hasMoreProducts = visibleCount < mergedProducts.length;
+const shouldShowLoadMore = hasMoreProducts || isBackgroundLoading;
+
 
   
   const selectedCategory = staticCategories.find(c => String(c.id) === String(selectedCategoryId));
@@ -732,8 +725,7 @@ const handleMouseLeave = (id) => {
 
 const renderProducts = (productsToShowParam) => {
   let productsToShow = productsToShowParam;
-  const countRaw = Math.min(visibleCount, productsToShow.length);
-  const count = Math.min(productsToShow.length, Math.ceil(countRaw / ITEMS_PER_ROW) * ITEMS_PER_ROW);
+  const count = Math.min(visibleCount, productsToShow.length);
   return productsToShow.slice(0, count).map((p, index) => {
     const hasSale = p.sale_price && p.sale_price !== p.regular_price;
     const hasSecondImage = p.images && p.images.length > 1 && typeof p.images[1]?.src === 'string' && p.images[1]?.src.trim() !== '';
@@ -970,7 +962,7 @@ useEffect(() => {
             );
           }
           // After initial load complete, show products without blinking
-          productsToShow = getMergedProducts();
+          productsToShow = mergedProducts;
           if (productsToShow.length === 0 && initialLoadComplete) {
             return (
               <div className="pcus-no-products" style={{ minHeight: "300px", textAlign: "center", paddingTop: "40px", fontSize: "18px", color: "#666" }}>
@@ -983,21 +975,22 @@ useEffect(() => {
 
         {/* Load More */}
         <div className="pcus-load-more-wrapper" style={{ textAlign: "center", margin: "24px 0" }}>
-          {hasMoreProducts ? (
+          {shouldShowLoadMore ? (
             <button
               className="pcus-load-more-btn"
               onClick={loadMoreProducts}
+              disabled={!hasMoreProducts}
               style={{
                 padding: "10px 20px",
                 fontSize: "14px",
-                backgroundColor: "#ff6207ff",
+                backgroundColor: hasMoreProducts ? "#ff6207ff" : "#c7c7c7",
                 color: "#fff",
                 border: "none",
                 borderRadius: "50px",
-                cursor: "pointer"
+                cursor: hasMoreProducts ? "pointer" : "not-allowed"
               }}
             >
-              Load More
+              {hasMoreProducts ? "Load More" : "Loading more products..."}
             </button>
           ) : (
             <span style={{ color: "#666", fontSize: "14px" }}></span>

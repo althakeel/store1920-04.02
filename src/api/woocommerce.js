@@ -631,6 +631,8 @@ export const getProductsByTagSlugs = async (slugs = [], page = 1, perPage = 42, 
 export const getNewArrivalsProducts = (page = 1, perPage = 24) => getProductsByTagSlugs(["new-arrivals"], page, perPage);
 export const getRatedProducts = (page = 1, perPage = 24) => getProductsByTagSlugs(["rated"], page, perPage, "rating");
 export const getFestSaleProducts = (page = 1, perPage = 24) => getProductsByTagSlugs(["fest-sale"], page, perPage);
+export const getLatestPublishedProducts = (page = 1, perPage = 24) =>
+  fetchAPI(`/products?per_page=${perPage}&page=${page}&orderby=date&order=desc&status=publish`);
 // Use Woo's supported alias 'popularity' (maps to total_sales)
 export const getTopSellingItemsProducts = (page = 1, perPage = 24) =>
   getProductsByTagSlugs(["top-selling"], page, perPage, "popularity");
