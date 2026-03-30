@@ -466,7 +466,7 @@ img.flying-clone {
 /* Products grid */
 .pcus-prd-grid001 {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr)); /* allow columns to shrink */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
 }
 /* Product card */
@@ -834,7 +834,7 @@ img.flying-clone {
   /* Product grid: flexible columns */
   .pcus-prd-grid001 {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 12px; /* reduced gap for better fit */
   }
 
@@ -925,7 +925,7 @@ img.flying-clone {
 
   /* Product grid: smaller columns */
   .pcus-prd-grid001 {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 2fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 10px;
   }
 

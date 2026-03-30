@@ -498,7 +498,7 @@ export const getCategoryBySlugAdvanced = async (slug) => {
 // ===================== Products =====================
 export const getProductsByCategory = (categoryId, page = 1, perPage = 42) =>
   // Remove _fields to allow custom fields like enable_saving_badge
-  fetchAPI(`/products?category=${categoryId}&per_page=${perPage}&page=${page}&orderby=date&order=desc`);
+  fetchAPI(`/products?category=${categoryId}&per_page=${perPage}&page=${page}&orderby=date&order=desc&status=publish&catalog_visibility=visible`);
 
 // ===================== Enhanced Products by Category Slug =====================
 export const getProductsByCategorySlugAdvanced = async (slug, page = 1, perPage = 8) => {
@@ -561,7 +561,7 @@ export const getProductsByCategorySlugAdvanced = async (slug, page = 1, perPage 
 export const getProductsByCategories = async (categoryIds = [], page = 1, perPage = 12, order = "desc") => {
   if (!Array.isArray(categoryIds) || !categoryIds.length) return [];
   try {
-    const products = await fetchAPI(`/products?category=${categoryIds.join(",")}&per_page=${perPage}&page=${page}&orderby=date&order=${order}`);
+    const products = await fetchAPI(`/products?category=${categoryIds.join(",")}&per_page=${perPage}&page=${page}&orderby=date&order=${order}&status=publish&catalog_visibility=visible`);
     return Array.isArray(products) ? products : [];
   } catch (error) {
     console.error('❌ Error fetching products by categories:', error);
@@ -622,7 +622,7 @@ export const getTagIdsBySlugs = async (slugs = []) => {
 export const getProductsByTagSlugs = async (slugs = [], page = 1, perPage = 42, orderBy = "date", order = "desc") => {
   const tagIds = await getTagIdsBySlugs(slugs);
   if (!tagIds.length) return [];
-  const url = `/products?tag=${tagIds.join(",")}&per_page=${perPage}&page=${page}&orderby=${orderBy}&order=${order}&_fields=id,name,slug,images,price,total_sales,enable_saving_badge
+  const url = `/products?tag=${tagIds.join(",")}&per_page=${perPage}&page=${page}&orderby=${orderBy}&order=${order}&status=publish&catalog_visibility=visible&_fields=id,name,slug,images,price,total_sales,enable_saving_badge
 `;
   return fetchAPI(url);
 };
@@ -639,7 +639,7 @@ export const getTopSellingItemsProducts = (page = 1, perPage = 24) =>
 
 // Fallback: get popular products irrespective of tag
 export const getPopularProducts = (page = 1, perPage = 24) =>
-  fetchAPI(`/products?per_page=${perPage}&page=${page}&orderby=popularity&order=desc&_fields=id,name,slug,images,price,total_sales,enable_saving_badge`);
+  fetchAPI(`/products?per_page=${perPage}&page=${page}&orderby=popularity&order=desc&status=publish&catalog_visibility=visible&_fields=id,name,slug,images,price,total_sales,enable_saving_badge`);
 
 // ===================== Variations =====================
 export const getFirstVariation = async (productId) => {
@@ -800,7 +800,7 @@ export const getProductsByCategorySlug = async (slug, page = 1, perPage = 42, or
 export const getLightProductsByCategories = (categoryIds = [], page = 1, perPage = 42, order = "desc") => {
   if (!Array.isArray(categoryIds) || !categoryIds.length) return [];
   return fetchAPI(
-    `/products?category=${categoryIds.join(",")}&per_page=${perPage}&page=${page}&orderby=date&order=${order}&_fields=id,name,slug,price,images`
+    `/products?category=${categoryIds.join(",")}&per_page=${perPage}&page=${page}&orderby=date&order=${order}&status=publish&catalog_visibility=visible&_fields=id,name,slug,price,images`
   );
 };
 export const getLightProductsByCategorySlug = async (slug, page = 1, perPage = 42, order = "desc") => {

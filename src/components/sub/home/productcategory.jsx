@@ -84,6 +84,30 @@ const shuffleAPIProducts = (products) => {
   return shuffleArray(products);
 };
 
+const getProductRouteKey = (product) => {
+  if (!product) return null;
+
+  const rawPath = typeof product.path === "string" ? product.path.trim().toLowerCase() : "";
+  const rawSlug = typeof product.slug === "string" ? product.slug.trim().toLowerCase() : "";
+
+  if (rawPath) return rawPath;
+  if (rawSlug) return `/product/${rawSlug}`;
+  if (product.id != null) return `id:${product.id}`;
+  return null;
+};
+
+const dedupeProductsByRoute = (products = []) => {
+  const seen = new Set();
+
+  return products.filter((product) => {
+    const key = getProductRouteKey(product);
+    if (!key) return true;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
 
 // Static Products with categories property
 const staticProducts = [
@@ -346,6 +370,7 @@ const ProductCategory = () => {
   const [animate, setAnimate] = useState(true);
 
   const categoriesRef = useRef(null);
+  const productsGridRef = useRef(null);
   const cartIconRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -407,7 +432,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
       // Move clicked products to top
       const clickedProducts = cached.filter(p => clickedProductIds.has(p.id));
       const unclickedProducts = shuffleAPIProducts(cached.filter(p => !clickedProductIds.has(p.id)));
-      const reordered = [...clickedProducts, ...unclickedProducts];
+      const reordered = dedupeProductsByRoute([...clickedProducts, ...unclickedProducts]);
       
       setAllProducts(reordered);
       setLoadingProducts(false);
@@ -425,7 +450,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
     
     try {
       // Stage 1: Quick load first 10 products with minimal fields
-      const quickUrl = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${QUICK_LOAD_COUNT}&page=1&category=${categoryId}&_fields=id,name,price,regular_price,sale_price,images,slug`;
+      const quickUrl = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${QUICK_LOAD_COUNT}&page=1&category=${categoryId}&status=publish&catalog_visibility=visible&_fields=id,name,price,regular_price,sale_price,images,slug`;
       console.log(`⚡ Quick loading first ${QUICK_LOAD_COUNT} products...`);
       
       const quickRes = await fetch(quickUrl);
@@ -443,7 +468,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
         });
         
         // Shuffle the quick loaded products for variety
-        const shuffledQuickData = shuffleAPIProducts(validQuickData);
+        const shuffledQuickData = dedupeProductsByRoute(shuffleAPIProducts(validQuickData));
         setAllProducts(shuffledQuickData);
         setLoadingProducts(false);
         setShowingStaticOnly(false);
@@ -459,7 +484,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
               
               // Fetch pages and update UI every batch for progressive loading
               while (true) {
-                const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&_fields=id,name,price,regular_price,sale_price,images,categories,slug`;
+                const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&status=publish&catalog_visibility=visible&_fields=id,name,price,regular_price,sale_price,images,categories,slug`;
                 console.log(`📡 Background fetching page ${page}...`);
                 
                 const res = await fetch(url);
@@ -481,7 +506,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
                 });
                 
                 // Append to current products
-                currentProducts = [...currentProducts, ...validPageProducts];
+                currentProducts = dedupeProductsByRoute([...currentProducts, ...validPageProducts]);
                 const limited = currentProducts.slice(0, MAX_PRODUCTS);
                 
                 // Update cache and state with animation
@@ -515,8 +540,8 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
               }
               
               // Final update after all products loaded with shuffle
-              const finalLimited = currentProducts.slice(0, MAX_PRODUCTS);
-              const shuffledFinal = shuffleAPIProducts(finalLimited);
+              const finalLimited = dedupeProductsByRoute(currentProducts).slice(0, MAX_PRODUCTS);
+              const shuffledFinal = dedupeProductsByRoute(shuffleAPIProducts(finalLimited));
               apiProductCache[categoryId] = shuffledFinal;
               setAllProducts([...shuffledFinal]);
               console.log('🎯 Background loading complete:', shuffledFinal.length);
@@ -568,11 +593,13 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
       console.log('🔀 Auto-shuffling products after 15 minutes');
       setAllProducts(prev => {
         if (prev.length === 0) return prev;
-        return shuffleAPIProducts([...prev]);
+        return dedupeProductsByRoute(shuffleAPIProducts([...prev]));
       });
       // Update cache with shuffled products
       if (apiProductCache[selectedCategoryId]) {
-        apiProductCache[selectedCategoryId] = shuffleAPIProducts([...apiProductCache[selectedCategoryId]]);
+        apiProductCache[selectedCategoryId] = dedupeProductsByRoute(
+          shuffleAPIProducts([...apiProductCache[selectedCategoryId]])
+        );
       }
     }, 900000); // 15 minutes
 
@@ -602,8 +629,27 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
   }, [updateArrowVisibility]);
 
   // Load more products
+  const getGridColumnCount = useCallback(() => {
+    const gridEl = productsGridRef.current;
+    if (!gridEl || typeof window === "undefined") return 1;
+
+    const computedStyle = window.getComputedStyle(gridEl);
+    const columns = computedStyle.gridTemplateColumns
+      .split(" ")
+      .filter(Boolean).length;
+
+    return Math.max(columns, 1);
+  }, []);
+
   const loadMoreProducts = () => {
-    setVisibleCount(prev => Math.min(prev + PAGE_SIZE, mergedProducts.length));
+    const columns = getGridColumnCount();
+
+    setVisibleCount((prev) => {
+      const baseNext = Math.min(prev + PAGE_SIZE, mergedProducts.length);
+      const remainder = baseNext % columns;
+      const fillCount = remainder === 0 ? 0 : columns - remainder;
+      return Math.min(baseNext + fillCount, mergedProducts.length);
+    });
   };
 
   // Fly to cart animation
@@ -672,11 +718,12 @@ const getMergedProducts = () => {
         merged.splice(insertPos, 0, staticForCategory[i]);
       }
     });
-    console.log('✅ Merged Products (Recommended):', merged.length);
-    return merged;
+    const dedupedMerged = dedupeProductsByRoute(merged);
+    console.log('✅ Merged Products (Recommended):', dedupedMerged.length);
+    return dedupedMerged;
   } else {
     // For other categories, append static products at the end
-    const merged = [...allProducts, ...staticForCategory];
+    const merged = dedupeProductsByRoute([...allProducts, ...staticForCategory]);
     console.log('✅ Merged Products (Other):', merged.length);
     return merged;
   }
@@ -950,12 +997,12 @@ useEffect(() => {
             if (staticForCategory.length === 0) {
               // Show skeletons while loading
               const skeletons = Array(10).fill(0).map((_, idx) => <SkeletonCard key={"skel-"+idx} />);
-              return <div className="pcus-prd-grid001">{skeletons}</div>;
+              return <div className="pcus-prd-grid001" ref={productsGridRef}>{skeletons}</div>;
             }
             // Show static products with few skeletons
             const skeletons = Array(4).fill(0).map((_, idx) => <SkeletonCard key={"skel-"+idx} />);
             return (
-              <div className="pcus-prd-grid001">
+              <div className="pcus-prd-grid001" ref={productsGridRef}>
                 {renderProducts(staticForCategory)}
                 {skeletons}
               </div>
@@ -970,7 +1017,7 @@ useEffect(() => {
               </div>
             );
           }
-          return <div className="pcus-prd-grid001">{renderProducts(productsToShow)}</div>;
+          return <div className="pcus-prd-grid001" ref={productsGridRef}>{renderProducts(productsToShow)}</div>;
         })()}
 
         {/* Load More */}
