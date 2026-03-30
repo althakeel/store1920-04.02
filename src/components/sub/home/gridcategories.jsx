@@ -6,10 +6,10 @@ import { useCart } from "../../../contexts/CartContext";
 
 // Images
 import PlaceHolderImage from "../../../assets/images/common/Placeholder.png";
-import grid1 from "../../../assets/images/gridhome/1 (1).png";
-import grid2 from "../../../assets/images/gridhome/2.png";
-import grid3 from "../../../assets/images/gridhome/3.png";
-import grid4 from "../../../assets/images/gridhome/4.png";
+import AutomotiveImage from "../../../assets/images/megamenu/Main catogory webp/Automotive.webp";
+import ElectronicsImage from "../../../assets/images/megamenu/Main catogory webp/Electronics.webp";
+import TravelImage from "../../../assets/images/megamenu/Main catogory webp/Travel & Luggage.webp";
+import FashionImage from "../../../assets/images/megamenu/Main catogory webp/Fashion.webp";
 
 import Static1 from '../../../assets/images/staticproducts/gamekit/1.webp'
 import Static2 from '../../../assets/images/staticproducts/minproject/2.webp'
@@ -23,10 +23,10 @@ const CS = "cs_c65538cff741bd9910071c7584b3dffb";
 
 // Static left categories
 const staticCategories = [
-  { id: 1, name: "Mobiles & Tablets", image: grid2, link: "/category/laptops-tablets" },
-  { id: 2, name: "Auto & Moto", image: grid4, link: "/category/automotive-motorcycle" },
-  { id: 3, name: "Fashion Deals", image: grid1, link: "/category/mens-watches" },
-  { id: 4, name: "Home & Kitchen", image: grid3, link: "/category/home-office-essentials" },
+  { id: 1, name: "Automotive", image: AutomotiveImage, link: "/category/automotive" },
+  { id: 2, name: "Electronics", image: ElectronicsImage, link: "/category/electronics" },
+  { id: 3, name: "Travel & Luggage", image: TravelImage, link: "/category/travel-luggage" },
+  { id: 4, name: "Fashion", image: FashionImage, link: "/category/fashion" },
 ];
 
 // Initial placeholder products (shown instantly)

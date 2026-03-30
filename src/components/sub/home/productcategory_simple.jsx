@@ -29,7 +29,7 @@ const ProductCategory = () => {
   const fetchProducts = async (categoryId) => {
     setLoading(true);
     try {
-      let url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=12`;
+      let url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=12&status=publish&catalog_visibility=visible`;
       
       if (categoryId !== "all") {
         url += `&category=${categoryId}`;

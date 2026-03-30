@@ -375,6 +375,7 @@ const AppContent = () => {
 
 
                     <Route path="/allproducts" element={<AllProducts />} />
+                    <Route path="/topselling" element={<TopSellingitems />} />
                     <Route path="/new" element={<New />} />
                     <Route path="/rated" element={<Rated />} />
                     <Route path="/support" element={<SupportPage />} />
@@ -419,7 +420,7 @@ const AppContent = () => {
                 )}
               </div>
 
-              {!isMobile && <PurchasePopup />}
+              {/* {!isMobile && <PurchasePopup />} */}
           {shouldShowCookiePopup && <CookiePopup />}
        {/* <ChatBot /> */}
 {isHomePage && <NewUserBonusPopup />}
