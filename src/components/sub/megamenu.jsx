@@ -781,16 +781,17 @@ const categories = [
 
 const defaultRightCategories = [
   // { id: 6535, name: "Mobile Phones", image: MobilePhones, path: "/category/mobile-phones", metaTitle: "Buy Electronics & Smart Devices Online | Store1920", metaDescription: "Shop the latest smartphones, laptops, cameras, and smart home devices at Store1920. Great prices, fast delivery, and trusted quality." },
-  // { id: 204, name: "Heating & Cooling Appliances", image: HeatingCooling, path: "/category/heating-cooling-appliances" },
-  { id: 404, name: "Office Furniture", image: OfficeFurniture, path: "/category/office-furniture" },
-  { id: 809, name: "Bracelets & Bangles", image: BraceletsBangles, path: "/category/bracelets-bangles" },
-  { id: 1105, name: "Nursery & Baby Furniture", image: NurseryFurniture, path: "/category/nursery-baby-furniture" },
-  { id: 1501, name: "Video Surveillance Systems", image: VideoSurveillance, path: "/category/video-surveillance-systems", metaTitle: "Security & Safety Products – Home & Workplace | Store1920", metaDescription: "Protect your home and business with CCTV, alarms, and safety gear from Store1920. Affordable and reliable security solutions." },
-  { id: 1305, name: "Strength Training & Gym Equipment", image: StrengthTraining, path: "/category/strength-training-gym-equipment" },
-      { id: 601, name: "Dresses & Gowns", image: WomensDressesGowns, path: "/category/dresses-gowns", metaTitle: "Women's Clothing Online – Dresses, Tops & Outerwear | Store1920", metaDescription: "Discover stylish women's fashion at Store1920. Shop dresses, blouses, skirts, and outerwear with trendy new arrivals." },
-      { id: 803, name: "Sunglasses & Eyewear", image: SunglassesEyewear, path: "/category/sunglasses-eyewear" },
-      { id: 501, name: "T-Shirts & Shirts", image: MensTShirtsShirts, path: "/category/t-shirts-shirts", metaTitle: "Men's Clothing Online – Shirts, Jackets & Suits | Store1920", metaDescription: "Upgrade your wardrobe with men's fashion at Store1920. Shop shirts, jeans, jackets, suits, and more at great prices." },
-      { id: 1306, name: "Cardio Training Equipment", image: CardioTraining, path: "/category/cardio-training" },
+  
+  { id: 404, name: "Home & Kitchen", image: KitchenDining, path: "/category/kitchen-dining" },
+  { id: 809, name: "Power Tools", image: PowerToolsImg, path: "/category/power-tools" },
+  { id: 1105, name: "Hair Care Appliances", image: HairCareAppliancesImg, path: "/category/hair-care-tools" },
+  { id: 1501, name: "Car Care Tools", image: CarToolsImg, path: "/category/car-care-tools", metaTitle: "Security & Safety Products – Home & Workplace | Store1920", metaDescription: "Protect your home and business with CCTV, alarms, and safety gear from Store1920. Affordable and reliable security solutions." },
+  { id: 1305, name: "Computer Accessories", image: ComputerAccessoriesImg, path: "/category/computer-accessories" },
+  { id: 601, name: "Mobile Accessories", image: MobileAccessoriesImg, path: "/category/mobile-accessories", metaTitle: "Women's Clothing Online – Dresses, Tops & Outerwear | Store1920", metaDescription: "Discover stylish women's fashion at Store1920. Shop dresses, blouses, skirts, and outerwear with trendy new arrivals." },
+  { id: 803, name: "Cat Accessories", image: PetImg, path: "/category/cat-accessories" },
+  { id: 501, name: "Travel Accessories", image: TravelImg, path: "/category/travel-accessories", metaTitle: "Men's Clothing Online – Shirts, Jackets & Suits | Store1920", metaDescription: "Upgrade your wardrobe with men's fashion at Store1920. Shop shirts, jeans, jackets, suits, and more at great prices." },
+  { id: 204, name: "Women's Bags", image: HeatingCooling, path: "/category/womens-bags" },
+  { id: 1306, name: "Hand Tools", image: HandToolsImg, path: "/category/hand-tools" },
 
 
 
