@@ -27,6 +27,7 @@ export const themes = {
       textColor: "#F46B1D",
     },
   }
+  // just keep the one banner for now
   // 2: {
   //   logo: Logo6,
   //   navbarBg: '#04061B',
