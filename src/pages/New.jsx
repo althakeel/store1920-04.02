@@ -9,9 +9,10 @@ import Adsicon from '../assets/images/summer-saving-coloured.png';
 import IconAED from '../assets/images/Dirham 2.png';
 import ProductCardReviews from '../components/temp/productcardreviews';
 
-import { getLatestPublishedProducts, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
+import { fetchAPI, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
 
-const PRODUCTS_PER_PAGE = 20;
+const INITIAL_LOAD_COUNT = 10;
+const LOAD_MORE_COUNT = 10;
 const TITLE_LIMIT = 35;
 
 // ===================== Utility functions =====================
@@ -51,19 +52,20 @@ const New = () => {
   const [products, setProducts] = useState([]);
   const [variationPrices, setVariationPrices] = useState({});
   const [loadingProducts, setLoadingProducts] = useState(false);
-  const [productsPage, setProductsPage] = useState(1);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
   const [badgeText, setBadgeText] = useState("HURRY UP");
   const [animateBadge, setAnimateBadge] = useState(true);
 
   // Fetch latest published products directly from WooCommerce
-  const fetchProducts = useCallback(async (page = 1) => {
+  const fetchProducts = useCallback(async ({ limit, offset, append }) => {
     setLoadingProducts(true);
     try {
-      const data = await getLatestPublishedProducts(page, PRODUCTS_PER_PAGE);
+      const data = await fetchAPI(
+        `/products?per_page=${limit}&offset=${offset}&orderby=date&order=desc&status=publish&catalog_visibility=visible`
+      );
       const validData = Array.isArray(data) ? data : [];
-      setProducts(prev => page === 1 ? validData : [...prev, ...validData]);
-      setHasMoreProducts(validData.length >= PRODUCTS_PER_PAGE);
+      setProducts((prev) => (append ? [...prev, ...validData] : validData));
+      setHasMoreProducts(validData.length === limit);
     } catch (error) {
       console.error('Error fetching products:', error);
       setProducts([]);
@@ -74,15 +76,12 @@ const New = () => {
   }, []);
 
   useEffect(() => {
-    fetchProducts(1);
-    setProductsPage(1);
+    fetchProducts({ limit: INITIAL_LOAD_COUNT, offset: 0, append: false });
   }, [fetchProducts]);
 
   const loadMoreProducts = () => {
     if (!hasMoreProducts || loadingProducts) return;
-    const nextPage = productsPage + 1;
-    setProductsPage(nextPage);
-    fetchProducts(nextPage);
+    fetchProducts({ limit: LOAD_MORE_COUNT, offset: products.length, append: true });
   };
 
   // Handle product click

@@ -90,6 +90,122 @@
   color: #fff;
 }
 
+.app-download-section {
+  margin-top: 24px;
+}
+
+.app-download-section h5 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.app-store-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.store-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 170px;
+  min-width: 170px;
+  height: 50px;
+  padding: 0 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.store-download-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #fff;
+  transform: translateY(-1px);
+}
+
+.store-download-btn svg {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.store-download-btn span {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 1;
+}
+
+.store-download-btn small {
+  font-size: 10px;
+  color: #d0d0d0;
+  letter-spacing: 0.01em;
+}
+
+.store-download-btn strong {
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.footer-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1200;
+}
+
+.footer-popup {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 28px 24px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.footer-popup p {
+  margin: 0;
+  color: #181818;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.footer-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: #f2f2f2;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.footer-popup-close:hover {
+  background: #e7e7e7;
+}
+
 /* Middle footer section */
 .footer-middle {
   display: grid;
@@ -280,6 +396,23 @@
   .social-icons {
     justify-content: flex-start;
     gap: 10px;
+  }
+  .app-download-section {
+    margin-top: 18px;
+  }
+  .app-store-buttons {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .store-download-btn {
+    width: 170px;
+    min-width: 170px;
+  }
+  .footer-popup {
+    padding: 24px 18px;
+  }
+  .footer-popup p {
+    font-size: 20px;
   }
   .footer-bottom {
     flex-direction: column;

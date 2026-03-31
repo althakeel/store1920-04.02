@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../assets/styles/QuantitySelector.css';
 
 export default function QuantitySelector({ quantity, setQuantity, maxQuantity, mode = 'stepper' }) {
@@ -16,6 +16,40 @@ export default function QuantitySelector({ quantity, setQuantity, maxQuantity, m
   const incrementQuantity = () => {
     if (safeQuantity >= validMax) return;
     setQuantity(safeQuantity + 1);
+  };
+
+  const [inputValue, setInputValue] = useState(String(safeQuantity));
+
+  useEffect(() => {
+    setInputValue(String(safeQuantity));
+  }, [safeQuantity]);
+
+  const commitQuantity = (rawValue) => {
+    const parsedValue = Number.parseInt(String(rawValue).trim(), 10);
+
+    if (!Number.isFinite(parsedValue)) {
+      setInputValue(String(safeQuantity));
+      return;
+    }
+
+    const normalizedValue = Math.min(Math.max(parsedValue, 1), validMax);
+    setQuantity(normalizedValue);
+    setInputValue(String(normalizedValue));
+  };
+
+  const handleInputChange = (event) => {
+    const nextValue = event.target.value.replace(/[^\d]/g, '');
+    setInputValue(nextValue);
+  };
+
+  const handleInputBlur = () => {
+    commitQuantity(inputValue);
+  };
+
+  const handleInputKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.currentTarget.blur();
+    }
   };
 
   const quantityOptions = Array.from({ length: validMax }, (_, index) => index + 1);
@@ -63,9 +97,19 @@ export default function QuantitySelector({ quantity, setQuantity, maxQuantity, m
           −
         </button>
 
-        <span className="quantity-value" aria-live="polite" aria-atomic="true">
-          {safeQuantity}
-        </span>
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          className="quantity-value quantity-value-input"
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          onKeyDown={handleInputKeyDown}
+          aria-label="Quantity value"
+          aria-live="polite"
+          aria-atomic="true"
+        />
 
         <button
           type="button"

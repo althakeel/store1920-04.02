@@ -23,6 +23,9 @@ import Product19 from '../assets/images/staticproducts/quran speaker/1.webp';
 import Product20 from '../assets/images/staticproducts/portable bottle warmer/4.webp';
 import Product21 from '../assets/images/staticproducts/scalp_messager/4.webp';
 
+const DESKTOP_COLUMNS = 5;
+const MOBILE_COLUMNS = 2;
+
 const staticProducts = [
    
 
@@ -330,20 +333,26 @@ const Fastdelivery = () => {
   const navigate = useNavigate();
   const [apiProducts, setApiProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
- useEffect(() => {
-  fetchProducts(page);
-}, [page]);
-useEffect(() => {
-  setApiProducts((prev) => shuffleArray(prev));
-}, []);
+  const isMobile = window.innerWidth <= 768;
+  const columnsPerRow = isMobile ? MOBILE_COLUMNS : DESKTOP_COLUMNS;
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-const fetchProducts = async (currentPage) => {
-  
+const fetchProducts = async () => {
+  setLoading(true);
+
   try {
+    const totalLoaded = staticProducts.length + apiProducts.length;
+    const remainder = totalLoaded % columnsPerRow;
+    const batchSize =
+      apiProducts.length === 0 && remainder !== 0
+        ? columnsPerRow - remainder
+        : columnsPerRow * 2;
+
     const res = await fetch(
-      `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&status=publish&_fields=id,name,price,regular_price,sale_price,images,slug`
+      `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&status=publish&per_page=${batchSize}&offset=${apiProducts.length}&_fields=id,name,price,regular_price,sale_price,images,slug`
     );
 
     const data = await res.json();
@@ -362,16 +371,16 @@ const fetchProducts = async (currentPage) => {
         sold: 0,
       }));
 
-    if (formatted.length < 10) {
-      setHasMore(false); // no more products
-    }
+    setHasMore(formatted.length === batchSize);
 
-   setApiProducts((prev) => {
-  const combined = [...prev, ...formatted];
-  return shuffleArray(combined);
-});
+    setApiProducts((prev) => {
+      const seen = new Set(prev.map((product) => product.id));
+      const nextProducts = formatted.filter((product) => !seen.has(product.id));
+      return shuffleArray([...prev, ...nextProducts]);
+    });
   } catch (err) {
     console.error("Error fetching products:", err);
+    setHasMore(false);
   } finally {
     setLoading(false);
   }
@@ -382,12 +391,16 @@ const fetchProducts = async (currentPage) => {
     const limit = isMobile ? 28 : 50;
     return name.length > limit ? name.substring(0, limit) + "..." : name;
   };
-
-  const isMobile = window.innerWidth <= 768;
+  const loadingSkeletonCount = isMobile ? MOBILE_COLUMNS * 2 : DESKTOP_COLUMNS;
 const mergedProducts = [
   ...staticProducts,
   ...apiProducts
 ].filter(p => p && p.images);
+const displayableCount =
+  mergedProducts.length <= columnsPerRow
+    ? mergedProducts.length
+    : Math.floor(mergedProducts.length / columnsPerRow) * columnsPerRow;
+const displayedProducts = mergedProducts.slice(0, displayableCount);
 
   return (
     <div style={{ background: '#fff', padding: '10px 0 40px' }}>
@@ -420,11 +433,11 @@ const mergedProducts = [
         maxWidth: '1400px',
         margin: '0 auto',
         display: 'grid',
-        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(230px, 1fr))',
+        gridTemplateColumns: isMobile ? `repeat(${MOBILE_COLUMNS}, 1fr)` : `repeat(${DESKTOP_COLUMNS}, minmax(0, 1fr))`,
         gap: isMobile ? '12px' : '20px',
         padding: '0 12px',
       }}>
-       {mergedProducts.length === 0 ? (
+       {displayedProducts.length === 0 ? (
   // 🔹 First Load Skeletons
   Array.from({ length: 8 }).map((_, index) => (
     <SkeletonCard key={index} isMobile={isMobile} />
@@ -432,7 +445,7 @@ const mergedProducts = [
 ) : (
   <>
     {/* 🔹 Real Products */}
-    {mergedProducts.map((product, index) => {
+    {displayedProducts.map((product, index) => {
       if (!product) return null;
 
       return (
@@ -591,7 +604,7 @@ const mergedProducts = [
 
     {/* 🔹 Loading More Skeletons */}
     {loading &&
-      Array.from({ length: 4 }).map((_, index) => (
+      Array.from({ length: loadingSkeletonCount }).map((_, index) => (
         <SkeletonCard key={`load-${index}`} isMobile={isMobile} />
       ))}
   </>
@@ -600,18 +613,20 @@ const mergedProducts = [
       <div style={{ textAlign: "center", marginTop: "20px" }}>
   {hasMore && (
     <button
-      onClick={() => setPage(prev => prev + 1)}
+      onClick={fetchProducts}
+      disabled={loading}
       style={{
         padding: "10px 20px",
         background: "#ff6b00",
         color: "#fff",
         border: "none",
         borderRadius: "8px",
-        cursor: "pointer",
+        cursor: loading ? "not-allowed" : "pointer",
+        opacity: loading ? 0.7 : 1,
         fontWeight: "bold"
       }}
     >
-      Load More
+      {loading ? "Loading..." : "Load More"}
     </button>
   )}
 </div>

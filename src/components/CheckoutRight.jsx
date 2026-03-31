@@ -9,6 +9,8 @@ import PaymentMethodSelector from './checkout/PaymentMethodSelector';
 import Tabby from '../assets/images/Footer icons/3.webp'
 import Tamara from '../assets/images/Footer icons/6.webp'
 
+const DELIVERY_FEE = 13;
+
 // -----------------------------
 // Alert Component
 // -----------------------------
@@ -91,7 +93,8 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
   // Cap total discount to itemsTotal to prevent negative totals
   const totalDiscount = Math.min(discount + coinDiscount, itemsTotal);
   const subtotal = Math.max(0, itemsTotal - totalDiscount);
-  const totalWithDelivery = Math.max(0, subtotal); // Ensure total never goes below zero
+  const deliveryFee = subtotal > 0 && subtotal < 100 ? DELIVERY_FEE : 0;
+  const totalWithDelivery = Math.max(0, subtotal + deliveryFee); // Ensure total never goes below zero
   const amountToSend = Number(totalWithDelivery.toFixed(2));
   const hasCartItems = cartItems.some((item) => (parseInt(item.quantity, 10) || 0) > 0);
   const isAddressFormOpen = !!(showForm || formData?.addressModalOpen);
@@ -680,6 +683,12 @@ console.log("✅ Wallet Payment Response =>", data);
               <div className="summaryRowCR">
                 <span>Coin Discount:</span>
                 <span style={{ color: '#1976d2', fontWeight: 600 }}>- AED {coinDiscount.toFixed(2)}</span>
+              </div>
+            )}
+            {deliveryFee > 0 && (
+              <div className="summaryRowCR">
+                <span>Delivery Charge:</span>
+                <span style={{ fontWeight: 600 }}>AED {deliveryFee.toFixed(2)}</span>
               </div>
             )}
             <div className="summaryRowCR" style={{ marginTop: '1rem' }}>

@@ -89,6 +89,12 @@ export default function ProductInfo({ product, variations, selectedVariation, on
   });
   const brandOptions = brandAttribute?.options || [];
   const brand = brandOptions.length ? brandOptions[0] : null;
+  const isRatingCategoryProduct = Array.isArray(product.categories)
+    && product.categories.some((category) => {
+      const name = (category?.name || '').toLowerCase().trim();
+      const slug = (category?.slug || '').toLowerCase().trim();
+      return name === 'rating' || slug === 'rating';
+    });
 
   // Stock quantity calculation
   const rawQty = Number(selectedVariation?.stock_quantity);
@@ -297,12 +303,13 @@ export default function ProductInfo({ product, variations, selectedVariation, on
           <div className="pi-badge-strip">
             <SellerBadges badges={combinedBadges} />
           </div>
-          <div className="pi-rating-strip">
+          {/* <div className="pi-rating-strip">
             <ProductCardReviews
               productId={product.id}
               soldCount={product.total_sales || 0}
+              overrideRating={isRatingCategoryProduct ? 5 : null}
             />
-          </div>
+          </div> */}
 
           {product.sku && <p className="pi-product-sku">SKU: {product.sku}</p>}
           {brand && <p className="pi-product-brand">Brand: {brand}</p>}

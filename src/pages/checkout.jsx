@@ -44,6 +44,7 @@ const fetchWithAuth = async (endpoint, options = {}) => {
 };
 
 const sanitizeField = (value) => (value && value.trim() ? value : 'NA');
+const DELIVERY_FEE = 13;
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -105,6 +106,8 @@ export default function CheckoutPage() {
     (sum, item) => sum + (parseFloat(item.price) || 0) * item.quantity,
     0
   );
+  const discountedSubtotal = Math.max(0, subtotal - discount - coinDiscount);
+  const deliveryFee = discountedSubtotal > 0 && discountedSubtotal < 100 ? DELIVERY_FEE : 0;
 
   useEffect(() => {
     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -343,6 +346,12 @@ useEffect(() => {
       fee_lines.push({
         name: 'Coin Discount',
         total: (-coinDiscount).toFixed(2),
+      });
+    }
+    if (deliveryFee > 0) {
+      fee_lines.push({
+        name: 'Delivery Charge',
+        total: deliveryFee.toFixed(2),
       });
     }
 

@@ -91,9 +91,22 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
   };
 
   const qtyNumberStyle = {
-    minWidth: 24,
+    minWidth: 52,
     textAlign: 'center',
     fontWeight: 'bold',
+  };
+
+  const qtyInputStyle = {
+    width: 52,
+    minWidth: 52,
+    height: 28,
+    border: '1px solid #ccc',
+    borderRadius: 4,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#dd5405ff',
+    outline: 'none',
+    padding: '0 6px',
   };
 
   return (
@@ -124,6 +137,11 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
 
           // Check if this item supports COD (either from static list OR WordPress backend setting)
           const isCodAvailable = staticProductIds.includes(item.id) || item.cod_available === true;
+          const currentQuantity = Number(item.quantity) > 0 ? Number(item.quantity) : 1;
+          const maxItemQuantity =
+            Number.isInteger(item.stock_quantity) && item.stock_quantity > 0
+              ? Math.min(item.stock_quantity, 99)
+              : 99;
 
           return (
             <div
@@ -204,20 +222,50 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
                     style={qtyButtonStyle}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleUpdateQuantity(item, (item.quantity ?? 1) - 1);
+                      handleUpdateQuantity(item, currentQuantity - 1);
                     }}
                   >
                     −
                   </button>
 
-                  <span style={qtyNumberStyle}><span style={{color:"#dd5405ff",fontWeight:"bold"}}>{item.quantity ?? 1}</span></span>
+                  <span style={qtyNumberStyle}>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      defaultValue={currentQuantity}
+                      aria-label={`Enter quantity for ${item.name}`}
+                      style={qtyInputStyle}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        e.target.value = e.target.value.replace(/[^\d]/g, '');
+                      }}
+                      onBlur={(e) => {
+                        const parsedValue = Number.parseInt(e.target.value, 10);
+                        const nextQuantity = Number.isFinite(parsedValue)
+                          ? Math.min(Math.max(parsedValue, 1), maxItemQuantity)
+                          : currentQuantity;
+
+                        e.target.value = String(nextQuantity);
+                        if (nextQuantity !== currentQuantity) {
+                          handleUpdateQuantity(item, nextQuantity);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.currentTarget.blur();
+                        }
+                      }}
+                    />
+                  </span>
 
                   <button
                     style={qtyButtonStyle}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleUpdateQuantity(item, (item.quantity ?? 1) + 1);
+                      handleUpdateQuantity(item, Math.min(currentQuantity + 1, maxItemQuantity));
                     }}
+                    disabled={currentQuantity >= maxItemQuantity}
                   >
                     +
                   </button>
