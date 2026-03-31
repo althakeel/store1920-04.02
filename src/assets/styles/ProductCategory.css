@@ -466,8 +466,9 @@ img.flying-clone {
 /* Products grid */
 .pcus-prd-grid001 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;
+  justify-items: center;
 }
 /* Product card */
 .pcus-prd-card {
@@ -482,6 +483,8 @@ img.flying-clone {
   user-select: none;
   overflow: hidden;
   position: relative;
+  width: 100%;
+  max-width: 260px;
 }
  
 .pcus-prd-card:hover,
@@ -834,7 +837,7 @@ img.flying-clone {
   /* Product grid: flexible columns */
   .pcus-prd-grid001 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 12px; /* reduced gap for better fit */
   }
 
@@ -925,8 +928,12 @@ img.flying-clone {
 
   /* Product grid: smaller columns */
   .pcus-prd-grid001 {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
+  }
+
+  .pcus-prd-card {
+    max-width: 100%;
   }
 
   /* Image wrapper: keep square ratio */
