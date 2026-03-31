@@ -11,9 +11,9 @@ import Logo8 from "../assets/images/theme/theme6/logo012.png";
 // import banner3 from '../assets/images/theme/banner/Banners-orange-2.webp';
 // import banner4 from '../assets/images/theme/banner/Banners-purple-2.webp';
 // import banner5 from '../assets/images/theme/banner/Banners Halloween 2.webp';
-// import banner6 from '../assets/images/theme/banner/Nexso_Banner.webp';
+import banner6 from '../assets/images/theme/banner/Nexso_Banner.webp';
 import Banner10 from "../assets/images/theme/theme6/Main-after-eid.webp";
-// import Banner11 from "../assets/images/theme/banner/main23rd.webp";
+import Banner11 from "../assets/images/theme/banner/main23rd.webp";
 
 
 export const themes = {
@@ -26,28 +26,28 @@ export const themes = {
       backgroundColor: "#F46B1D",
       textColor: "#F46B1D",
     },
-  }
-  // 2: {
-  //   logo: Logo6,
-  //   navbarBg: '#04061B',
-  //   bannerKey: banner6,
-  //   link: "https://www.store1920.com/search?q=nexso",
-  //   bannerBg: '#04061B',
-  //   lightningBanner: {
-  //     backgroundColor: '#04061B',
-  //     textColor: '#000000'
-  //   }
-  // },
-  //   3: {
-  //   logo: Logo8,
-  //   navbarBg: "#026D7D",
-  //   bannerKey: Banner11,
-  //   bannerBg: "#026D7D",
-  //   lightningBanner: {
-  //     backgroundColor: "#026D7D",
-  //     textColor: "#026D7D",
-  //   },
-  // },
+  },
+  2: {
+    logo: Logo6,
+    navbarBg: '#04061B',
+    bannerKey: banner6,
+    link: "https://www.store1920.com/search?q=nexso",
+    bannerBg: '#04061B',
+    lightningBanner: {
+      backgroundColor: '#04061B',
+      textColor: '#000000'
+    }
+  },
+    3: {
+    logo: Logo8,
+    navbarBg: "#026D7D",
+    bannerKey: Banner11,
+    bannerBg: "#026D7D",
+    lightningBanner: {
+      backgroundColor: "#026D7D",
+      textColor: "#026D7D",
+    },
+  },
   // 4: {
   //   logo: Logo2,
   //   navbarBg: '#37AADA',
