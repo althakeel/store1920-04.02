@@ -26,28 +26,28 @@ export const themes = {
       backgroundColor: "#F46B1D",
       textColor: "#F46B1D",
     },
-  },
-  2: {
-    logo: Logo6,
-    navbarBg: '#04061B',
-    bannerKey: banner6,
-    link: "https://www.store1920.com/search?q=nexso",
-    bannerBg: '#04061B',
-    lightningBanner: {
-      backgroundColor: '#04061B',
-      textColor: '#000000'
-    }
-  },
-    3: {
-    logo: Logo8,
-    navbarBg: "#026D7D",
-    bannerKey: Banner11,
-    bannerBg: "#026D7D",
-    lightningBanner: {
-      backgroundColor: "#026D7D",
-      textColor: "#026D7D",
-    },
-  },
+  }
+  // 2: {
+  //   logo: Logo6,
+  //   navbarBg: '#04061B',
+  //   bannerKey: banner6,
+  //   link: "https://www.store1920.com/search?q=nexso",
+  //   bannerBg: '#04061B',
+  //   lightningBanner: {
+  //     backgroundColor: '#04061B',
+  //     textColor: '#000000'
+  //   }
+  // },
+  //   3: {
+  //   logo: Logo8,
+  //   navbarBg: "#026D7D",
+  //   bannerKey: Banner11,
+  //   bannerBg: "#026D7D",
+  //   lightningBanner: {
+  //     backgroundColor: "#026D7D",
+  //     textColor: "#026D7D",
+  //   },
+  // },
   // 4: {
   //   logo: Logo2,
   //   navbarBg: '#37AADA',
