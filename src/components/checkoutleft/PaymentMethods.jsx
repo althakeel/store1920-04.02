@@ -2,31 +2,16 @@ import React, { useEffect, useState } from 'react';
 import '../../assets/styles/checkoutleft/paymentmethods.css';
 import PaymentConfirmationPopup from './PaymentConfirmationPopup';
 
-import circleEmpty from '../../assets/images/tabby/full.webp';
-import circleQuarter from '../../assets/images/tabby/quarter.webp';
-import circleHalf from '../../assets/images/tabby/half.webp';
-import circleFull from '../../assets/images/tabby/half-and-quarter.webp';
-import aedIcon from '../../assets/images/Dirham 2.png';
-
 import TabbyIcon from '../../assets/images/Footer icons/3.webp';
 import TamaraIcon from '../../assets/images/Footer icons/6.webp';
 import CashIcon from '../../assets/images/Footer icons/13.webp';
 import CardIcon from '../../assets/images/tabby/creditcard.webp';
 
-import AppleIcon from '../../assets/images/Footer icons/2.webp';
-import VisaIcon from '../../assets/images/Footer icons/17.webp';
-import MasterIcon from '../../assets/images/Footer icons/16.webp';
-
 // Card payment icons
 import ApplePayIcon from '../../assets/images/Footer icons/2.webp';
-import TabbyPayIcon from '../../assets/images/Footer icons/3.webp';
-import TamaraPayIcon from '../../assets/images/Footer icons/6.webp';
 import AmexIcon from '../../assets/images/Footer icons/11.webp';
 import GooglePayIcon from '../../assets/images/Footer icons/12.webp';
-import CashPayIcon from '../../assets/images/Footer icons/13.webp';
 import MasterCardIcon from '../../assets/images/Footer icons/16.webp';
-import VisaCardIcon from '../../assets/images/Footer icons/17.webp';
-import PayPalIcon from '../../assets/images/Footer icons/18.webp';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -46,6 +31,74 @@ const TABBY_MERCHANT_CODE = 'Store1920';
 
 // Tamara credentials
 const TAMARA_PUBLIC_KEY = '610bc886-8883-42f4-9f61-4cf0ec45c02e';
+
+const formatAED = (value) => `AED${Number(value || 0).toFixed(2)}`;
+
+const getInstallmentAmounts = (amount) => {
+  const normalizedAmount = Number(amount) || 0;
+  const baseInstallment = Math.floor((normalizedAmount / 4) * 100) / 100;
+  const installments = Array.from({ length: 4 }, () => baseInstallment);
+  const assignedTotal = baseInstallment * 4;
+  installments[3] = Number((normalizedAmount - assignedTotal + baseInstallment).toFixed(2));
+  return installments;
+};
+
+const PAYMENT_SCHEDULE_LABELS = ['Today', 'In 1 month', 'In 2 months', 'In 3 months'];
+
+const InstallmentOption = ({
+  method,
+  icon,
+  selected,
+  disabled = false,
+  amount,
+  onChange,
+}) => {
+  const brandName = method === 'tabby' ? 'Tabby.' : 'Tamara:';
+  const lineText =
+    method === 'tabby'
+      ? 'Split into 4 Payments'
+      : 'Split in up to 4 payments';
+  const installments = getInstallmentAmounts(amount);
+
+  return (
+    <div className={`payment-method-item payment-method-item--installment ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}>
+      <input
+        type="radio"
+        id={method}
+        name="payment-method"
+        disabled={disabled}
+        checked={selected}
+        onChange={onChange}
+      />
+      <label htmlFor={method} className="payment-method-label payment-method-label--installment">
+        <div className="temu-pay-block">
+          <div className="temu-pay-header">
+            <div className="temu-pay-brand-row">
+              <img src={icon} alt={method === 'tabby' ? 'Tabby' : 'Tamara'} className="temu-pay-logo" />
+              <span className="temu-pay-brand-copy">
+                <strong>{brandName}</strong> {lineText}
+              </span>
+              <span className="temu-pay-info">?</span>
+            </div>
+            <div className="temu-pay-summary">
+              <span className="temu-pay-highlight">Pay {formatAED(installments[0])} today</span> and the rest in 3 interest-free payments
+            </div>
+          </div>
+
+          <div className={`temu-pay-schedule ${method === 'tamara' ? 'temu-pay-schedule--tamara' : 'temu-pay-schedule--tabby'}`}>
+            {installments.map((installmentAmount, index) => (
+              <div key={`${method}-${PAYMENT_SCHEDULE_LABELS[index]}`} className="temu-pay-installment">
+                <div className="temu-pay-installment-amount">{formatAED(installmentAmount)}</div>
+                <div className="temu-pay-installment-label">{PAYMENT_SCHEDULE_LABELS[index]}</div>
+                <div className={`temu-pay-installment-bar temu-pay-installment-bar--${method}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </label>
+    </div>
+  );
+};
 
 const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = [] }) => {
   const [showCodPopup, setShowCodPopup] = useState(false);
@@ -152,71 +205,13 @@ console.log('Auth user ID:', user?.id);
   const canUseWallet =
   Number(walletBalance || 0) >= amount &&
   amount > 0;
-  const tabbyInstallment = (amount / 4).toFixed(2);
-
   useEffect(() => {
     if (selectedMethod === 'cod' && !isCodAvailableForCart) {
       onMethodSelect('card', 'Credit/Debit Card', CardIcon);
     }
   }, [cartItems, selectedMethod, onMethodSelect, isCodAvailableForCart]);
 
-  // --- TabbyCard integration ---
-  useEffect(() => {
-    if (!document.getElementById('tabby-card-js')) {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.tabby.ai/tabby-card.js';
-      script.id = 'tabby-card-js';
-      script.onload = () => {
-        if (window.TabbyCard) {
-          new window.TabbyCard({
-            selector: '#tabbyCard',
-            currency: 'AED',
-            price: (Number(subtotal) || 0).toFixed(2),
-            lang: 'en',
-            shouldInheritBg: false,
-            publicKey: TABBY_PUBLIC_KEY,
-            merchantCode: TABBY_MERCHANT_CODE
-          });
-        }
-      };
-      document.body.appendChild(script);
-    } else if (window.TabbyCard) {
-      new window.TabbyCard({
-        selector: '#tabbyCard',
-        currency: 'AED',
-        price: (Number(subtotal) || 0).toFixed(2),
-        lang: 'en',
-        shouldInheritBg: false,
-        publicKey: TABBY_PUBLIC_KEY,
-        merchantCode: TABBY_MERCHANT_CODE
-      });
-    }
-  }, [subtotal]);
-
-  // --- Tamara Installment Widget Integration ---
-  useEffect(() => {
-    const loadTamaraWidget = () => {
-      if (window.TamaraInstallmentPlan) {
-        window.TamaraInstallmentPlan.init({
-          lang: 'en',
-          currency: 'AED',
-          publicKey: TAMARA_PUBLIC_KEY
-        });
-        window.TamaraInstallmentPlan.render();
-      }
-    };
-
-    if (!document.getElementById('tamara-widget-js')) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.tamara.co/widget/installment-plan.min.js';
-      script.id = 'tamara-widget-js';
-      script.async = true;
-      script.onload = loadTamaraWidget;
-      document.head.appendChild(script);
-    } else {
-      loadTamaraWidget();
-    }
-  }, [subtotal]);
+  const installmentAmounts = getInstallmentAmounts(amount);
 
 
 useEffect(() => {
@@ -312,85 +307,50 @@ console.log('Wallet loading:', walletLoading);
           </label>
         </div>
 
-        {/* Tabby Widget */}
-        <div className="payment-method-item tabby-checkout-method" style={{ width: '100%' }}>
-          <input
-            type="radio"
-            id="tabby"
-            name="payment-method"
-            checked={selectedMethod === 'tabby'}
-            onChange={() => handlePaymentMethodSelect('tabby', 'Tabby', TabbyIcon)}
-          />
-          <label htmlFor="tabby" className="payment-method-label" style={{ width: '100%' }}>
-            <div className="payment-method-content" style={{ width: '100%' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  width: '100%',
-                  background: '#fff',
-                  borderRadius: '16px',
-                  border: '1px solid #e5e5e5',
-                  padding: '2px 0',
-                  boxShadow: '0 2px 8px 0 rgba(0,0,0,0.03)',
-                  position: 'relative',
-                  marginLeft: 0,
-                  opacity: selectedMethod === 'tabby' ? 1 : 0.7,
-                  filter: selectedMethod === 'tabby' ? 'none' : 'grayscale(0.3)'
-                }}
-              >
-                <div id="tabbyCard" style={{ marginTop: '0px', width: '100%' }}></div>
-              </div>
-            </div>
-          </label>
-        </div>
+        <InstallmentOption
+          method="tabby"
+          icon={TabbyIcon}
+          selected={selectedMethod === 'tabby'}
+          amount={amount}
+          onChange={() => handlePaymentMethodSelect('tabby', 'Tabby', TabbyIcon)}
+        />
 
-        {/* Tamara Official Widget */}
-        <div className="payment-method-item" style={{ width: '100%', opacity: isTamaraEligible ? 1 : 0.5 }}>
-          <input
-            type="radio"
-            id="tamara"
-            name="payment-method"
-            disabled={!isTamaraEligible}
-            checked={selectedMethod === 'tamara'}
+        {isTamaraEligible ? (
+          <InstallmentOption
+            method="tamara"
+            icon={TamaraIcon}
+            selected={selectedMethod === 'tamara'}
+            amount={amount}
             onChange={() => handlePaymentMethodSelect('tamara', 'Tamara', TamaraIcon)}
           />
-          <label htmlFor="tamara" className="payment-method-label" style={{ width: '100%' }}>
-            <div className="payment-method-content" style={{ width: '100%' }}>
-              {isTamaraEligible ? (
-                <div
-                  className="tamara-installment-plan-widget"
-                  data-lang="en"
-                  data-currency="AED"
-                  data-price={(Number(subtotal) || 0).toFixed(2)}
-                  data-number-of-installments="4"
-                  data-disable-installment="false"
-                  data-installment-minimum-amount="99"
-                  data-installment-maximum-amount="3000"
-                  data-installment-available-amount="99"
-                  style={{ width: '100%', marginTop: '4px' }}
-                ></div>
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    marginTop: '4px',
-                    padding: '12px 14px',
-                    background: '#fff7ed',
-                    border: '1px solid #fed7aa',
-                    borderRadius: '12px',
-                    color: '#9a3412',
-                    fontSize: '13px'
-                  }}
-                >
-                  Tamara is available for orders between AED {tamaraMinAmount} and AED {tamaraMaxAmount}.
-                  Your total is AED {amount.toFixed(2)}.
+        ) : (
+          <div className="payment-method-item payment-method-item--installment disabled">
+            <input
+              type="radio"
+              id="tamara"
+              name="payment-method"
+              disabled
+              checked={false}
+              onChange={() => {}}
+            />
+            <label htmlFor="tamara" className="payment-method-label payment-method-label--installment">
+              <div className="temu-pay-block">
+                <div className="temu-pay-header">
+                  <div className="temu-pay-brand-row">
+                    <img src={TamaraIcon} alt="Tamara" className="temu-pay-logo" />
+                    <span className="temu-pay-brand-copy">
+                      <strong>Tamara:</strong> Split in up to 4 payments
+                    </span>
+                    <span className="temu-pay-info">?</span>
+                  </div>
                 </div>
-              )}
-            </div>
-          </label>
-        </div>
+                <div className="temu-pay-unavailable">
+                  Tamara is available for orders between AED {tamaraMinAmount} and AED {tamaraMaxAmount}. Your total is AED {amount.toFixed(2)}.
+                </div>
+              </div>
+            </label>
+          </div>
+        )}
 
         {/* Cash on Delivery */}
         {isCodAvailableForCart && (

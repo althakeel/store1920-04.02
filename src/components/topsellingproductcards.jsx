@@ -11,15 +11,11 @@ import IconAED from '../assets/images/Dirham 2.png';
 import ProductCardReviews from '../components/temp/productcardreviews';
 import NoImagePlaceholder from './NoImagePlaceholder';
 
-import { getProductsByCategory, getFirstVariation, getCurrencySymbol, getPopularProducts } from '../api/woocommerce';
-// Set this to your actual 'topselling' category ID from WooCommerce
-const TOPSELLING_CATEGORY_ID = 29686;
+import { getFirstVariation, getCurrencySymbol, getPopularProducts, getTopSellingItemsProducts } from '../api/woocommerce';
 
-const PRODUCTS_PER_PAGE = 24;
+const INITIAL_LOAD_COUNT = 10;
+const LOAD_MORE_COUNT = 10;
 const TITLE_LIMIT = 35;
-const INITIAL_LOAD = 12; // Load only 12 products initially for faster LCP
-const FALLBACK_RANDOM_COUNT = 20;
-const FALLBACK_FETCH_SIZE = 60;
 
 // ===================== Utility functions =====================
 const decodeHTML = (html) => {
@@ -53,15 +49,10 @@ const New = () => {
   const [variationPrices, setVariationPrices] = useState({});
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [currencySymbol, setCurrencySymbol] = useState('AED');
-  const [productsPage, setProductsPage] = useState(1);
-  const [hasMoreProducts, setHasMoreProducts] = useState(true);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [usingFallbackProducts, setUsingFallbackProducts] = useState(false);
-
-
-
-
-  
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [nextPage, setNextPage] = useState(1);
 
   // ===================== Fetch currency =====================
   useEffect(() => {
@@ -77,95 +68,59 @@ const New = () => {
     fetchCurrency();
   }, []);
 
-
   // ===================== Fetch products OPTIMIZED =====================
-  const loadFallbackProducts = useCallback(async () => {
-    try {
-      const data = await getPopularProducts(1, FALLBACK_FETCH_SIZE);
-      const validData = Array.isArray(data) ? data : [];
-      const randomProducts = shuffleArray(validData).slice(0, FALLBACK_RANDOM_COUNT);
-
-      setProducts(randomProducts);
-      setProductsPage(1);
-      setHasMoreProducts(false);
-      setUsingFallbackProducts(true);
-      setInitialLoadDone(true);
-    } catch (error) {
-      console.error('Error fetching fallback products:', error);
-      setProducts([]);
-      setHasMoreProducts(false);
-    }
-  }, []);
-
-  const fetchProducts = useCallback(async (page = 1) => {
+  const fetchProducts = useCallback(async ({ page, append, useFallback = false }) => {
     setLoadingProducts(true);
     try {
-      const perPage = page === 1 ? INITIAL_LOAD : PRODUCTS_PER_PAGE;
-      const data = await getProductsByCategory(TOPSELLING_CATEGORY_ID, page, perPage);
+      const fetcher = useFallback ? getPopularProducts : getTopSellingItemsProducts;
+      const batchSize = append ? LOAD_MORE_COUNT : INITIAL_LOAD_COUNT;
+      const data = await fetcher(page, batchSize);
       const validData = Array.isArray(data) ? data : [];
 
-      if (page === 1 && validData.length === 0) {
-        await loadFallbackProducts();
+      if (!useFallback && page === 1 && validData.length === 0) {
+        setUsingFallbackProducts(true);
+        await fetchProducts({ page: 1, append: false, useFallback: true });
         return;
       }
-      
-      setProducts(prev => page === 1 ? validData : [...prev, ...validData]);
-      setHasMoreProducts(validData.length >= perPage);
-      setUsingFallbackProducts(false);
-      
-      if (page === 1) {
-        setInitialLoadDone(true);
-        // Load remaining products in background after initial render
-        setTimeout(() => {
-          if (validData.length >= INITIAL_LOAD) {
-            fetchMoreInBackground();
-          }
-        }, 100);
-      }
+
+      setProducts((prev) => {
+        if (!append) return validData;
+
+        const existingIds = new Set(prev.map((product) => product.id));
+        const nextItems = validData.filter((product) => !existingIds.has(product.id));
+        return [...prev, ...nextItems];
+      });
+      setHasMoreProducts(validData.length === batchSize);
+      setNextPage(page + 1);
+      setInitialLoadDone(true);
     } catch (error) {
       console.error('Error fetching products:', error);
-      await loadFallbackProducts();
+
+      if (!useFallback) {
+        setUsingFallbackProducts(true);
+        await fetchProducts({ page: 1, append: false, useFallback: true });
+        return;
+      }
+
+      setProducts([]);
+      setHasMoreProducts(false);
     } finally {
       setLoadingProducts(false);
     }
-  }, [loadFallbackProducts]);
-
-  // Background fetch for remaining first page products
-  const fetchMoreInBackground = async () => {
-    try {
-      const data = await getProductsByCategory(TOPSELLING_CATEGORY_ID, 1, PRODUCTS_PER_PAGE);
-      const validData = Array.isArray(data) ? data : [];
-      if (validData.length > 0) {
-        setProducts(validData);
-      }
-    } catch (error) {
-      console.error('Error fetching more products:', error);
-    }
-  };
-
-
+  }, []);
 
   useEffect(() => {
-    fetchProducts(1);
-    setProductsPage(1);
+    fetchProducts({ page: 1, append: false });
   }, [fetchProducts]);
 
   // Defer reviews progressively - optimized
   useEffect(() => {
     if (!initialLoadDone || products.length === 0) return;
     
-    const filtered = products.filter(p => {
-      const hasImage = Array.isArray(p.images) && p.images.length > 0 && p.images[0]?.src;
-      const isVariable = p.type === 'variable';
-      const variationPriceInfo = variationPrices[p.id] || {};
-      const price = isVariable ? variationPriceInfo.price : p.price || p.regular_price || 0;
-      return hasImage && parseFloat(price) > 0;
-    });
-
     // Show reviews gradually - much faster
     const timeout = setTimeout(() => {
-      const newSet = new Set(showReviews);
-      for (let i = 4; i < Math.min(filtered.length, 24); i++) {
+      const newSet = new Set([0, 1, 2, 3]);
+      for (let i = 4; i < Math.min(products.length, 24); i++) {
         newSet.add(i);
       }
       setShowReviews(newSet);
@@ -174,55 +129,13 @@ const New = () => {
     return () => clearTimeout(timeout);
   }, [initialLoadDone, products.length]);
 
-  // Optimized variation price fetching - only fetch visible products
-  useEffect(() => {
-    if (!products || products.length === 0) return;
-    
-    const visibleProducts = products.slice(0, PRODUCTS_PER_PAGE);
-    const variableProducts = visibleProducts.filter(p => p.type === 'variable' && !variationPrices[p.id]);
-    
-    // Batch fetch variations - max 5 at a time to avoid overwhelming
-    const batchSize = 5;
-    for (let i = 0; i < variableProducts.length; i += batchSize) {
-      const batch = variableProducts.slice(i, i + batchSize);
-      setTimeout(() => {
-        batch.forEach(p => fetchFirstVariationPrice(p.id));
-      }, i * 100); // Stagger batches
-    }
-  }, [products.length]);
-
-  // Memoize filtered products
-  const filteredProducts = useMemo(() => {
-    return products.filter(p => {
-      const hasImage = Array.isArray(p.images) && p.images.length > 0 && p.images[0]?.src;
-      const isVariable = p.type === 'variable';
-      const variationPriceInfo = variationPrices[p.id] || {};
-      const price = isVariable ? variationPriceInfo.price : p.price || p.regular_price || 0;
-      return hasImage && parseFloat(price) > 0;
-    });
-  }, [products, variationPrices]);
+  const displayedProducts = useMemo(() => products, [products]);
 
   // Optimized Load More
   const loadMoreProducts = useCallback(() => {
-    if (!hasMoreProducts || loadingProducts || usingFallbackProducts) return;
-    const nextPage = productsPage + 1;
-    setProductsPage(nextPage);
-    setLoadingProducts(true);
-    
-    getProductsByCategory(TOPSELLING_CATEGORY_ID, nextPage, PRODUCTS_PER_PAGE)
-      .then((data) => {
-        const validData = Array.isArray(data) ? data : [];
-        setProducts(prev => [...prev, ...validData]);
-        setHasMoreProducts(validData.length >= PRODUCTS_PER_PAGE);
-      })
-      .catch((error) => {
-        console.error('Error fetching products:', error);
-        setHasMoreProducts(false);
-      })
-      .finally(() => {
-        setLoadingProducts(false);
-      });
-  }, [hasMoreProducts, loadingProducts, productsPage, usingFallbackProducts]);
+    if (!hasMoreProducts || loadingProducts) return;
+    fetchProducts({ page: nextPage, append: true, useFallback: usingFallbackProducts });
+  }, [fetchProducts, hasMoreProducts, loadingProducts, nextPage, usingFallbackProducts]);
 
   // ===================== Fetch first variation prices - OPTIMIZED =====================
   const fetchFirstVariationPrice = useCallback(async (productId) => {
@@ -242,6 +155,22 @@ const New = () => {
       console.error(`Failed to fetch variation for product ${productId}:`, error);
     }
   }, []);
+
+  // Optimized variation price fetching - only fetch currently visible products
+  useEffect(() => {
+    if (!displayedProducts || displayedProducts.length === 0) return;
+    
+    const variableProducts = displayedProducts.filter(p => p.type === 'variable' && !variationPrices[p.id]);
+    
+    // Batch fetch variations - max 5 at a time to avoid overwhelming
+    const batchSize = 5;
+    for (let i = 0; i < variableProducts.length; i += batchSize) {
+      const batch = variableProducts.slice(i, i + batchSize);
+      setTimeout(() => {
+        batch.forEach(p => fetchFirstVariationPrice(p.id));
+      }, i * 100); // Stagger batches
+    }
+  }, [displayedProducts, variationPrices, fetchFirstVariationPrice]);
 
   // ===================== Handle product click =====================
   const onProductClick = useCallback((slug, id) => {
@@ -290,33 +219,6 @@ const New = () => {
     setTimeout(() => clone.remove(), 750);
   }, []);
   
-// ===================== Shuffle utility =====================
-const shuffleArray = (array) => {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-
-// ===================== Shuffle products every hour =====================
-// ===================== Shuffle first page every hour =====================
-useEffect(() => {
-  const interval = setInterval(() => {
-    setProducts(prev => {
-      if (!prev || prev.length === 0) return prev;
-
-      const firstPage = prev.slice(0, PRODUCTS_PER_PAGE); // only first page
-      const rest = prev.slice(PRODUCTS_PER_PAGE);         // rest of products
-      return [...shuffleArray(firstPage), ...rest];
-    });
-  }, 60 * 60 * 1000); // 1 hour
-
-  return () => clearInterval(interval);
-}, []);
-
-
   // ===================== Render =====================
   return (
     <div className="pcus-wrapper12" style={{ display: 'flex' }}>
@@ -343,7 +245,7 @@ useEffect(() => {
         ) : (
           <div className="pcus-prd-grid12">
             {/* Render using memoized filtered products */}
-            {filteredProducts.slice(0, productsPage * PRODUCTS_PER_PAGE).map((p, idx) => {
+            {displayedProducts.map((p, idx) => {
                   const isVariable = p.type === 'variable';
                   const variationPriceInfo = variationPrices[p.id] || {};
                   const displayRegularPrice = isVariable ? variationPriceInfo.regular_price : p.regular_price || p.price;

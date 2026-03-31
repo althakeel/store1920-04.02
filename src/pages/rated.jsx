@@ -7,11 +7,10 @@ import AddCarticon from '../assets/images/addtocart.png';
 import AddedToCartIcon from '../assets/images/added-cart.png';
 import Adsicon from '../assets/images/summer-saving-coloured.png';
 import IconAED from '../assets/images/Dirham 2.png';
-import { getRatedProducts, getPopularProducts, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
+import { getProductsByExactWooCategorySlug, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
 
-const PRODUCTS_PER_PAGE = 20;
+const PRODUCTS_PER_PAGE = 10;
 const TITLE_LIMIT = 35;
-const FALLBACK_RANDOM_COUNT = 12;
 
 // ===================== Utilities =====================
 const decodeHTML = (html) => {
@@ -63,7 +62,6 @@ const Rated = () => {
   const [currencySymbol, setCurrencySymbol] = useState('AED');
   const [productsPage, setProductsPage] = useState(1);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
-  const [usingFallbackProducts, setUsingFallbackProducts] = useState(false);
 
   // ===================== Effects =====================
   // Fetch currency symbol
@@ -79,60 +77,32 @@ const Rated = () => {
     fetchCurrency();
   }, []);
 
-  const shuffleArray = (array) => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
-  const loadFallbackProducts = useCallback(async () => {
-    try {
-      const data = await getPopularProducts(1, PRODUCTS_PER_PAGE);
-      const validData = Array.isArray(data) ? data : [];
-      setProducts(shuffleArray(validData).slice(0, FALLBACK_RANDOM_COUNT));
-      setHasMoreProducts(false);
-      setUsingFallbackProducts(true);
-    } catch (error) {
-      console.error('Error fetching fallback rated products:', error);
-      setProducts([]);
-      setHasMoreProducts(false);
-    }
-  }, []);
-
   // Fetch rated products, but render first product instantly for fastest LCP
   const fetchProducts = useCallback(async (page = 1) => {
     setLoadingProducts(true);
     try {
-      const data = await getRatedProducts(page, PRODUCTS_PER_PAGE);
+      const data = await getProductsByExactWooCategorySlug('rating', page, PRODUCTS_PER_PAGE);
       const validData = Array.isArray(data) ? data : [];
-      if (page === 1 && validData.length === 0) {
-        await loadFallbackProducts();
-        return;
-      }
       if (page === 1 && validData.length > 0) {
         // Render first product instantly, rest as skeletons until loaded
         setProducts([validData[0]]);
         setTimeout(() => {
           setProducts(validData);
           setHasMoreProducts(validData.length >= PRODUCTS_PER_PAGE);
-          setUsingFallbackProducts(false);
           setLoadingProducts(false);
         }, 0); // next tick, after first render
         return;
       }
       setProducts((prev) => (page === 1 ? validData : [...prev, ...validData]));
       setHasMoreProducts(validData.length >= PRODUCTS_PER_PAGE);
-      setUsingFallbackProducts(false);
     } catch (error) {
       console.error('Error fetching products:', error);
-      await loadFallbackProducts();
+      if (page === 1) setProducts([]);
+      setHasMoreProducts(false);
     } finally {
       setLoadingProducts(false);
     }
-  }, [loadFallbackProducts]);
+  }, []);
 
   useEffect(() => {
     fetchProducts(1);
@@ -207,7 +177,7 @@ const Rated = () => {
   };
 
   const loadMoreProducts = () => {
-    if (!hasMoreProducts || loadingProducts || usingFallbackProducts) return;
+    if (!hasMoreProducts || loadingProducts) return;
     const nextPage = productsPage + 1;
     setProductsPage(nextPage);
     fetchProducts(nextPage);

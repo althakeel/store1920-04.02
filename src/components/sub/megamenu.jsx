@@ -209,9 +209,10 @@ import MobileAccessoriesImg from '../../assets/images/megamenu/Sub catogory Webp
 
 import PetImg from '../../assets/images/megamenu/Sub catogory Webp/Cats copy.webp';
 
-import TravelImg from '../../assets/images/megamenu/Sub catogory Webp/Bags (Handbags, Shoulder Bags, Travel Bags, Wallets, Backpacks, Multi-purpose Bags) copy.webp';
+import TravelImg from '../../assets/images/megamenu/Sub catogory Webp/travel-accessories.webp';
 
-import FashionBagImg from '../../assets/images/megamenu/Sub catogory Webp/Bags (Handbags, Shoulder Bags, Travel Bags, Wallets, Backpacks, Multi-purpose Bags) copy.webp';
+import FashionBagImg from '../../assets/images/megamenu/Sub catogory Webp/womens-bags.webp';
+import BagsBackpacksImg from '../../assets/images/megamenu/Sub catogory Webp/Bags (Handbags, Shoulder Bags, Travel Bags, Wallets, Backpacks, Multi-purpose Bags) copy.webp';
 
 import WatchImg from '../../assets/images/megamenu/Sub catogory Webp/Jewelry & Watches copy.webp';
 
@@ -253,7 +254,7 @@ import Speakers from '../../assets/images/megamenu/Sub catogory Webp/speakers.we
 
 
 // MANUAL DATA
-const categories = [
+export const megaMenuCategories = [
 
   // {
   //   id: 1,
@@ -632,7 +633,7 @@ const categories = [
   //slug /fashion
   subCategories: [
     { id: 2091, name: "Women's Bags", image: FashionBagImg, path: "/category/womens-bags" },
-    { id: 2092, name: "Bags & Backpacks", image: FashionBagImg, path: "/category/bags-backpacks" },
+    { id: 2092, name: "Bags & Backpacks", image: BagsBackpacksImg, path: "/category/bags-backpacks" },
   ]
 },
 
@@ -790,7 +791,7 @@ const defaultRightCategories = [
   { id: 601, name: "Mobile Accessories", image: MobileAccessoriesImg, path: "/category/mobile-accessories", metaTitle: "Women's Clothing Online – Dresses, Tops & Outerwear | Store1920", metaDescription: "Discover stylish women's fashion at Store1920. Shop dresses, blouses, skirts, and outerwear with trendy new arrivals." },
   { id: 803, name: "Cat Accessories", image: PetImg, path: "/category/cat-accessories" },
   { id: 501, name: "Travel Accessories", image: TravelImg, path: "/category/travel-accessories", metaTitle: "Men's Clothing Online – Shirts, Jackets & Suits | Store1920", metaDescription: "Upgrade your wardrobe with men's fashion at Store1920. Shop shirts, jeans, jackets, suits, and more at great prices." },
-  { id: 204, name: "Women's Bags", image: HeatingCooling, path: "/category/womens-bags" },
+  { id: 204, name: "Women's Bags", image: FashionBagImg, path: "/category/womens-bags" },
   { id: 1306, name: "Hand Tools", image: HandToolsImg, path: "/category/hand-tools" },
 
 
@@ -906,7 +907,7 @@ const MegaMenuManual = ({ onClose }) => {
     <div style={styles.container}>
       {/* LEFT SIDE */}
       <div style={styles.left}>
-        {categories.map((cat) => (
+        {megaMenuCategories.map((cat) => (
           <div
             key={cat.id}
             style={styles.leftItem(activeCategory?.id === cat.id)}

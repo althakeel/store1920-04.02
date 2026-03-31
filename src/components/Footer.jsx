@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "../assets/styles/Footer.css";
-import { FaInstagram, FaFacebookF, FaTiktok } from "react-icons/fa6";
+import {
+  FaInstagram,
+  FaFacebookF,
+  FaTiktok,
+  FaSnapchat,
+  FaYoutube,
+  FaApple,
+  FaGooglePlay,
+  FaXmark,
+} from "react-icons/fa6";
 import { useCart } from "../contexts/CartContext";
 import { Link } from "react-router-dom";
 
@@ -27,10 +36,12 @@ import Image18 from "../assets/images/Footer icons/20.webp";
 const categoryData = [
   {
     id: 1,
-    title: "Company info",
+    title: "Company Information",
     items: [
-      { id: 1101, name: "About Store1920", path: "/about" },
-      { id: 1102, name: "Contact us", path: "/contact" },
+      { id: 1101, name: "About Us", path: "/about" },
+      { id: 1102, name: "Affiliate Links", path: "/partnerwithus" },
+      { id: 1103, name: "Contact for Partnerships", path: "/contact" },
+      { id: 1104, name: "Careers", path: "/careers" },
     ],
   },
   {
@@ -66,16 +77,18 @@ const categoryData = [
 
 const Footer = () => {
   const { isCartOpen } = useCart();
+  const [showAppMessage, setShowAppMessage] = useState(false);
 
   return (
-    <footer
-      className="main-footer"
-      style={{
-        width: window.innerWidth >= 768 && isCartOpen ? "calc(100% - 250px)" : "100%",
-        transition: "width 0.3s ease",
-      }}
-    >
-      <div className="footer-container">
+    <>
+      <footer
+        className="main-footer"
+        style={{
+          width: window.innerWidth >= 768 && isCartOpen ? "calc(100% - 250px)" : "100%",
+          transition: "width 0.3s ease",
+        }}
+      >
+        <div className="footer-container">
         <div
           className="footer-top"
           style={{ display: "flex", width: "100%", gap: "0", justifyContent: "space-between" }}
@@ -104,6 +117,35 @@ const Footer = () => {
               <a href="https://www.tiktok.com/@thestore1920" target="_blank" rel="noopener noreferrer">
                 <FaTiktok />
               </a>
+              <a href="https://snapchat.com/t/vG4RGrrU" target="_blank" rel="noopener noreferrer">
+                <FaSnapchat />
+              </a>
+              <a
+                href="https://www.youtube.com/channel/UCB9VyXlS-Z_Urli7V4Ac-sw"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaYoutube />
+              </a>
+            </div>
+            <div className="app-download-section">
+              <h5>Download Application</h5>
+              <div className="app-store-buttons">
+                <button type="button" className="store-download-btn" onClick={() => setShowAppMessage(true)}>
+                  <FaApple />
+                  <span>
+                    <small>Download on the</small>
+                    <strong>App Store</strong>
+                  </span>
+                </button>
+                <button type="button" className="store-download-btn" onClick={() => setShowAppMessage(true)}>
+                  <FaGooglePlay />
+                  <span>
+                    <small>Get it on</small>
+                    <strong>Google Play</strong>
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -154,8 +196,25 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-      </div>
-    </footer>
+        </div>
+      </footer>
+
+      {showAppMessage && (
+        <div className="footer-popup-overlay" onClick={() => setShowAppMessage(false)}>
+          <div className="footer-popup" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="footer-popup-close"
+              onClick={() => setShowAppMessage(false)}
+              aria-label="Close popup"
+            >
+              <FaXmark />
+            </button>
+            <p>We are enhancing your experience</p>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

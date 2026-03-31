@@ -46,6 +46,7 @@ const NavbarWithMegaMenu = ({ cartIconRef, openCart }) => {
   const [language, setLanguage] = useState('en');
   const [currency, setCurrency] = useState('AED');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [languageNoticeOpen, setLanguageNoticeOpen] = useState(false);
 
   const { isCartOpen, cartItems } = useCart();
   const navigate = useNavigate();
@@ -241,6 +242,11 @@ const messages = [
     setUserDropdownOpen(false);
     setMobileMenuOpen(false);
     navigate('/');
+  };
+
+  const handleArabicSelection = () => {
+    setLangDropdownOpen(false);
+    setLanguageNoticeOpen(true);
   };
 
   // const backgroundColor = currentTheme?.navbarBg || '#CCA000';
@@ -674,7 +680,7 @@ const messages = [
                     <div className="dropdown-section">
                       <div className="dropdown-title">Language</div>
                       <label className="radio-item">
-                        <input type="radio" checked={language === 'ar'} onChange={() => setLanguage('ar')} />
+                        <input type="radio" checked={language === 'ar'} onChange={handleArabicSelection} />
                         العربية
                       </label>
                       <label className="radio-item">
@@ -737,6 +743,55 @@ const messages = [
         onClose={() => setSignInOpen(false)}
         onLogin={handleLogin}
       />
+      {languageNoticeOpen && (
+        <div
+          onClick={() => setLanguageNoticeOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.45)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 9999,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '420px',
+              background: '#fff',
+              borderRadius: '16px',
+              padding: '24px',
+              textAlign: 'center',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.18)',
+            }}
+          >
+            <p style={{ margin: 0, color: '#222', fontSize: '18px', fontWeight: 600, lineHeight: 1.5 }}>
+              We are working on enhancing your experience
+            </p>
+            <button
+              type="button"
+              onClick={() => setLanguageNoticeOpen(false)}
+              style={{
+                marginTop: '18px',
+                border: 'none',
+                borderRadius: '999px',
+                background: '#8C3200',
+                color: '#fff',
+                padding: '10px 22px',
+                fontSize: '14px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

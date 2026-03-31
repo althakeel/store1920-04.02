@@ -797,6 +797,41 @@ export const getProductsByCategorySlug = async (slug, page = 1, perPage = 42, or
   }
 };
 
+export const getProductsByExactWooCategorySlug = async (slug, page = 1, perPage = 42, order = "desc") => {
+  try {
+    const normalizedSlug = String(slug || "").toLowerCase().trim();
+    if (!normalizedSlug) return [];
+
+    const staticCategoryId = CATEGORY_SLUG_MAP[normalizedSlug];
+    let categoryId = staticCategoryId || null;
+
+    if (!categoryId) {
+      const categories = await getCategoryBySlug(normalizedSlug);
+      categoryId = categories?.[0]?.id || null;
+    }
+
+    if (!categoryId) return [];
+
+    const products = await fetchAPI(
+      `/products?category=${categoryId}&per_page=${perPage}&page=${page}&orderby=date&order=${order}&status=publish&catalog_visibility=visible&_fields=id,name,slug,images,price,regular_price,sale_price,stock_status,stock_quantity,manage_stock,is_in_stock,average_rating,review_count,short_description,description,attributes,upsell_ids,cross_sell_ids,variations,sku,total_sales,subtitle,cod_available,categories,type`
+    );
+
+    const validProducts = Array.isArray(products) ? products : [];
+
+    return validProducts.filter((product) =>
+      Array.isArray(product?.categories) &&
+      product.categories.some((category) => {
+        const categorySlug = String(category?.slug || "").toLowerCase().trim();
+        const categoryName = String(category?.name || "").toLowerCase().trim();
+        return categorySlug === normalizedSlug || categoryName === normalizedSlug;
+      })
+    );
+  } catch (err) {
+    console.error("getProductsByExactWooCategorySlug error:", err);
+    return [];
+  }
+};
+
 export const getLightProductsByCategories = (categoryIds = [], page = 1, perPage = 42, order = "desc") => {
   if (!Array.isArray(categoryIds) || !categoryIds.length) return [];
   return fetchAPI(

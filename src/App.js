@@ -47,6 +47,7 @@ import MyCoins from './pages/my-coins';
 import TopSellingitems from './pages/topselling';
 import CategoryPageid from './pages/CategoryPage';
 import Contact from './pages/contact';
+import Careers from './pages/careers';
 import Search from './pages/search';
 import PaymobSuccess from './pages/PaymobSuccess';
 import PaymobCheckoutPage from './pages/PaymobCheckoutPage';
@@ -401,6 +402,7 @@ const AppContent = () => {
                     <Route path="/top-selling-item" element={<TopSellingitems />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="contact" element={<Contact />} />
+                    <Route path="/careers" element={<Careers />} />
                     <Route path="search" element={<Search />} />
 
                     <Route path="fast-delivery" element={<Fastdelivery />} />

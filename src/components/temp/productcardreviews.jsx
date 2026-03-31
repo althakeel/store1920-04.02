@@ -1,10 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { getProductReviewsWoo } from '../../data/wooReviews'; // adjust path
+import React, { useEffect, useMemo, useState } from 'react';
+import { getProductReviewsWoo } from '../../data/wooReviews';
 
-export default function ProductCardReviews({ productId, soldCount = 0, hideLoading = false }) {
+export default function ProductCardReviews({
+  productId,
+  soldCount = 0,
+  hideLoading = false,
+  overrideRating = null,
+}) {
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const displayRating = useMemo(() => {
+    const parsedOverride = Number(overrideRating);
+    if (Number.isFinite(parsedOverride) && parsedOverride > 0) {
+      return parsedOverride;
+    }
+    return averageRating;
+  }, [averageRating, overrideRating]);
 
   useEffect(() => {
     async function fetchReviews() {
@@ -72,8 +85,8 @@ export default function ProductCardReviews({ productId, soldCount = 0, hideLoadi
   if (loading) {
     return (
       <div className="pi-rating-meta" aria-live="polite">
-        <strong className="pi-rating-score">0.0</strong>
-        <div className="pi-stars">{renderStars(0)}</div>
+        <strong className="pi-rating-score">{displayRating.toFixed(1)}</strong>
+        <div className="pi-stars">{renderStars(displayRating)}</div>
         <span className="pi-rating-count">(0)</span>
       </div>
     );
@@ -81,8 +94,8 @@ export default function ProductCardReviews({ productId, soldCount = 0, hideLoadi
 
   return (
     <div className="pi-rating-meta" aria-live="polite">
-      <strong className="pi-rating-score">{averageRating.toFixed(1)}</strong>
-      <div className="pi-stars">{renderStars(averageRating)}</div>
+      <strong className="pi-rating-score">{displayRating.toFixed(1)}</strong>
+      <div className="pi-stars">{renderStars(displayRating)}</div>
       <span className="pi-rating-count">({reviews.length})</span>
       {soldCount > 0 && <span className="pi-sold-count">{soldCount} sold</span>}
     </div>
