@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import "../../assets/styles/SignInModal.css";
 import { useAuth } from "../../contexts/AuthContext";
-import FacebookIcon from "../../assets/images/facebook.png";
 import GoogleSignInButton from '../../components/sub/GoogleSignInButton';
+import FacebookSignInButton from "../../components/sub/FacebookSignInButton";
 
 // ===================== Alert Component =====================
 const Alert = ({ children, onClose }) => (
@@ -50,17 +51,76 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     confirmPassword: "",
     phone: "",
   });
+  const [pendingRegistration, setPendingRegistration] = useState(null);
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpMessage, setOtpMessage] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const FRONTEND_URL = "https://store1920.com";
   const WP_API = "https://db.store1920.com/wp-json";
+  const isSignInMode = !isRegister;
+  const isOtpStep = isRegister && (otpSent || Boolean(pendingRegistration));
+  const shouldHideOtpErrorInSignIn =
+    isSignInMode &&
+    typeof errorMsg === "string" &&
+    (/otp/i.test(errorMsg) || /attempts left/i.test(errorMsg));
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    setIsRegister(false);
+    setPendingRegistration(null);
+    setOtp("");
+    setOtpSent(false);
+    setOtpMessage("");
+    setSuccessMsg("");
+    setErrorMsg(null);
+    setShowPassword(false);
+
+    document.body.dataset.signinModalOpen = "true";
+
+    return () => {
+      delete document.body.dataset.signinModalOpen;
+    };
+  }, [isOpen]);
 
   // ===================== Handlers =====================
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errorMsg) {
+      setErrorMsg(null);
+    }
+  };
+
+  const resetRegisterFlow = () => {
+    setPendingRegistration(null);
+    setOtp("");
+    setOtpSent(false);
+    setOtpMessage("");
+    setErrorMsg(null);
+  };
+
+  const switchToLoginMode = (message = "") => {
+    resetRegisterFlow();
+    setIsRegister(false);
+    setShowPassword(false);
+    setSuccessMsg(message);
+    setOtpMessage("");
+  };
+
+  const switchToRegisterMode = () => {
+    resetRegisterFlow();
+    setIsRegister(true);
+    setSuccessMsg("");
+  };
+
+  const moveToLoginAfterVerification = (message) => {
+    switchToLoginMode(message || "Email verified successfully. Please sign in.");
   };
 
   const handleForgotPassword = () => {
@@ -70,50 +130,46 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
 
   // ===================== Validation =====================
   const validateRegister = () => {
-    if (!formData.name.trim()) return setErrorMsg("Name is required"), false;
-    if (!formData.email.trim()) return setErrorMsg("Email is required"), false;
-    if (!formData.phone.trim()) return setErrorMsg("Phone number is required"), false;
-    if (!formData.password) return setErrorMsg("Password is required"), false;
-    if (formData.password !== formData.confirmPassword)
-      return setErrorMsg("Passwords do not match"), false;
+    if (!formData.name.trim()) {
+      setErrorMsg("Name is required");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      setErrorMsg("Email is required");
+      return false;
+    }
+    // if (!formData.phone.trim()) {
+    //   setErrorMsg("Phone number is required");
+    //   return false;
+    // }
+    if (!formData.password) {
+      setErrorMsg("Password is required");
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMsg("Passwords do not match");
+      return false;
+    }
     setErrorMsg(null);
     return true;
   };
 
-  const validateLogin = () => {
-    if (!formData.email.trim()) return setErrorMsg("Email is required"), false;
-    if (!formData.password) return setErrorMsg("Password is required"), false;
-    setErrorMsg(null);
-    return true;
-  };
-
-  // ===================== API Calls =====================
-  const registerUser = async () => {
-    if (!validateRegister()) return;
-    setLoading(true);
-    setErrorMsg(null);
-
+  const loginAfterRegistration = async () => {
+    const registrationData = pendingRegistration || formData;
     try {
-      const res = await axios.post(`${WP_API}/custom/v1/register`, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-      });
-
       const loginRes = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
-        username: formData.email,
-        password: formData.password,
+        username: registrationData.email,
+        password: registrationData.password,
       });
 
       if (loginRes.data?.token) {
         const userInfo = {
-          name: formData.name,
+          name: registrationData.name,
           image: "",
           token: loginRes.data.token,
-          id: res.data.id || res.data.user_id,
-          email: formData.email,
-          user: res.data,
+          id: loginRes.data.user_id || loginRes.data.id || null,
+          email: registrationData.email,
+          user: loginRes.data,
         };
         login(userInfo);
         localStorage.setItem("userId", userInfo.id);
@@ -121,9 +177,58 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         localStorage.setItem("token", userInfo.token);
         onLogin?.(userInfo);
         onClose();
-      } else {
-        setErrorMsg("Login failed after registration");
+        return true;
       }
+    } catch (error) {
+      console.warn("Auto login after registration failed", error);
+    }
+
+    moveToLoginAfterVerification("Email verified successfully. Please sign in.");
+    return false;
+  };
+
+  const validateLogin = () => {
+    if (!formData.email.trim()) {
+      setErrorMsg("Email is required");
+      return false;
+    }
+    if (!formData.password) {
+      setErrorMsg("Password is required");
+      return false;
+    }
+    setErrorMsg(null);
+    return true;
+  };
+
+  // ===================== API Calls =====================
+  const sendEmailOtp = async () => {
+    if (isOtpStep) {
+      await verifyEmailOtp();
+      return;
+    }
+
+    if (!validateRegister()) return;
+    const registrationData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      phone: formData.phone.trim(),
+    };
+    setLoading(true);
+    setErrorMsg(null);
+    setOtpMessage("");
+    setSuccessMsg("");
+
+    try {
+      const res = await axios.post(`${WP_API}/custom/v1/send-email-otp`, {
+        name: registrationData.name,
+        email: registrationData.email,
+        password: registrationData.password,
+        phone: registrationData.phone,
+      });
+      setPendingRegistration(registrationData);
+      setOtpSent(true);
+      setOtpMessage(res.data?.message || "OTP sent to your email.");
     } catch (err) {
       setErrorMsg(parseErrorMsg(err.response?.data?.message || "Registration failed"));
     } finally {
@@ -131,10 +236,45 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     }
   };
 
+  const verifyEmailOtp = async () => {
+    if (!otp.trim()) {
+      setErrorMsg("OTP is required");
+      return;
+    }
+
+    setLoading(true);
+    setErrorMsg(null);
+    setSuccessMsg("");
+
+    try {
+      const res = await axios.post(`${WP_API}/custom/v1/verify-email-otp`, {
+        email: pendingRegistration?.email || formData.email,
+        otp: otp.trim(),
+      });
+
+      const verifyMessage = res.data?.message || "Email verified successfully.";
+      setOtpMessage(verifyMessage);
+      await loginAfterRegistration();
+    } catch (err) {
+      const attemptsLeft = err.response?.data?.data?.attempts_left;
+      const baseMessage = err.response?.data?.message || "OTP verification failed";
+      if (typeof attemptsLeft === "number") {
+        setErrorMsg(`${baseMessage}. Attempts left: ${attemptsLeft}`);
+      } else {
+        setErrorMsg(parseErrorMsg(baseMessage));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loginUser = async () => {
+    switchToLoginMode();
     if (!validateLogin()) return;
     setLoading(true);
     setErrorMsg(null);
+    setOtpMessage("");
+    setSuccessMsg("");
 
     try {
       const res = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
@@ -172,24 +312,34 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     }
   };
 
-  // ===================== Social Login (WordPress Nextend) =====================
-  const handleSocialLogin = (provider) => {
-    const baseUrl = "https://db.store1920.com/wp-login.php?loginSocial=";
-    window.location.href = `${baseUrl}${provider}`;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    isRegister ? registerUser() : loginUser();
+    if (isSignInMode) {
+      loginUser();
+      return;
+    }
+    if (isRegister) {
+      if (isOtpStep) {
+        verifyEmailOtp();
+      } else {
+        sendEmailOtp();
+      }
+      return;
+    }
   };
 
   if (!isOpen) return null;
 
   // ===================== Render =====================
-  return (
+  return ReactDOM.createPortal(
     <>
       <div className="signin-modal-overlay" onClick={onClose} />
-      <div className="signin-modal-container" role="dialog" aria-modal="true">
+      <div
+        className="signin-modal-container"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="signin-modal-close" onClick={onClose} aria-label="Close modal">
           ✕
         </button>
@@ -209,7 +359,19 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         </div>
 
         <form className="signin-modal-form" onSubmit={handleSubmit} noValidate>
-          {errorMsg && <Alert onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>}
+          {errorMsg && !shouldHideOtpErrorInSignIn && (
+            <Alert onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>
+          )}
+          {successMsg && (
+            <div className="signin-success-alert">
+              <div className="signin-success-content">{successMsg}</div>
+            </div>
+          )}
+          {isRegister && otpMessage && (
+            <div className="signin-success-alert">
+              <div className="signin-success-content">{otpMessage}</div>
+            </div>
+          )}
 
           <input
             type="text"
@@ -218,10 +380,11 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
             value={formData.email}
             onChange={handleChange}
             className="signin-modal-input"
-            required
+            required={!isOtpStep}
+            disabled={isOtpStep}
           />
 
-          {!isRegister && (
+          {isSignInMode && (
             <>
               <input
                 type={showPassword ? "text" : "password"}
@@ -248,13 +411,34 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           {isRegister && (
             <>
               <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                className="signin-modal-input"
+                required={!isOtpStep}
+                disabled={isOtpStep}
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                className="signin-modal-input"
+                required={!isOtpStep}
+                disabled={isOtpStep}
+              />
+              <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
                 className="signin-modal-input"
-                required
+                required={!isOtpStep}
+                disabled={isOtpStep}
               />
               <input
                 type={showPassword ? "text" : "password"}
@@ -263,7 +447,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className="signin-modal-input"
-                required
+                required={!isOtpStep}
+                disabled={isOtpStep}
               />
               <div className="signin-show-password">
                 <label>
@@ -275,15 +460,57 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                   Show password
                 </label>
               </div>
+              {isOtpStep && (
+                <>
+                  <input
+                    type="text"
+                    name="otp"
+                    placeholder="Enter Email OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    className="signin-modal-input"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="signin-secondary-btn"
+                    onClick={sendEmailOtp}
+                    disabled={loading}
+                  >
+                    Resend OTP
+                  </button>
+                  <button
+                    type="button"
+                    className="signin-secondary-link-btn"
+                    onClick={() => {
+                      resetRegisterFlow();
+                    }}
+                    disabled={loading}
+                  >
+                    Change email or details
+                  </button>
+                </>
+              )}
             </>
           )}
 
-          <button type="submit" className="signin-submit-btn" disabled={loading}>
-            {loading ? "Please wait..." : isRegister ? "Register" : "Continue"}
+          <button
+            type={isRegister ? "button" : "submit"}
+            className="signin-submit-btn"
+            disabled={loading}
+            onClick={isRegister ? () => (isOtpStep ? verifyEmailOtp() : sendEmailOtp()) : undefined}
+          >
+            {loading
+              ? "Please wait..."
+              : isRegister
+                ? isOtpStep
+                  ? "Verify OTP"
+                  : "Send OTP"
+                : "Continue"}
           </button>
         </form>
 
-        {!isRegister && (
+        {isSignInMode && (
           <div className="signin-forgot-password-text" onClick={handleForgotPassword}>
             Trouble signing in?
           </div>
@@ -298,18 +525,10 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
             onLogin?.(userInfo);
             onClose();
           }} />
-
-          <button onClick={() => handleSocialLogin("facebook")}>
-            <img src={FacebookIcon} alt="Facebook" />
-          </button>
-          <button disabled>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-              alt="Apple"
-              width="30px"
-              height="50px"
-            />
-          </button>
+          <FacebookSignInButton onLogin={(userInfo) => {
+            onLogin?.(userInfo);
+            onClose();
+          }} />
         </div>
 
         <div className="signin-terms">
@@ -323,7 +542,9 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
               Already have an account?{" "}
               <button
                 type="button"
-                onClick={() => setIsRegister(false)}
+                onClick={() => {
+                  switchToLoginMode();
+                }}
                 className="signin-toggle-link"
               >
                 Sign In
@@ -334,7 +555,9 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
               Don’t have an account?{" "}
               <button
                 type="button"
-                onClick={() => setIsRegister(true)}
+                onClick={() => {
+                  switchToRegisterMode();
+                }}
                 className="signin-toggle-link"
               >
                 Register
@@ -343,7 +566,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
 

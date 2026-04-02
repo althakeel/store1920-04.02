@@ -24,6 +24,16 @@ export const AuthProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
+  const updateUser = (updates) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        ...updates,
+      };
+    });
+  };
+
   // Sync user across tabs
   useEffect(() => {
     const syncUser = () => {
@@ -184,7 +194,7 @@ const logout = async () => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

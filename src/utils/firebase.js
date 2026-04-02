@@ -32,6 +32,10 @@ setPersistence(auth, browserLocalPersistence)
 
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
+facebookProvider.addScope("email");
+facebookProvider.setCustomParameters({
+  display: "popup",
+});
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
 

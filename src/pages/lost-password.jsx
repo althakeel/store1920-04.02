@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const ForgotPassword = () => {
+  const [searchParams] = useSearchParams();
   const [identifier, setIdentifier] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Update isMobile on resize
+  const resetKey = searchParams.get('key') || '';
+  const resetLogin = searchParams.get('login') || '';
+  const isResetMode = useMemo(() => Boolean(resetKey && resetLogin), [resetKey, resetLogin]);
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleReset = async (e) => {
+  const handleResetRequest = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
@@ -38,7 +45,7 @@ const ForgotPassword = () => {
       if (!res.ok) {
         setError(data.message || 'Reset failed.');
       } else {
-        setMessage('✅ If a matching account was found, a reset link has been sent.');
+        setMessage('A reset link has been sent to your email.');
       }
     } catch {
       setError('Network error. Please try again.');
@@ -47,27 +54,74 @@ const ForgotPassword = () => {
     }
   };
 
-  // Styles with responsiveness based on isMobile
- const containerStyle = {
-  maxWidth: 1400,
-  margin: '20px auto 40px',
-  minHeight: '40vh',
-  padding: isMobile ? 15 : 20,
-  fontFamily: "'Montserrat', sans-serif",
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-//   boxShadow: '0 8px 20px rgba(0, 0, 0, 0.12)',
-  borderRadius: 12,
-  backgroundColor: '#fff',
-};
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setError('');
+
+    if (!newPassword || !confirmPassword) {
+      setError('Please enter and confirm your new password.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('https://db.store1920.com/wp-json/custom/v1/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          key: resetKey,
+          login: resetLogin,
+          password: newPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Unable to reset password.');
+      } else {
+        setMessage('Your password has been reset successfully. You can now sign in with your new password.');
+        setNewPassword('');
+        setConfirmPassword('');
+      }
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const containerStyle = {
+    maxWidth: 1400,
+    margin: '20px auto 40px',
+    minHeight: '40vh',
+    padding: isMobile ? 15 : 20,
+    fontFamily: "'Montserrat', sans-serif",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: '#fff',
+  };
+
   const cardStyle = {
     display: 'flex',
     flexDirection: isMobile ? 'column' : 'row',
     gap: isMobile ? 25 : 40,
     background: '#fff',
     borderRadius: 12,
-    // boxShadow: '0 6px 20px rgba(0,0,0,0.07)',
     padding: isMobile ? 25 : 40,
   };
 
@@ -174,39 +228,81 @@ const ForgotPassword = () => {
     fontSize: isMobile ? 16 : 18,
   };
 
+  const linkStyle = {
+    color: '#aa4d00ff',
+    fontWeight: 600,
+    textDecoration: 'none',
+  };
+
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
-        {/* Left side - form */}
         <div style={leftStyle}>
-          <h2 style={headingStyle}>Forgot Password 🔐</h2>
+          <h2 style={headingStyle}>{isResetMode ? 'Reset Password' : 'Forgot Password'}</h2>
           <p style={paragraphStyle}>
-            Enter your registered email or phone number. We'll send you a reset link.
+            {isResetMode
+              ? 'Enter your new password below to finish resetting your account password.'
+              : "Enter your registered email or phone number. We'll send you a reset link."}
           </p>
 
-          <form onSubmit={handleReset} style={formStyle}>
-            <input
-              type="text"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="Email or mobile number"
-              style={inputStyle}
-              onFocus={(e) => (e.target.style.borderColor = '#0073aa')}
-              onBlur={(e) => (e.target.style.borderColor = '#ccc')}
-              disabled={loading}
-            />
-            <button type="submit" disabled={loading} style={buttonStyle}>
-              {loading ? 'Sending...' : 'Send Reset Link'}
-            </button>
-          </form>
+          {isResetMode ? (
+            <form onSubmit={handlePasswordReset} style={formStyle}>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New password"
+                style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = '#0073aa')}
+                onBlur={(e) => (e.target.style.borderColor = '#ccc')}
+                disabled={loading}
+              />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = '#0073aa')}
+                onBlur={(e) => (e.target.style.borderColor = '#ccc')}
+                disabled={loading}
+              />
+              <button type="submit" disabled={loading} style={buttonStyle}>
+                {loading ? 'Resetting...' : 'Reset Password'}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleResetRequest} style={formStyle}>
+              <input
+                type="text"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="Email or mobile number"
+                style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = '#0073aa')}
+                onBlur={(e) => (e.target.style.borderColor = '#ccc')}
+                disabled={loading}
+              />
+              <button type="submit" disabled={loading} style={buttonStyle}>
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+            </form>
+          )}
 
           {message && <p style={messageSuccessStyle}>{message}</p>}
           {error && <p style={messageErrorStyle}>{error}</p>}
+
+          {isResetMode && (
+            <p style={{ marginTop: 16, fontSize: isMobile ? 13 : 14, color: '#666' }}>
+              <Link to="/lost-password" style={linkStyle}>
+                Request a new reset link
+              </Link>
+            </p>
+          )}
         </div>
 
-        {/* Right side - content */}
         <div style={rightStyle}>
-          <h3 style={subHeadingStyle}>📋 Rules & Instructions</h3>
+          <h3 style={subHeadingStyle}>Rules & Instructions</h3>
           <ul style={listStyle}>
             <li style={listItemStyle}>
               <span style={bulletStyle}>•</span>
@@ -218,7 +314,7 @@ const ForgotPassword = () => {
             </li>
             <li style={listItemStyle}>
               <span style={bulletStyle}>•</span>
-              Check spam/junk if you don’t receive the email.
+              Check spam/junk if you don&apos;t receive the email.
             </li>
             <li style={listItemStyle}>
               <span style={bulletStyle}>•</span>

@@ -1,18 +1,20 @@
 .add-card-container {
-  max-width: 640px;
-  margin: 20px auto;
-  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 12px 0 0;
   background-color: #fff;
   border: 1px solid #eaeaea;
   border-radius: 12px;
   font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
 }
 
 .card-title {
   font-size: 18px;
   font-weight: 600;
   color: #222;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   text-align: center;
 }
 
@@ -29,6 +31,8 @@
 }
 
 .form-input {
+  width: 100%;
+  box-sizing: border-box;
   padding: 10px 12px;
   font-size: 14px;
   border: 1px solid #ddd;
@@ -43,15 +47,21 @@
   background-color: #fff;
 }
 
+.form-input:invalid {
+  box-shadow: none;
+}
+
 .form-row {
   display: flex;
   gap: 10px;
+  width: 100%;
 }
 
 .form-group {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .billing-address-row {
@@ -115,6 +125,11 @@
   justify-content: center;
 }
 
+.accepted-cards--top {
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
 .accepted-cards img {
   height: 28px;
   max-width: 60px;
@@ -125,4 +140,10 @@
 
 .accepted-cards img:hover {
   transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+  }
 }

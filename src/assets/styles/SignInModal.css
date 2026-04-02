@@ -139,6 +139,19 @@
   font-weight: 500;
 }
 
+.signin-success-alert {
+  background: #e8f7ea;
+  color: #1f7a34;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.signin-success-content {
+  font-weight: 500;
+}
+
 /* ===================== Form Inputs ===================== */
 .signin-modal-form {
   display: flex;
@@ -175,6 +188,43 @@
   background: #e65c00;
 }
 .signin-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signin-secondary-btn {
+  background: #fff4eb;
+  color: #ff6600;
+  padding: 11px 0;
+  border: 1px solid #ffd2b3;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.signin-secondary-btn:hover:not(:disabled) {
+  background: #ffe9d6;
+}
+
+.signin-secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signin-secondary-link-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  margin-top: -2px;
+}
+
+.signin-secondary-link-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

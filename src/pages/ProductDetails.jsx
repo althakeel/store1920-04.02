@@ -77,6 +77,7 @@ function getAvatarColor(name = '') {
 const QUALITY_MARQUEE_TEXT =
   "• Each item passes rigorous quality checks. • Safe packaging to prevent any damage. • Shipping available all over the UAE. • Hassle-free returns. • 100% secure payment and data protection. • Money-back guarantee if you’re not satisfied. • Fast and reliable delivery to your doorstep.";
 const QUALITY_MARQUEE_LOOP_TEXT = QUALITY_MARQUEE_TEXT.replace(/•/g, ' • ');
+const LOCAL_HISTORY_KEY = 'store1920_browsing_history';
 const TRUST_BAR_THEMES = [
   {
     background: 'linear-gradient(90deg, #111827 0%, #1f2937 45%, #111827 100%)',
@@ -169,6 +170,38 @@ export default function ProductDetails() {
   const desktopStickyTop = headerStickyOffset;
   const uiFontFamily = 'miui, system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", Helvetica, Arial, sans-serif';
 
+  const persistBrowsingHistory = useCallback((productData) => {
+    if (!productData?.id) return;
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(LOCAL_HISTORY_KEY) || '[]');
+      const existingHistory = Array.isArray(stored) ? stored : [];
+      const entry = {
+        id: productData.id,
+        title: productData.name,
+        image: productData.images?.[0]?.src || '',
+        product_link: productData.permalink || window.location.href,
+        date: new Date().toISOString(),
+        email: user?.email || '',
+      };
+
+      const filteredHistory = existingHistory.filter((item) => {
+        if (user?.email) {
+          return !(String(item.id) === String(productData.id) && item.email === user.email);
+        }
+
+        return String(item.id) !== String(productData.id);
+      });
+
+      localStorage.setItem(
+        LOCAL_HISTORY_KEY,
+        JSON.stringify([entry, ...filteredHistory].slice(0, 30))
+      );
+    } catch (error) {
+      console.error('Failed to persist browsing history:', error);
+    }
+  }, [user?.email]);
+
   // Fetch minimal/full product
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id || slug],
@@ -191,8 +224,9 @@ export default function ProductDetails() {
         price: product.price,
         category: product.categories?.[0]?.name || 'Uncategorized',
       });
+      persistBrowsingHistory(product);
     }
-  }, [product]);
+  }, [product, persistBrowsingHistory]);
 
   useEffect(() => {
     console.log('📸 mainImageUrl changed to:', mainImageUrl);

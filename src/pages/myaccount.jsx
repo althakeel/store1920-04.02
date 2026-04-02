@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import axios from 'axios';
 
 import Sidebar from '../components/sub/account/Sidebar';
 import OrderSection from '../components/sub/account/sections/OrderSection';
@@ -10,9 +9,6 @@ import CouponsSection from '../components/sub/account/sections/CouponsSection';
 import BrowsingHistorySection from '../components/sub/account/sections/BrowsingHistorySection';
 import AddressesSection from '../components/sub/account/sections/AddressesSection';
 import PaymentMethodsSection from '../components/sub/account/sections/PaymentMethodsSection';
-import SecuritySection from '../components/sub/account/sections/SecuritySection';
-import PermissionsSection from '../components/sub/account/sections/PermissionsSection';
-import NotificationsSection from '../components/sub/account/sections/NotificationsSection';
 import ProductsUnder20AED from '../components/ProductsUnder20AED';
 
 import { useAuth } from '../contexts/AuthContext';
@@ -87,12 +83,13 @@ const MyAccount = () => {
             <Route path="reviews" element={<ReviewsSection customerEmail={email} />} />
             <Route path="profile" element={<ProfileSection userId={userId} />} />
             <Route path="coupons" element={<CouponsSection />} />
-            <Route path="browsing-history" element={<BrowsingHistorySection />} />
+            <Route path="history" element={<BrowsingHistorySection customerEmail={email} />} />
+            <Route path="browsing-history" element={<Navigate to="/myaccount/history" replace />} />
             <Route path="addresses" element={<AddressesSection />} />
             <Route path="payment-methods" element={<PaymentMethodsSection />} />
-            <Route path="account-security" element={<SecuritySection />} />
-            <Route path="permissions" element={<PermissionsSection />} />
-            <Route path="notifications" element={<NotificationsSection userId={userId} />} />
+            <Route path="account-security" element={<Navigate to="/myaccount/orders" replace />} />
+            <Route path="permissions" element={<Navigate to="/myaccount/orders" replace />} />
+            <Route path="notifications" element={<Navigate to="/myaccount/orders" replace />} />
             <Route path="" element={<Navigate to="orders" replace />} />
           </Routes>
         </main>

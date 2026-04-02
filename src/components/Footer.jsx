@@ -3,6 +3,7 @@ import "../assets/styles/Footer.css";
 import {
   FaInstagram,
   FaFacebookF,
+  FaPinterestP,
   FaTiktok,
   FaSnapchat,
   FaYoutube,
@@ -113,6 +114,9 @@ const Footer = () => {
               </a>
               <a href="https://www.facebook.com/thestore1920" target="_blank" rel="noopener noreferrer">
                 <FaFacebookF />
+              </a>
+              <a href="https://www.pinterest.com/thestore1920/" target="_blank" rel="noopener noreferrer">
+                <FaPinterestP />
               </a>
               <a href="https://www.tiktok.com/@thestore1920" target="_blank" rel="noopener noreferrer">
                 <FaTiktok />

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../../../assets/styles/myaccount/ProfileSection.css';
-
-const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
-const CONSUMER_KEY = 'ck_2e4ba96dde422ed59388a09a139cfee591d98263';
-const CONSUMER_SECRET = 'cs_43b449072b8d7d63345af1b027f2c8026fd15428';
+import { API_BASE, CONSUMER_KEY, CONSUMER_SECRET } from '../../../../api/woocommerce';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 function getInitials(user) {
   if (user.first_name && user.last_name) {
@@ -32,6 +30,7 @@ function getColorForInitials(initials) {
 }
 
 const ProfileSection = ({ userId }) => {
+  const { user: authUser, updateUser } = useAuth();
   const [user, setUser] = useState(null);
   const [ordersCount, setOrdersCount] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,6 +38,7 @@ const ProfileSection = ({ userId }) => {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState('');
 
   useEffect(() => {
     if (!userId) {
@@ -53,8 +53,8 @@ const ProfileSection = ({ userId }) => {
       setError(null);
       try {
         const userRes = await axios.get(`${API_BASE}/customers/${userId}`, {
-          auth: { username: CONSUMER_KEY, password: CONSUMER_SECRET },
           timeout: 8000,
+          params: { consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET },
         });
         setUser(userRes.data);
 
@@ -66,11 +66,16 @@ const ProfileSection = ({ userId }) => {
           billing: { ...userRes.data.billing },
           shipping: { ...userRes.data.shipping },
         });
+        setAvatarPreview(authUser?.image || authUser?.photoURL || userRes.data.avatar_url || '');
 
         const ordersRes = await axios.get(`${API_BASE}/orders`, {
-          auth: { username: CONSUMER_KEY, password: CONSUMER_SECRET },
           timeout: 8000,
-          params: { customer: userId, per_page: 1 },
+          params: {
+            customer: userId,
+            per_page: 1,
+            consumer_key: CONSUMER_KEY,
+            consumer_secret: CONSUMER_SECRET,
+          },
         });
         const totalOrders = parseInt(ordersRes.headers['x-wp-total'], 10) || 0;
         setOrdersCount(totalOrders);
@@ -118,7 +123,25 @@ const ProfileSection = ({ userId }) => {
         shipping: { ...user.shipping },
       });
     }
+    setAvatarPreview(authUser?.image || authUser?.photoURL || user?.avatar_url || '');
     setEditMode(false);
+  };
+
+  const handleAvatarChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const nextImage = typeof reader.result === 'string' ? reader.result : '';
+      setAvatarPreview(nextImage);
+    };
+    reader.readAsDataURL(file);
   };
 
   const saveProfile = async () => {
@@ -129,19 +152,56 @@ const ProfileSection = ({ userId }) => {
       const first_name = names.shift() || '';
       const last_name = names.join(' ') || '';
 
+      const billing = {
+        first_name,
+        last_name,
+        company: formData.billing?.company || '',
+        address_1: formData.billing?.address_1 || '',
+        address_2: formData.billing?.address_2 || '',
+        city: formData.billing?.city || '',
+        state: formData.billing?.state || '',
+        postcode: formData.billing?.postcode || '',
+        country: formData.billing?.country || 'AE',
+        email: formData.email || '',
+        phone: formData.billing?.phone || '',
+      };
+
+      const shipping = {
+        first_name,
+        last_name,
+        company: formData.shipping?.company || '',
+        address_1: formData.shipping?.address_1 || '',
+        address_2: formData.shipping?.address_2 || '',
+        city: formData.shipping?.city || '',
+        state: formData.shipping?.state || '',
+        postcode: formData.shipping?.postcode || '',
+        country: formData.shipping?.country || 'AE',
+      };
+
       const payload = {
         first_name,
         last_name,
         email: formData.email,
-        billing: formData.billing,
-        shipping: formData.shipping,
+        billing,
+        shipping,
       };
 
       await axios.put(`${API_BASE}/customers/${userId}`, payload, {
-        auth: { username: CONSUMER_KEY, password: CONSUMER_SECRET },
+        params: { consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET },
       });
 
-      setUser((prev) => ({ ...prev, ...payload }));
+      const nextUser = {
+        ...user,
+        ...payload,
+        avatar_url: avatarPreview || user?.avatar_url || '',
+      };
+
+      setUser(nextUser);
+      updateUser({
+        name: `${first_name} ${last_name}`.trim() || formData.email,
+        email: formData.email,
+        image: avatarPreview || null,
+      });
       setEditMode(false);
       alert('Profile updated successfully!');
     } catch (e) {
@@ -175,6 +235,11 @@ const ProfileSection = ({ userId }) => {
 
   const initials = getInitials(user);
   const bgColor = getColorForInitials(initials);
+  const displayAvatar =
+    avatarPreview ||
+    authUser?.image ||
+    authUser?.photoURL ||
+    user.avatar_url;
 
   return (
     <section className="ps-section">
@@ -191,24 +256,53 @@ const ProfileSection = ({ userId }) => {
         )}
       </header>
 
-      <div className="ps-main">
-        {user.avatar_url ? (
-          <img
-            src={user.avatar_url}
-            alt="Avatar"
-            className="ps-avatar"
-            loading="lazy"
-          />
-        ) : (
-          <div
-            className="ps-avatar ps-avatar-initials"
-            style={{ backgroundColor: bgColor }}
-            aria-label="Profile initials"
-          >
-            {initials}
+      <div className="ps-profile-picture-card">
+        <div className="ps-profile-picture-header">
+          <div>
+            <h2 className="ps-profile-picture-title">Profile Picture</h2>
+          </div>
+        </div>
+
+        <div className="ps-profile-picture-preview">
+          {displayAvatar ? (
+            <img
+              src={displayAvatar}
+              alt="Profile"
+              className="ps-avatar ps-avatar-large"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              className="ps-avatar ps-avatar-initials ps-avatar-large"
+              style={{ backgroundColor: bgColor }}
+              aria-label="Profile initials"
+            >
+              {initials}
+            </div>
+          )}
+        </div>
+
+        {editMode && (
+          <div className="ps-profile-picture-actions">
+            <label
+              htmlFor="profile-avatar-upload"
+              className="ps-btn ps-btn-edit"
+              style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer' }}
+            >
+              Change Photo
+            </label>
+            <input
+              id="profile-avatar-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ display: 'none' }}
+            />
           </div>
         )}
+      </div>
 
+      <div className="ps-main">
         <div className="ps-info">
           {editMode ? (
             <input
