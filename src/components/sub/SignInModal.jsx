@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import "../../assets/styles/SignInModal.css";
 import { useAuth } from "../../contexts/AuthContext";
 import FacebookIcon from "../../assets/images/facebook.png";
 import GoogleSignInButton from '../../components/sub/GoogleSignInButton';
+
 
 // ===================== Alert Component =====================
 const Alert = ({ children, onClose }) => (
@@ -39,9 +40,23 @@ const parseErrorMsg = (rawMsg) => {
   return <>{rawMsg.replace(/<[^>]+>/g, "").trim()}</>;
 };
 
+const splitName = (fullName) => {
+  const trimmedName = fullName.trim();
+  if (!trimmedName) {
+    return { firstName: "", lastName: "" };
+  }
+
+  const [firstName, ...lastNameParts] = trimmedName.split(/\s+/);
+  return {
+    firstName,
+    lastName: lastNameParts.join(" ") || "User",
+  };
+};
+
 // ===================== Main Component =====================
 const SignInModal = ({ isOpen, onClose, onLogin }) => {
   const { login } = useAuth();
+  const formRef = useRef(null);
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -61,6 +76,9 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errorMsg) {
+      setErrorMsg(null);
+    }
   };
 
   const handleForgotPassword = () => {
@@ -69,77 +87,97 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
   };
 
   // ===================== Validation =====================
-  const validateRegister = () => {
-    if (!formData.name.trim()) return setErrorMsg("Name is required"), false;
-    if (!formData.email.trim()) return setErrorMsg("Email is required"), false;
-    if (!formData.phone.trim()) return setErrorMsg("Phone number is required"), false;
-    if (!formData.password) return setErrorMsg("Password is required"), false;
-    if (formData.password !== formData.confirmPassword)
+  const validateRegister = (values) => {
+    if (!values.name.trim()) return setErrorMsg("Name is required"), false;
+    if (!values.email.trim()) return setErrorMsg("Email is required"), false;
+    if (!values.phone.trim()) return setErrorMsg("Phone number is required"), false;
+    if (!values.password) return setErrorMsg("Password is required"), false;
+    if (values.password !== values.confirmPassword)
       return setErrorMsg("Passwords do not match"), false;
     setErrorMsg(null);
     return true;
   };
 
-  const validateLogin = () => {
-    if (!formData.email.trim()) return setErrorMsg("Email is required"), false;
-    if (!formData.password) return setErrorMsg("Password is required"), false;
+  const validateLogin = (values) => {
+    if (!values.email.trim()) return setErrorMsg("Email is required"), false;
+    if (!values.password) return setErrorMsg("Password is required"), false;
     setErrorMsg(null);
     return true;
   };
 
+  const getFormValues = () => {
+    if (!formRef.current) {
+      return formData;
+    }
+
+    const formValues = new FormData(formRef.current);
+    return {
+      name: (formValues.get("name") || "").toString().trim(),
+      email: (formValues.get("email") || "").toString().trim(),
+      password: (formValues.get("password") || "").toString(),
+      confirmPassword: (formValues.get("confirmPassword") || "").toString(),
+      phone: (formValues.get("phone") || "").toString().trim(),
+    };
+  };
+
   // ===================== API Calls =====================
-  const registerUser = async () => {
-    if (!validateRegister()) return;
+  const registerUser = async (values) => {
+    if (!validateRegister(values)) return;
     setLoading(true);
     setErrorMsg(null);
 
     try {
-      const res = await axios.post(`${WP_API}/custom/v1/register`, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
+      const registerRes = await axios.post(`${WP_API}/custom/v2/register`, {
+        email: values.email,
+        password: values.password,
+        name: values.name,
+        phone: values.phone,
       });
 
-      const loginRes = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
-        username: formData.email,
-        password: formData.password,
-      });
-
-      if (loginRes.data?.token) {
-        const userInfo = {
-          name: formData.name,
-          image: "",
-          token: loginRes.data.token,
-          id: res.data.id || res.data.user_id,
-          email: formData.email,
-          user: res.data,
-        };
-        login(userInfo);
-        localStorage.setItem("userId", userInfo.id);
-        localStorage.setItem("email", userInfo.email);
-        localStorage.setItem("token", userInfo.token);
-        onLogin?.(userInfo);
-        onClose();
-      } else {
-        setErrorMsg("Login failed after registration");
+      if (!registerRes.data?.success) {
+        const msg = registerRes.data?.message || "Registration failed";
+        const code = registerRes.data?.code || "";
+        if (code === "email_exists") {
+          setErrorMsg("This email is already registered. Please sign in instead.");
+        } else {
+          setErrorMsg(msg);
+        }
+        return;
       }
+
+      const res = registerRes.data;
+
+      // Token is generated server-side in the register endpoint to bypass OTP interceptors
+      const userInfo = {
+        name: values.name,
+        image: "",
+        token: res.token || "wordpress_session",
+        id: res.id || res.user_id,
+        email: values.email,
+        user: res,
+      };
+      login(userInfo);
+      localStorage.setItem("userId", userInfo.id);
+      localStorage.setItem("email", userInfo.email);
+      localStorage.setItem("token", userInfo.token);
+      onLogin?.(userInfo);
+      onClose();
     } catch (err) {
-      setErrorMsg(parseErrorMsg(err.response?.data?.message || "Registration failed"));
+      setErrorMsg(parseErrorMsg(err.message || err?.data?.message || err?.message || "Registration failed"));
     } finally {
       setLoading(false);
     }
   };
 
-  const loginUser = async () => {
-    if (!validateLogin()) return;
+  const loginUser = async (values) => {
+    if (!validateLogin(values)) return;
     setLoading(true);
     setErrorMsg(null);
 
     try {
       const res = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
-        username: formData.email,
-        password: formData.password,
+        username: values.email,
+        password: values.password,
       });
 
       if (res.data?.token) {
@@ -148,11 +186,11 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         });
 
         const userInfo = {
-          name: profileRes.data.name || formData.email,
+          name: profileRes.data.name || values.email,
           image: "",
           token: res.data.token,
           id: profileRes.data.id,
-          email: formData.email,
+          email: values.email,
           user: profileRes.data,
         };
 
@@ -180,7 +218,9 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    isRegister ? registerUser() : loginUser();
+    const values = getFormValues();
+    setFormData(values);
+    isRegister ? registerUser(values) : loginUser(values);
   };
 
   if (!isOpen) return null;
@@ -208,13 +248,36 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           </div>
         </div>
 
-        <form className="signin-modal-form" onSubmit={handleSubmit} noValidate>
+        <form ref={formRef} className="signin-modal-form" onSubmit={handleSubmit} noValidate>
           {errorMsg && <Alert onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>}
+
+          {isRegister && (
+            <>
+              <input
+                type="text"
+                name="name"
+                placeholder="Full name"
+                value={formData.name}
+                onChange={handleChange}
+                className="signin-modal-input"
+                required
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone number"
+                value={formData.phone}
+                onChange={handleChange}
+                className="signin-modal-input"
+                required
+              />
+            </>
+          )}
 
           <input
             type="text"
             name="email"
-            placeholder="Email or phone number"
+            placeholder={isRegister ? "Email address" : "Email or phone number"}
             value={formData.email}
             onChange={handleChange}
             className="signin-modal-input"

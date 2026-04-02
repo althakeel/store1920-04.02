@@ -35,6 +35,7 @@ import About from './pages/about';
 import Shippinginfo from './pages/shippinginfo';
 import Intellectualproperty from './pages/intellectual-property-policy';
 import PrivacyPolicy from './pages/privacy-policy';
+import DataDeletion from './pages/DataDeletion';
 import Terms0fuse from './pages/TermsOfuse';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderCancel from './pages/OrderCancel';
@@ -390,6 +391,7 @@ const AppContent = () => {
                     <Route path="/shippinginfo" element={<Shippinginfo />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route path="/data-deletion" element={<DataDeletion />} />
                     <Route path="/terms-0f-use" element={<Terms0fuse />} />
                     <Route path="/order-success" element={<OrderSuccess />} />
                     <Route path="/order-cancel" element={<OrderCancel />} />
