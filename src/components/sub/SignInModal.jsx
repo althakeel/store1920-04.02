@@ -40,6 +40,37 @@ const parseErrorMsg = (rawMsg) => {
   return <>{rawMsg.replace(/<[^>]+>/g, "").trim()}</>;
 };
 
+const getLoginErrorMessage = (rawMsg) => {
+  const normalized = typeof rawMsg === "string" ? rawMsg.replace(/<[^>]+>/g, "").trim() : "";
+
+  if (!normalized) {
+    return "Login failed";
+  }
+
+  if (/otp/i.test(normalized) || /attempts left/i.test(normalized)) {
+    return "Invalid email or password.";
+  }
+
+  return normalized;
+};
+
+const resolveUserId = (...candidates) => {
+  for (const candidate of candidates) {
+    if (candidate === undefined || candidate === null) {
+      continue;
+    }
+
+    const value = String(candidate).trim();
+    if (!value || value === "undefined" || value === "null") {
+      continue;
+    }
+
+    return value;
+  }
+
+  return null;
+};
+
 // ===================== Main Component =====================
 const SignInModal = ({ isOpen, onClose, onLogin }) => {
   const { login } = useAuth();
@@ -63,11 +94,6 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
   const FRONTEND_URL = "https://store1920.com";
   const WP_API = "https://db.store1920.com/wp-json";
   const isSignInMode = !isRegister;
-  const isOtpStep = isRegister && (otpSent || Boolean(pendingRegistration));
-  const shouldHideOtpErrorInSignIn =
-    isSignInMode &&
-    typeof errorMsg === "string" &&
-    (/otp/i.test(errorMsg) || /attempts left/i.test(errorMsg));
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -110,7 +136,6 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     setIsRegister(false);
     setShowPassword(false);
     setSuccessMsg(message);
-    setOtpMessage("");
   };
 
   const switchToRegisterMode = () => {
@@ -154,25 +179,42 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     return true;
   };
 
-  const loginAfterRegistration = async () => {
-    const registrationData = pendingRegistration || formData;
+  const loginAfterRegistration = async (registrationData = pendingRegistration || formData) => {
     try {
-      const loginRes = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
-        username: registrationData.email,
-        password: registrationData.password,
-      });
+      const loginRes = await axios.post(
+        `${WP_API}/custom/v1/login`,
+        {
+          login: registrationData.email,
+          username: registrationData.email,
+          password: registrationData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-      if (loginRes.data?.token) {
+      if (loginRes.data?.success) {
+        const profileRes = await axios.get(`${WP_API}/custom/v1/me`, {
+          withCredentials: true,
+        });
+
         const userInfo = {
-          name: registrationData.name,
+          name: profileRes.data?.name || registrationData.name,
           image: "",
-          token: loginRes.data.token,
-          id: loginRes.data.user_id || loginRes.data.id || null,
-          email: registrationData.email,
-          user: loginRes.data,
+          token: "wordpress_session",
+          id: resolveUserId(
+            profileRes.data?.id,
+            loginRes.data?.user?.id,
+            loginRes.data?.id,
+            JSON.parse(localStorage.getItem("userData") || "null")?.id
+          ),
+          email: profileRes.data?.email || registrationData.email,
+          user: profileRes.data || loginRes.data?.user || null,
         };
         login(userInfo);
-        localStorage.setItem("userId", userInfo.id);
+        if (userInfo.id) {
+          localStorage.setItem("userId", userInfo.id);
+        }
         localStorage.setItem("email", userInfo.email);
         localStorage.setItem("token", userInfo.token);
         onLogin?.(userInfo);
@@ -202,12 +244,29 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
 
   // ===================== API Calls =====================
   const sendEmailOtp = async () => {
-    if (isOtpStep) {
-      await verifyEmailOtp();
+    if (otpSent) {
+      setLoading(true);
+      setErrorMsg(null);
+      setSuccessMsg("");
+
+      try {
+        const res = await axios.post(`${WP_API}/custom/v1/send-email-otp`, {
+          name: pendingRegistration?.name || formData.name.trim(),
+          email: pendingRegistration?.email || formData.email.trim(),
+          password: pendingRegistration?.password || formData.password,
+          phone: pendingRegistration?.phone || formData.phone.trim(),
+        });
+        setOtpMessage(res.data?.message || "OTP sent to your email.");
+      } catch (err) {
+        setErrorMsg(parseErrorMsg(err.response?.data?.message || "Unable to resend OTP"));
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
     if (!validateRegister()) return;
+
     const registrationData = {
       name: formData.name.trim(),
       email: formData.email.trim(),
@@ -216,7 +275,6 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     };
     setLoading(true);
     setErrorMsg(null);
-    setOtpMessage("");
     setSuccessMsg("");
 
     try {
@@ -252,9 +310,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         otp: otp.trim(),
       });
 
-      const verifyMessage = res.data?.message || "Email verified successfully.";
-      setOtpMessage(verifyMessage);
-      await loginAfterRegistration();
+      setOtpMessage(res.data?.message || "Email verified successfully.");
+      await loginAfterRegistration(pendingRegistration || formData);
     } catch (err) {
       const attemptsLeft = err.response?.data?.data?.attempts_left;
       const baseMessage = err.response?.data?.message || "OTP verification failed";
@@ -273,31 +330,44 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     if (!validateLogin()) return;
     setLoading(true);
     setErrorMsg(null);
-    setOtpMessage("");
     setSuccessMsg("");
 
     try {
-      const res = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
-        username: formData.email,
-        password: formData.password,
-      });
+      const res = await axios.post(
+        `${WP_API}/custom/v1/login`,
+        {
+          login: formData.email,
+          username: formData.email,
+          password: formData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-      if (res.data?.token) {
-        const profileRes = await axios.get(`${WP_API}/wp/v2/users/me`, {
-          headers: { Authorization: `Bearer ${res.data.token}` },
+      if (res.data?.success) {
+        const profileRes = await axios.get(`${WP_API}/custom/v1/me`, {
+          withCredentials: true,
         });
 
         const userInfo = {
           name: profileRes.data.name || formData.email,
           image: "",
-          token: res.data.token,
-          id: profileRes.data.id,
-          email: formData.email,
-          user: profileRes.data,
+          token: "wordpress_session",
+          id: resolveUserId(
+            profileRes.data?.id,
+            res.data?.user?.id,
+            res.data?.id,
+            JSON.parse(localStorage.getItem("userData") || "null")?.id
+          ),
+          email: profileRes.data.email || formData.email,
+          user: profileRes.data || res.data?.user || null,
         };
 
         login(userInfo);
-        localStorage.setItem("userId", userInfo.id);
+        if (userInfo.id) {
+          localStorage.setItem("userId", userInfo.id);
+        }
         localStorage.setItem("email", userInfo.email);
         localStorage.setItem("token", userInfo.token);
         onLogin?.(userInfo);
@@ -306,7 +376,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         setErrorMsg("Invalid login credentials");
       }
     } catch (err) {
-      setErrorMsg(parseErrorMsg(err.response?.data?.message || "Login failed"));
+      setErrorMsg(getLoginErrorMessage(err.response?.data?.message || "Login failed"));
     } finally {
       setLoading(false);
     }
@@ -319,7 +389,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
       return;
     }
     if (isRegister) {
-      if (isOtpStep) {
+      if (otpSent) {
         verifyEmailOtp();
       } else {
         sendEmailOtp();
@@ -359,9 +429,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         </div>
 
         <form className="signin-modal-form" onSubmit={handleSubmit} noValidate>
-          {errorMsg && !shouldHideOtpErrorInSignIn && (
-            <Alert onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>
-          )}
+          {errorMsg && <Alert onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>}
           {successMsg && (
             <div className="signin-success-alert">
               <div className="signin-success-content">{successMsg}</div>
@@ -376,12 +444,12 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           <input
             type="text"
             name="email"
-            placeholder="Email or phone number"
+            placeholder="Email or username"
             value={formData.email}
             onChange={handleChange}
             className="signin-modal-input"
-            required={!isOtpStep}
-            disabled={isOtpStep}
+            required
+            disabled={isRegister && otpSent}
           />
 
           {isSignInMode && (
@@ -417,8 +485,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.name}
                 onChange={handleChange}
                 className="signin-modal-input"
-                required={!isOtpStep}
-                disabled={isOtpStep}
+                required
+                disabled={otpSent}
               />
               <input
                 type="tel"
@@ -427,8 +495,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.phone}
                 onChange={handleChange}
                 className="signin-modal-input"
-                required={!isOtpStep}
-                disabled={isOtpStep}
+                required
+                disabled={otpSent}
               />
               <input
                 type={showPassword ? "text" : "password"}
@@ -437,8 +505,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.password}
                 onChange={handleChange}
                 className="signin-modal-input"
-                required={!isOtpStep}
-                disabled={isOtpStep}
+                required
+                disabled={otpSent}
               />
               <input
                 type={showPassword ? "text" : "password"}
@@ -447,8 +515,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className="signin-modal-input"
-                required={!isOtpStep}
-                disabled={isOtpStep}
+                required
+                disabled={otpSent}
               />
               <div className="signin-show-password">
                 <label>
@@ -460,7 +528,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                   Show password
                 </label>
               </div>
-              {isOtpStep && (
+              {otpSent && (
                 <>
                   <input
                     type="text"
@@ -482,9 +550,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                   <button
                     type="button"
                     className="signin-secondary-link-btn"
-                    onClick={() => {
-                      resetRegisterFlow();
-                    }}
+                    onClick={resetRegisterFlow}
                     disabled={loading}
                   >
                     Change email or details
@@ -495,15 +561,14 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           )}
 
           <button
-            type={isRegister ? "button" : "submit"}
+            type="submit"
             className="signin-submit-btn"
             disabled={loading}
-            onClick={isRegister ? () => (isOtpStep ? verifyEmailOtp() : sendEmailOtp()) : undefined}
           >
             {loading
               ? "Please wait..."
               : isRegister
-                ? isOtpStep
+                ? otpSent
                   ? "Verify OTP"
                   : "Send OTP"
                 : "Continue"}

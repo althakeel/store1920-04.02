@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import '../../../../assets/styles/myaccount/PaymentMethodsSection.css';
 import CardSecurityInfo from './CardSecurityInfo';
 import AddCardModal from './AddCardModal';
@@ -10,6 +10,7 @@ import FooterPaypal from '../../../../assets/images/Footer icons/14.png';
 import FooterApplePay from '../../../../assets/images/Footer icons/15.png';
 import FooterGooglePay from '../../../../assets/images/Footer icons/16.webp';
 import FooterCash from '../../../../assets/images/Footer icons/17.webp';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 const LOCAL_CARDS_KEY = 'store1920_saved_cards';
 
@@ -32,9 +33,9 @@ const getBrandLogo = (brand) => {
   }
 };
 
-const getInitialCards = () => {
+const getStoredCards = (storageKey) => {
   try {
-    const stored = localStorage.getItem(LOCAL_CARDS_KEY);
+    const stored = localStorage.getItem(storageKey);
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error('Failed to read saved cards from localStorage', error);
@@ -43,8 +44,11 @@ const getInitialCards = () => {
 };
 
 const PaymentMethodsSection = () => {
+  const { user } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
-  const [savedCards, setSavedCards] = useState(getInitialCards);
+  const storageKey = user?.id ? `${LOCAL_CARDS_KEY}_${user.id}` : LOCAL_CARDS_KEY;
+  const [savedCards, setSavedCards] = useState(() => getStoredCards(storageKey));
+  const [successMessage, setSuccessMessage] = useState('');
 
   const acceptedCardIcons = useMemo(
     () => [
@@ -59,17 +63,67 @@ const PaymentMethodsSection = () => {
     []
   );
 
-  const persistCards = (cards) => {
-    setSavedCards(cards);
-    localStorage.setItem(LOCAL_CARDS_KEY, JSON.stringify(cards));
-  };
+  useEffect(() => {
+    const userCards = getStoredCards(storageKey);
+    const legacyCards = getStoredCards(LOCAL_CARDS_KEY);
+
+    if (!user?.id && userCards.length === 0) {
+      setSavedCards(legacyCards);
+      return;
+    }
+
+    if (user?.id && userCards.length === 0 && legacyCards.length > 0) {
+      setSavedCards(legacyCards);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(legacyCards));
+      } catch (error) {
+        console.error('Failed to migrate saved cards to user storage', error);
+      }
+      return;
+    }
+
+    setSavedCards(userCards);
+  }, [storageKey, user?.id]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(savedCards));
+    } catch (error) {
+      console.error('Failed to save cards to localStorage', error);
+    }
+  }, [savedCards, storageKey]);
+
+  useEffect(() => {
+    if (!successMessage) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [successMessage]);
 
   const handleSaveCard = (cardData) => {
-    persistCards([cardData, ...savedCards]);
+    setSavedCards((prevCards) => {
+      const nextCards = [cardData, ...prevCards];
+
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(nextCards));
+      } catch (error) {
+        console.error('Failed to persist card immediately', error);
+      }
+
+      return nextCards;
+    });
+
+    setModalOpen(false);
+    setSuccessMessage('Card saved successfully.');
   };
 
   const handleRemoveCard = (cardId) => {
-    persistCards(savedCards.filter((card) => card.id !== cardId));
+    setSavedCards((prevCards) => prevCards.filter((card) => card.id !== cardId));
   };
 
   return (
@@ -78,6 +132,22 @@ const PaymentMethodsSection = () => {
         Your payment methods <span className="lock-icon">🔒</span>
         <span className="encrypted-text">All data is encrypted</span>
       </h2>
+
+      {successMessage && (
+        <div
+          style={{
+            background: '#edf8ee',
+            border: '1px solid #b7dfbc',
+            color: '#1d6b2b',
+            borderRadius: '12px',
+            padding: '12px 16px',
+            marginBottom: '16px',
+            fontWeight: 600,
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
 
       <div className="payment-card-box">
         <div className="payment-graphic">

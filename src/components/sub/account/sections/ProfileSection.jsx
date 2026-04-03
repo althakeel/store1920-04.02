@@ -29,8 +29,120 @@ function getColorForInitials(initials) {
   return colors[charCode % colors.length];
 }
 
+function buildProfileShell(authUser, fallbackUserId) {
+  const displayName = authUser?.name || '';
+  const nameParts = displayName.trim().split(/\s+/).filter(Boolean);
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ');
+
+  return {
+    id: fallbackUserId || authUser?.id || null,
+    first_name: firstName,
+    last_name: lastName,
+    email: authUser?.email || '',
+    billing: {
+      first_name: firstName,
+      last_name: lastName,
+      phone: '',
+      address_1: '',
+      address_2: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: 'AE',
+    },
+    shipping: {
+      first_name: firstName,
+      last_name: lastName,
+      address_1: '',
+      address_2: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: 'AE',
+    },
+    avatar_url: authUser?.image || authUser?.photoURL || '',
+    date_created: new Date().toISOString(),
+  };
+}
+
+function buildFormData(profile) {
+  return {
+    fullName: `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+    email: profile.email || '',
+    phone: profile.billing?.phone || '',
+    billing: { ...(profile.billing || {}) },
+    shipping: { ...(profile.shipping || {}) },
+  };
+}
+
+function normalizeCustomerId(...candidates) {
+  for (const candidate of candidates) {
+    if (candidate === undefined || candidate === null) {
+      continue;
+    }
+
+    const value = String(candidate).trim();
+    if (!value || value === 'undefined' || value === 'null') {
+      continue;
+    }
+
+    return value;
+  }
+
+  return null;
+}
+
+function getProfileImageStorageKey(email, customerId) {
+  if (email) {
+    return `store1920_profile_image_${String(email).trim().toLowerCase()}`;
+  }
+
+  if (customerId) {
+    return `store1920_profile_image_user_${String(customerId).trim()}`;
+  }
+
+  return null;
+}
+
+function getStoredProfileImage(email, customerId) {
+  const key = getProfileImageStorageKey(email, customerId);
+  if (!key) {
+    return '';
+  }
+
+  try {
+    return localStorage.getItem(key) || '';
+  } catch (error) {
+    console.error('Failed to read profile image from localStorage', error);
+    return '';
+  }
+}
+
+function saveStoredProfileImage(email, customerId, image) {
+  const key = getProfileImageStorageKey(email, customerId);
+  if (!key) {
+    return;
+  }
+
+  try {
+    if (image) {
+      localStorage.setItem(key, image);
+    } else {
+      localStorage.removeItem(key);
+    }
+  } catch (error) {
+    console.error('Failed to save profile image to localStorage', error);
+  }
+}
+
 const ProfileSection = ({ userId }) => {
   const { user: authUser, updateUser } = useAuth();
+  const effectiveUserId = normalizeCustomerId(
+    userId,
+    authUser?.id,
+    localStorage.getItem('userId')
+  );
   const [user, setUser] = useState(null);
   const [ordersCount, setOrdersCount] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,9 +151,34 @@ const ProfileSection = ({ userId }) => {
   const [formData, setFormData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState('');
+  const persistedProfileImage = getStoredProfileImage(authUser?.email, effectiveUserId);
 
   useEffect(() => {
-    if (!userId) {
+    const fallbackProfile = buildProfileShell(authUser, effectiveUserId);
+
+    if (!effectiveUserId) {
+      setUser(fallbackProfile);
+      setFormData(buildFormData(fallbackProfile));
+      setAvatarPreview(
+        authUser?.image || authUser?.photoURL || persistedProfileImage || fallbackProfile.avatar_url || ''
+      );
+      setEditMode(true);
+      setOrdersCount(0);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    if (!userId && authUser?.email) {
+      setUser(fallbackProfile);
+      setFormData(buildFormData(fallbackProfile));
+      setAvatarPreview(
+        authUser?.image || authUser?.photoURL || persistedProfileImage || fallbackProfile.avatar_url || ''
+      );
+      setEditMode(true);
+    }
+
+    if (!effectiveUserId) {
       setUser(null);
       setOrdersCount(null);
       setLoading(false);
@@ -52,26 +189,25 @@ const ProfileSection = ({ userId }) => {
       setLoading(true);
       setError(null);
       try {
-        const userRes = await axios.get(`${API_BASE}/customers/${userId}`, {
+        const userRes = await axios.get(`${API_BASE}/customers/${effectiveUserId}`, {
           timeout: 8000,
           params: { consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET },
         });
         setUser(userRes.data);
-
-        // Initialize formData with fullName
-        setFormData({
-          fullName: `${userRes.data.first_name || ''} ${userRes.data.last_name || ''}`.trim(),
-          email: userRes.data.email || '',
-          phone: userRes.data.billing?.phone || '',
-          billing: { ...userRes.data.billing },
-          shipping: { ...userRes.data.shipping },
-        });
-        setAvatarPreview(authUser?.image || authUser?.photoURL || userRes.data.avatar_url || '');
+        setFormData(buildFormData(userRes.data));
+        setAvatarPreview(
+          authUser?.image ||
+          authUser?.photoURL ||
+          persistedProfileImage ||
+          userRes.data.avatar_url ||
+          ''
+        );
+        setEditMode(false);
 
         const ordersRes = await axios.get(`${API_BASE}/orders`, {
           timeout: 8000,
           params: {
-            customer: userId,
+            customer: effectiveUserId,
             per_page: 1,
             consumer_key: CONSUMER_KEY,
             consumer_secret: CONSUMER_SECRET,
@@ -80,16 +216,21 @@ const ProfileSection = ({ userId }) => {
         const totalOrders = parseInt(ordersRes.headers['x-wp-total'], 10) || 0;
         setOrdersCount(totalOrders);
       } catch (e) {
-        setError('Failed to load profile data.');
-        setUser(null);
-        setOrdersCount(null);
+        setError(null);
+        setUser(fallbackProfile);
+        setFormData(buildFormData(fallbackProfile));
+        setAvatarPreview(
+          authUser?.image || authUser?.photoURL || persistedProfileImage || fallbackProfile.avatar_url || ''
+        );
+        setOrdersCount(0);
+        setEditMode(true);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserAndOrders();
-  }, [userId]);
+  }, [authUser, effectiveUserId, persistedProfileImage, userId]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => {
@@ -115,15 +256,11 @@ const ProfileSection = ({ userId }) => {
 
   const cancelEdit = () => {
     if (user) {
-      setFormData({
-        fullName: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
-        email: user.email || '',
-        phone: user.billing?.phone || '',
-        billing: { ...user.billing },
-        shipping: { ...user.shipping },
-      });
+      setFormData(buildFormData(user));
     }
-    setAvatarPreview(authUser?.image || authUser?.photoURL || user?.avatar_url || '');
+    setAvatarPreview(
+      authUser?.image || authUser?.photoURL || persistedProfileImage || user?.avatar_url || ''
+    );
     setEditMode(false);
   };
 
@@ -145,6 +282,11 @@ const ProfileSection = ({ userId }) => {
   };
 
   const saveProfile = async () => {
+    if (!effectiveUserId) {
+      alert('Profile cannot be saved because no user account id was found.');
+      return;
+    }
+
     setSaving(true);
     try {
       // Split fullName into first and last name
@@ -186,7 +328,7 @@ const ProfileSection = ({ userId }) => {
         shipping,
       };
 
-      await axios.put(`${API_BASE}/customers/${userId}`, payload, {
+      await axios.put(`${API_BASE}/customers/${effectiveUserId}`, payload, {
         params: { consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET },
       });
 
@@ -195,6 +337,8 @@ const ProfileSection = ({ userId }) => {
         ...payload,
         avatar_url: avatarPreview || user?.avatar_url || '',
       };
+
+      saveStoredProfileImage(formData.email, effectiveUserId, avatarPreview || user?.avatar_url || '');
 
       setUser(nextUser);
       updateUser({
@@ -226,12 +370,8 @@ const ProfileSection = ({ userId }) => {
     return <p className="ps-loading">Loading profile...</p>;
   if (error)
     return <p className="ps-error">{error}</p>;
-  if (!user)
-    return (
-      <p className="ps-no-user">
-        No user profile found. Please sign in to view your profile.
-      </p>
-    );
+  if (!user || !formData)
+    return <p className="ps-loading">Loading profile...</p>;
 
   const initials = getInitials(user);
   const bgColor = getColorForInitials(initials);
@@ -239,6 +379,7 @@ const ProfileSection = ({ userId }) => {
     avatarPreview ||
     authUser?.image ||
     authUser?.photoURL ||
+    persistedProfileImage ||
     user.avatar_url;
 
   return (

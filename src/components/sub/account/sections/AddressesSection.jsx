@@ -1,13 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../../../assets/styles/myaccount/addressesSection.css';
+import { useAuth } from '../../../../contexts/AuthContext';
 
-const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
-const CK = 'ck_2e4ba96dde422ed59388a09a139cfee591d98263';
-const CS = 'cs_43b449072b8d7d63345af1b027f2c8026fd15428';
+const API_BASE = 'https://db.store1920.com/wp-json/custom/v1';
+const LOCAL_ADDRESS_KEY = 'store1920_saved_address';
+
+const getStoredAddress = (storageKey) => {
+  try {
+    const stored = localStorage.getItem(storageKey);
+    return stored ? JSON.parse(stored) : null;
+  } catch (error) {
+    console.error('Failed to read saved address from localStorage', error);
+    return null;
+  }
+};
+
+const toAddressCard = (address) => {
+  if (!address) {
+    return null;
+  }
+
+  const fullName = address.fullName || address.full_name || '';
+  const firstName = address.first_name || fullName.split(' ').shift() || '';
+  const lastName = address.last_name || fullName.split(' ').slice(1).join(' ') || '';
+  const address1 = address.address_1 || address.address1 || '';
+
+  if (!address1) {
+    return null;
+  }
+
+  return {
+    first_name: firstName,
+    last_name: lastName,
+    address_1: address1,
+    address_2: address.address_2 || address.address2 || '',
+    city: address.city || '',
+    state: address.state || '',
+    country: address.country || '',
+    phone: address.phone || '',
+  };
+};
 
 const AddressesSection = () => {
-  const userId = localStorage.getItem('userId'); // WooCommerce customer ID stored in localStorage
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id || localStorage.getItem('userId');
+  const storageKey = userId ? `${LOCAL_ADDRESS_KEY}_${userId}` : LOCAL_ADDRESS_KEY;
 
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,15 +67,22 @@ const AddressesSection = () => {
   // Fetch countries for dropdown
   useEffect(() => {
     axios
-      .get(`${API_BASE}/data/countries`, {
-        params: { consumer_key: CK, consumer_secret: CS },
+      .get('https://db.store1920.com/wp-json/wc/v3/data/countries', {
+        params: {
+          consumer_key: 'ck_2e4ba96dde422ed59388a09a139cfee591d98263',
+          consumer_secret: 'cs_43b449072b8d7d63345af1b027f2c8026fd15428',
+        },
       })
       .then((res) => setCountries(res.data || []))
       .catch(() => setCountries([]));
   }, []);
 
-  // Fetch customer billing address by userId
+  // Fetch saved address from the custom session endpoint
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+
     if (!userId) {
       setLoading(false);
       return;
@@ -45,20 +90,28 @@ const AddressesSection = () => {
 
     setLoading(true);
     axios
-      .get(`${API_BASE}/customers/${userId}`, {
-        params: { consumer_key: CK, consumer_secret: CS },
+      .get(`${API_BASE}/get-address`, {
+        withCredentials: true,
       })
       .then((res) => {
-        const customer = res.data;
-        if (customer && customer.billing) {
-          setAddresses([customer.billing]);
+        const shipping = toAddressCard(res.data?.shipping);
+        const billing = toAddressCard(res.data?.billing);
+        const savedAddress = shipping || billing;
+
+        if (savedAddress) {
+          setAddresses([savedAddress]);
+          localStorage.setItem(storageKey, JSON.stringify(savedAddress));
         } else {
-          setAddresses([]);
+          const cachedAddress = getStoredAddress(storageKey);
+          setAddresses(cachedAddress ? [cachedAddress] : []);
         }
       })
-      .catch(() => setAddresses([]))
+      .catch(() => {
+        const cachedAddress = getStoredAddress(storageKey);
+        setAddresses(cachedAddress ? [cachedAddress] : []);
+      })
       .finally(() => setLoading(false));
-  }, [userId]);
+  }, [authLoading, storageKey, userId]);
 
   // Update cities list if country is AE
   useEffect(() => {
@@ -83,7 +136,7 @@ const AddressesSection = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Save new billing address to WooCommerce
+  // Save address through the custom session endpoint
   const handleSave = async () => {
     if (!userId) {
       alert('User not logged in.');
@@ -92,28 +145,48 @@ const AddressesSection = () => {
 
     setSaving(true);
 
-    const billingData = {
+    const payload = {
       billing: {
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        address1: formData.street,
+        address2: formData.additional,
+        city: formData.city,
+        state: '',
+        postalCode: '',
+        country: formData.country,
+        phone: formData.phone,
+      },
+      shipping: {
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        address1: formData.street,
+        address2: formData.additional,
+        city: formData.city,
+        state: '',
+        postalCode: '',
+        country: formData.country,
+      },
+    };
+
+    try {
+      await axios.post(`${API_BASE}/save-address`, payload, {
+        withCredentials: true,
+      });
+
+      alert('Address saved successfully.');
+
+      const savedAddress = {
         first_name: formData.firstName,
         last_name: formData.lastName,
         address_1: formData.street,
         address_2: formData.additional,
         city: formData.city,
-        state: '', // Optional, add if you have this data
+        state: '',
         country: formData.country,
         phone: formData.phone,
-      },
-    };
+      };
 
-    try {
-      await axios.put(`${API_BASE}/customers/${userId}`, billingData, {
-        params: { consumer_key: CK, consumer_secret: CS },
-      });
-
-      alert('Address saved successfully.');
-
-      // Update local addresses list
-      setAddresses((prev) => [...prev, billingData.billing]);
+      localStorage.setItem(storageKey, JSON.stringify(savedAddress));
+      setAddresses([savedAddress]);
 
       // Reset form and hide
       setFormData({

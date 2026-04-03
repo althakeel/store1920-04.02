@@ -23,7 +23,13 @@ const MyAccount = () => {
   // const [loadingCoins, setLoadingCoins] = useState(false);
   // const [coinError, setCoinError] = useState(null);
 
-  const userId = user?.id;
+  const storedUserId = localStorage.getItem('userId');
+  const userId =
+    user?.id && user.id !== 'undefined' && user.id !== 'null'
+      ? user.id
+      : storedUserId && storedUserId !== 'undefined' && storedUserId !== 'null'
+        ? storedUserId
+        : null;
   const email = user?.email;
 
   // 🔐 COINS: WordPress session based
