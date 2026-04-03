@@ -341,6 +341,8 @@ export const API_BASE = "https://db.store1920.com/wp-json/wc/v3";
 export const CONSUMER_KEY = "ck_8dfeb134379e51fa95e3a22769f67bd6b4f0e507";
 export const CONSUMER_SECRET = "cs_2e5da71434cc874771a8ab0ef2dae2ffef3591c0";
 const SHORT_DESC_API_BASE = "https://db.store1920.com/wp-json/store1920/v1/product";
+const STORE1920_API_BASE = "https://db.store1920.com/wp-json/store1920/v1";
+const WP_MEDIA_API_BASE = "https://db.store1920.com/wp-json/wp/v2/media";
 
 const authParams = `consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
 
@@ -380,6 +382,41 @@ export async function fetchAPI(endpoint) {
   } catch (error) {
     console.error("fetchAPI error:", error);
     return null;
+  }
+}
+
+export async function getMediaByIds(ids = []) {
+  const uniqueIds = Array.from(
+    new Set(
+      (Array.isArray(ids) ? ids : [])
+        .map((id) => Number.parseInt(id, 10))
+        .filter((id) => Number.isFinite(id) && id > 0)
+    )
+  );
+
+  if (!uniqueIds.length) return [];
+
+  try {
+    const response = await axios.get(
+      `${WP_MEDIA_API_BASE}?include=${uniqueIds.join(",")}&per_page=${Math.min(uniqueIds.length, 100)}&_fields=id,source_url,alt_text,title`
+    );
+
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error("getMediaByIds error:", error);
+    return [];
+  }
+}
+
+export async function getVariationGalleries(productId) {
+  if (!productId) return [];
+
+  try {
+    const response = await axios.get(`${STORE1920_API_BASE}/products/${productId}/variation-galleries`);
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.warn("getVariationGalleries error:", error?.message || error);
+    return [];
   }
 }
 
