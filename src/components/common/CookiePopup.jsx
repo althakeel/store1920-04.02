@@ -1,5 +1,29 @@
 import React, { useState, useEffect } from "react";
 
+const PRESERVED_LOCAL_STORAGE_KEYS = [
+  "userData",
+  "userId",
+  "email",
+  "token",
+  "loginEvent",
+  "logoutEvent",
+  "cookiePopupClosed",
+  "lastClickedProduct",
+  "categories",
+];
+
+const PRESERVED_COOKIE_PREFIXES = [
+  "wordpress_logged_in_",
+  "wordpress_sec_",
+  "wp-settings-",
+  "wp-settings-time-",
+  "store1920_session",
+  "session",
+];
+
+const shouldPreserveCookie = (cookieName) =>
+  PRESERVED_COOKIE_PREFIXES.some((prefix) => cookieName.startsWith(prefix));
+
 const CookiePopup = () => {
   const [showPopup, setShowPopup] = useState(false);
 
@@ -24,24 +48,21 @@ const CookiePopup = () => {
     sessionStorage.setItem("skipCookiePopup", "true");
 
     setTimeout(() => {
-      const preservedKeys = [
-        "userToken",
-        "userId",
-        "isLoggedIn",
-        "lastClickedProduct",
-        "categories",
-      ];
-
       let preservedData = {};
-      preservedKeys.forEach((key) => {
+      PRESERVED_LOCAL_STORAGE_KEYS.forEach((key) => {
         const value = localStorage.getItem(key);
         if (value !== null) preservedData[key] = value;
       });
 
       document.cookie.split(";").forEach((c) => {
-        document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        const trimmedCookie = c.replace(/^ +/, "");
+        const [cookieName] = trimmedCookie.split("=");
+
+        if (!cookieName || shouldPreserveCookie(cookieName)) {
+          return;
+        }
+
+        document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       });
 
       localStorage.clear();

@@ -469,7 +469,7 @@ const canReturn = (order) => {
           </div>
 
           <div className="order-actions-simple">
-            <button className="btn-outline" onClick={() => openEditAddress(order)}>Change address</button>
+            {/* <button className="btn-outline" onClick={() => openEditAddress(order)}>Change address</button> */}
             <button className="btn-secondary" onClick={() => handleBuyAgain(order.line_items, order.id)} disabled={buyingAgainOrderId === order.id}>
               {buyingAgainOrderId === order.id ? 'Adding...' : 'Buy this again'}
             </button>

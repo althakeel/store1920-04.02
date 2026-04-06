@@ -12,6 +12,7 @@ import CoinWidget from './CoinWidget';
 import { useCart } from '../contexts/CartContext';
 import { useTheme } from '../contexts/ThemeContext'; 
 import { useAuth } from '../contexts/AuthContext';
+import { resolveUserProfileImage } from '../utils/profileImage';
 import LogoMain from '../assets/images/Logo/logo-after-eid.png';
 
 import Dirham from '../assets/images/language/aed (1).png';
@@ -50,6 +51,7 @@ const NavbarWithMegaMenu = ({ cartIconRef, openCart }) => {
 
   const { isCartOpen, cartItems } = useCart();
   const navigate = useNavigate();
+  const [resolvedProfileImage, setResolvedProfileImage] = useState('');
 const [currentMessage, setCurrentMessage] = useState('🚀 Fast Delivery');
 
 
@@ -207,6 +209,18 @@ const messages = [
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const syncProfileImage = () => {
+      setResolvedProfileImage(resolveUserProfileImage(user));
+    };
+
+    syncProfileImage();
+
+    const handleStorageChange = () => syncProfileImage();
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [user]);
+
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setHovering(true);
@@ -315,6 +329,9 @@ const messages = [
   const sitelogo = LogoMain;
   const isDark = chroma(backgroundColor).luminance() < 0.5;
   const textColor = isDark ? '#fff' : '#fff';
+  const menuUser = user
+    ? { ...user, image: resolvedProfileImage || user.image || user.photoURL || null }
+    : null;
 
   return (
     <>
@@ -563,16 +580,16 @@ const messages = [
             <div className="nav-center"><SearchBar /></div>
 
             <div className="nav-right">
-              {user ? (
+              {menuUser ? (
                 <div
                   className="account logged-in"
-                  title={`Hi, ${user?.name || 'User'}`}
+                  title={`Hi, ${menuUser?.name || 'User'}`}
                   onMouseEnter={() => {
                     if (userTimeoutRef.current) clearTimeout(userTimeoutRef.current);
                     setUserDropdownOpen(true);
-                    console.log('Current user data:', user);
-                    console.log('User image:', user?.image);
-                    console.log('User photoURL:', user?.photoURL);
+                    console.log('Current user data:', menuUser);
+                    console.log('User image:', menuUser?.image);
+                    console.log('User photoURL:', menuUser?.photoURL);
                   }}
                   onMouseLeave={() => {
                     userTimeoutRef.current = setTimeout(() => setUserDropdownOpen(false), 200);
@@ -582,16 +599,16 @@ const messages = [
                   <div 
                     className="avatar"
                     style={{ 
-                      background: (user?.image || user?.photoURL) 
+                      background: (menuUser?.image || menuUser?.photoURL) 
                         ? 'transparent' 
-                        : getAvatarColor(user?.name || user?.email)
+                        : getAvatarColor(menuUser?.name || menuUser?.email)
                     }}
                   >
-                    {(user?.image || user?.photoURL) ? (
+                    {(menuUser?.image || menuUser?.photoURL) ? (
                       <>
                         <img 
-                          src={user.image || user.photoURL} 
-                          alt={user.name || user.email}
+                          src={menuUser.image || menuUser.photoURL} 
+                          alt={menuUser.name || menuUser.email}
                           onError={(e) => {
                             console.error('Image failed to load:', e.target.src);
                             e.target.style.display = 'none';
@@ -601,23 +618,23 @@ const messages = [
                           className="avatar-fallback"
                           style={{ display: 'none' }}
                         >
-                          {getInitials(user)}
+                          {getInitials(menuUser)}
                         </div>
                       </>
                     ) : (
                       <div className="avatar-fallback">
-                        {getInitials(user)}
+                        {getInitials(menuUser)}
                       </div>
                     )}
                   </div>
                   <div className="user-name">
-                    Hi, {user?.name ? capitalizeFirst(truncateName(user.name)) : 
-                         user?.email ? truncateName(user.email.split('@')[0]) : 'User'}{' '}
-                    <CoinWidget userId={user?.id ? Number(user.id) : 0} />
+                    Hi, {menuUser?.name ? capitalizeFirst(truncateName(menuUser.name)) : 
+                         menuUser?.email ? truncateName(menuUser.email.split('@')[0]) : 'User'}{' '}
+                    <CoinWidget userId={menuUser?.id ? Number(menuUser.id) : 0} />
                   </div>
 
                   <UserDropdownMenu
-                    user={user}
+                    user={menuUser}
                     isOpen={userDropdownOpen}
                     onSignOut={handleSignOut}
                     onClose={() => setUserDropdownOpen(false)}
@@ -730,7 +747,7 @@ const messages = [
         isOpen={mobileMenuOpen}
         closeMobileMenu={closeMobileMenu}
         categories={categories}
-        user={user}
+        user={menuUser}
         userDropdownOpen={userDropdownOpen}
         setUserDropdownOpen={setUserDropdownOpen}
         setSignInOpen={setSignInOpen}

@@ -3,6 +3,11 @@ import axios from 'axios';
 import '../../../../assets/styles/myaccount/ProfileSection.css';
 import { API_BASE, CONSUMER_KEY, CONSUMER_SECRET } from '../../../../api/woocommerce';
 import { useAuth } from '../../../../contexts/AuthContext';
+import {
+  normalizePhoneDigits,
+  normalizePhoneForSave,
+  validateUAEPhoneNumber,
+} from '../../../../utils/uaePhoneValidation';
 
 function getInitials(user) {
   if (user.first_name && user.last_name) {
@@ -150,6 +155,7 @@ const ProfileSection = ({ userId }) => {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
   const [avatarPreview, setAvatarPreview] = useState('');
   const persistedProfileImage = getStoredProfileImage(authUser?.email, effectiveUserId);
 
@@ -233,25 +239,36 @@ const ProfileSection = ({ userId }) => {
   }, [authUser, effectiveUserId, persistedProfileImage, userId]);
 
   const handleInputChange = (field, value) => {
+    const normalizedValue =
+      field === 'billing.phone'
+        ? normalizePhoneDigits(value).startsWith('5')
+          ? normalizePhoneDigits(value).slice(0, 9)
+          : normalizePhoneDigits(value)
+        : value;
+
     setFormData((prev) => {
       if (field === 'fullName') {
-        return { ...prev, fullName: value };
+        return { ...prev, fullName: normalizedValue };
       }
       if (field.startsWith('billing.')) {
         const key = field.split('.')[1];
         return {
           ...prev,
-          billing: { ...prev.billing, [key]: value },
+          billing: { ...prev.billing, [key]: normalizedValue },
         };
       } else if (field.startsWith('shipping.')) {
         const key = field.split('.')[1];
         return {
           ...prev,
-          shipping: { ...prev.shipping, [key]: value },
+          shipping: { ...prev.shipping, [key]: normalizedValue },
         };
       }
-      return { ...prev, [field]: value };
+      return { ...prev, [field]: normalizedValue };
     });
+
+    if (field === 'billing.phone') {
+      setPhoneError(validateUAEPhoneNumber(normalizedValue));
+    }
   };
 
   const cancelEdit = () => {
@@ -261,6 +278,7 @@ const ProfileSection = ({ userId }) => {
     setAvatarPreview(
       authUser?.image || authUser?.photoURL || persistedProfileImage || user?.avatar_url || ''
     );
+    setPhoneError('');
     setEditMode(false);
   };
 
@@ -287,6 +305,12 @@ const ProfileSection = ({ userId }) => {
       return;
     }
 
+    const nextPhoneError = validateUAEPhoneNumber(formData.billing?.phone || '');
+    if (nextPhoneError) {
+      setPhoneError(nextPhoneError);
+      return;
+    }
+
     setSaving(true);
     try {
       // Split fullName into first and last name
@@ -305,7 +329,7 @@ const ProfileSection = ({ userId }) => {
         postcode: formData.billing?.postcode || '',
         country: formData.billing?.country || 'AE',
         email: formData.email || '',
-        phone: formData.billing?.phone || '',
+        phone: `+971${normalizePhoneForSave(formData.billing?.phone || '')}`,
       };
 
       const shipping = {
@@ -341,6 +365,7 @@ const ProfileSection = ({ userId }) => {
       saveStoredProfileImage(formData.email, effectiveUserId, avatarPreview || user?.avatar_url || '');
 
       setUser(nextUser);
+      setPhoneError('');
       updateUser({
         name: `${first_name} ${last_name}`.trim() || formData.email,
         email: formData.email,
@@ -472,13 +497,17 @@ const ProfileSection = ({ userId }) => {
           )}
 
           {editMode ? (
-            <input
-              type="tel"
-              value={formData.billing?.phone || ''}
-              placeholder="Phone"
-              onChange={(e) => handleInputChange('billing.phone', e.target.value)}
-              className="ps-input ps-single-input"
-            />
+            <>
+              <input
+                type="tel"
+                value={formData.billing?.phone || ''}
+                placeholder="501234564"
+                onChange={(e) => handleInputChange('billing.phone', e.target.value)}
+                className="ps-input ps-single-input"
+              />
+              <p className="ps-help">Example: 501234564. Enter 9 digits starting with 5 only.</p>
+              {phoneError && <p className="ps-error">{phoneError}</p>}
+            </>
           ) : (
             <p className="ps-phone">
               <strong>Phone:</strong> {user.billing?.phone || 'N/A'}
@@ -540,9 +569,10 @@ const ProfileSection = ({ userId }) => {
               <input
                 type="text"
                 placeholder="Country"
-                value={formData.billing.country || ''}
-                onChange={(e) => handleInputChange('billing.country', e.target.value)}
+                value="United Arab Emirates"
                 className="ps-input"
+                readOnly
+                disabled
               />
             </>
           ) : user.billing && user.billing.address_1 ? (
@@ -603,9 +633,10 @@ const ProfileSection = ({ userId }) => {
               <input
                 type="text"
                 placeholder="Country"
-                value={formData.shipping.country || ''}
-                onChange={(e) => handleInputChange('shipping.country', e.target.value)}
+                value="United Arab Emirates"
                 className="ps-input"
+                readOnly
+                disabled
               />
             </>
           ) : user.shipping && user.shipping.address_1 ? (
