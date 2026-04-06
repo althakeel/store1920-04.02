@@ -69,9 +69,10 @@ const categoryData = [
       { id: 601, name: "Support center", path: "/support" },
       { id: 602, name: "Safety center", path: "/safetycenter" },
       { id: 603, name: "Privacy policy", path: "/privacy-policy" },
-      { id: 604, name: "Terms of use", path: "/terms-0f-use" },
-      { id: 605, name: "Store1920 purchase protection", path: "/purchaseprotection" },
-      { id: 606, name: "Track Order", path: "/track-order" },
+      { id: 604, name: "Data deletion", path: "/data-deletion" },
+      { id: 605, name: "Terms of use", path: "/terms-0f-use" },
+      { id: 606, name: "Store1920 purchase protection", path: "/purchaseprotection" },
+      { id: 607, name: "Track Order", path: "/track-order" },
     ],
   },
 ];
@@ -90,12 +91,9 @@ const Footer = () => {
         }}
       >
         <div className="footer-container">
-        <div
-          className="footer-top"
-          style={{ display: "flex", width: "100%", gap: "0", justifyContent: "space-between" }}
-        >
+        <div className="footer-top">
           {categoryData.map((category) => (
-            <div className="footer-section" key={category.id} style={{ flex: 1 }}>
+            <div className="footer-section" key={category.id}>
               <h4>{category.title}</h4>
               <ul>
                 {category.items.map((item) => (
@@ -106,7 +104,7 @@ const Footer = () => {
               </ul>
             </div>
           ))}
-          <div className="footer-section" style={{ flex: 1 }}>
+          <div className="footer-section footer-connect-section">
             <h4>Connect with Store1920</h4>
             <div className="social-icons">
               <a href="https://www.instagram.com/store1920.ae" target="_blank" rel="noopener noreferrer">
@@ -194,6 +192,9 @@ const Footer = () => {
             </li>
             <li>
               <Link to="/privacy-policy">Privacy Policy</Link>
+            </li>
+            <li>
+              <Link to="/data-deletion">Data Deletion</Link>
             </li>
             <li>
               <Link to="/cookies-settings">Cookie Settings</Link>
