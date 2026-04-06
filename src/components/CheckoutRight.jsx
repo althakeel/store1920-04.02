@@ -225,6 +225,8 @@ console.log("✅ Wallet Payment Response =>", data);
           amount: amountToSend,
           order_id: id.id || id,
           billing: normalized,
+          saved_card_hint: formData.selectedSavedCardHint || null,
+          selected_saved_card_id: formData.selectedSavedCardId || null,
           frontend_success: window.location.origin + '/order-success',
         };
 
@@ -338,6 +340,8 @@ console.log("✅ Wallet Payment Response =>", data);
           billing: normalized,
           shipping: normalized,
           billingSameAsShipping: true,
+          saved_card_hint: formData.selectedSavedCardHint || null,
+          selected_saved_card_id: formData.selectedSavedCardId || null,
           items: [
             {
               name: `Order ${id.id || id}`,
@@ -458,6 +462,8 @@ console.log("✅ Wallet Payment Response =>", data);
           amount: finalAmount,
           order_id: orderId,
           billing: normalized,
+          saved_card_hint: formData.selectedSavedCardHint || null,
+          selected_saved_card_id: formData.selectedSavedCardId || null,
           frontend_success: window.location.origin + '/order-success',
         };
 

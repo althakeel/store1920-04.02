@@ -14,6 +14,7 @@ import GooglePayIcon from '../../assets/images/Footer icons/12.webp';
 import MasterCardIcon from '../../assets/images/Footer icons/16.webp';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
+import { buildSavedCardHint, getSavedCardsForUser } from '../../utils/savedCards';
 
 // Safely import staticProducts with fallback
 let staticProducts = [];
@@ -100,13 +101,20 @@ const InstallmentOption = ({
   );
 };
 
-const PaymentMethods = ({ selectedMethod, onMethodSelect, subtotal, cartItems = [] }) => {
+const PaymentMethods = ({
+  selectedMethod,
+  selectedSavedCardId = null,
+  onMethodSelect,
+  subtotal,
+  cartItems = [],
+}) => {
   const [showCodPopup, setShowCodPopup] = useState(false);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   const [confirmationMethod, setConfirmationMethod] = useState(null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [walletBalance, setWalletBalance] = React.useState(null);
   const [walletLoading, setWalletLoading] = React.useState(true);
+  const [savedCards, setSavedCards] = useState([]);
   const { user } = useAuth();
   
   // Log cartItems received
@@ -124,15 +132,35 @@ console.log('Auth user ID:', user?.id);
     }
   }, [selectedMethod, subtotal, onMethodSelect]);
 
+  useEffect(() => {
+    setSavedCards(getSavedCardsForUser(user?.id));
+  }, [user?.id]);
+
+  const resolvedSelectedSavedCardId =
+    selectedSavedCardId || savedCards[0]?.id || null;
+
+  const selectedSavedCard =
+    savedCards.find((card) => card.id === resolvedSelectedSavedCardId) || savedCards[0] || null;
+
   // Handle payment method selection with confirmation popup
-  const handlePaymentMethodSelect = (methodId, methodTitle, methodLogo = null) => {
+  const handlePaymentMethodSelect = (
+    methodId,
+    methodTitle,
+    methodLogo = null,
+    extra = {}
+  ) => {
     // Show confirmation popup for card payment
     if (methodId === 'card') {
-      setConfirmationMethod({ id: methodId, title: methodTitle, logo: methodLogo });
+      setConfirmationMethod({
+        id: methodId,
+        title: methodTitle,
+        logo: methodLogo,
+        extra,
+      });
       setShowPaymentConfirmation(true);
     } else {
       // For other methods, select directly
-      onMethodSelect(methodId, methodTitle, methodLogo);
+      onMethodSelect(methodId, methodTitle, methodLogo, extra);
     }
   };
 
@@ -148,10 +176,25 @@ console.log('Auth user ID:', user?.id);
       onMethodSelect(
         confirmationMethod.id,
         confirmationMethod.title,
-        confirmationMethod.logo
+        confirmationMethod.logo,
+        confirmationMethod.extra || {}
       );
       handleConfirmationClose();
     }
+  };
+
+  const handleSavedCardSelect = (card) => {
+    const extra = {
+      selectedSavedCardId: card.id,
+      selectedSavedCardHint: buildSavedCardHint(card),
+    };
+
+    if (selectedMethod === 'card') {
+      onMethodSelect('card', 'Credit/Debit Card', CardIcon, extra);
+      return;
+    }
+
+    handlePaymentMethodSelect('card', 'Credit/Debit Card', CardIcon, extra);
   };
 
   // Static product checks
@@ -289,7 +332,12 @@ console.log('Wallet loading:', walletLoading);
             id="card"
             name="payment-method"
             checked={selectedMethod === 'card'}
-            onChange={() => handlePaymentMethodSelect('card', 'Credit/Debit Card', CardIcon)}
+            onChange={() =>
+              handlePaymentMethodSelect('card', 'Credit/Debit Card', CardIcon, {
+                selectedSavedCardId: resolvedSelectedSavedCardId,
+                selectedSavedCardHint: buildSavedCardHint(selectedSavedCard),
+              })
+            }
           />
           <label htmlFor="card" className="payment-method-label">
             <div className="payment-method-content">
@@ -303,6 +351,36 @@ console.log('Wallet loading:', walletLoading);
                   <img src={GooglePayIcon} alt="Google Pay" className="card-icon" />
                 </div>
               </div>
+              {savedCards.length > 0 && (
+                <div className="saved-cards-checkout">
+                  <div className="saved-cards-checkout-title">Use a saved card</div>
+                  <div className="saved-cards-checkout-list">
+                    {savedCards.map((card) => {
+                      const isSelected = card.id === resolvedSelectedSavedCardId;
+
+                      return (
+                        <button
+                          key={card.id}
+                          type="button"
+                          className={`saved-card-chip ${isSelected ? 'selected' : ''}`}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            handleSavedCardSelect(card);
+                          }}
+                        >
+                          <span className="saved-card-chip-brand">{card.brand}</span>
+                          <span className="saved-card-chip-number">•••• {card.last4}</span>
+                          <span className="saved-card-chip-expiry">Exp {card.expiry}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="saved-cards-checkout-note">
+                    Your selected card will be sent as a saved-card hint to payment. You can still change it on Stripe.
+                  </div>
+                </div>
+              )}
             </div>
           </label>
         </div>

@@ -161,12 +161,20 @@ export default function CheckoutLeft({
   // -------------------------------
   // Select payment
   // -------------------------------
-  const handlePaymentSelect = (id, title, logo = null) => {
+  const handlePaymentSelect = (id, title, logo = null, extra = {}) => {
     setFormData(prev => ({
       ...prev,
       paymentMethod: id,
       paymentMethodTitle: title,
       paymentMethodLogo: logo || null,
+      selectedSavedCardId:
+        extra.selectedSavedCardId !== undefined
+          ? extra.selectedSavedCardId
+          : prev.selectedSavedCardId || null,
+      selectedSavedCardHint:
+        extra.selectedSavedCardHint !== undefined
+          ? extra.selectedSavedCardHint
+          : prev.selectedSavedCardHint || null,
     }));
   };
 
@@ -379,6 +387,7 @@ export default function CheckoutLeft({
       {/* Payment Methods */}
       <PaymentMethods
         selectedMethod={formData.paymentMethod || 'cod'}
+        selectedSavedCardId={formData.selectedSavedCardId || null}
         onMethodSelect={handlePaymentSelect}
         subtotal={subtotal}
         cartItems={cartItems || []}
