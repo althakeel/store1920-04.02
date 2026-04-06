@@ -4,7 +4,7 @@ const TermsOfUse = () => {
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 20,fontFamily: 'Montserrat, sans-serif', lineHeight: 1.6 }}>
       <h1>Terms of Use</h1>
-      <p>Last updated: August 14, 2025</p>
+      <p>Last updated: April 6, 2026</p>
      <p>Welcome to Store1920! These Terms of Use (“Terms”) are a legally binding agreement between you and Althakeel General Trading LLC, the company that owns and operates the Store1920 platform. Throughout these Terms, “Store1920,” “we,” “us,” or “our” refer to Althakeel General Trading LLC and its affiliates. “You” refers to you as a user of our website, mobile applications, and any related services (collectively, the “Services”). By registering for an account or by accessing or using our Services, you agree to these Terms. If you do not agree with these Terms, you must not use our Services.</p>
      <p>Please read these Terms carefully before using Store1920. They contain important information about your rights and obligations, as well as limitations and exclusions that may apply to you.</p>
       

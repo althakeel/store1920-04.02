@@ -18,7 +18,7 @@ const IntellectualPropertyPolicy = () => {
       </h1>
 
       <p style={{ marginBottom: 20, fontWeight: '600' }}>
-        Last updated: July 18th, 2025
+        Last updated: April 6, 2026
       </p>
 
       <p style={{ marginBottom: 20 }}>

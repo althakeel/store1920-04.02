@@ -67,8 +67,8 @@ const SecuritySection = () => {
         </div>
 
         <div className="security-footer">
-          <a href="/account/signin-activity">Review sign in activity for this account</a>
-          <a href="/account/delete">Delete your Store1920 account</a>
+          <a href="/myaccount/profile">Review sign in details for this account</a>
+          <a href="/data-deletion">Delete your Store1920 account</a>
         </div>
       </div>
     </div>

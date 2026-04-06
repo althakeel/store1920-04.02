@@ -50,7 +50,7 @@ const ShippedOrder = ({
         .map((order) => (
           <div key={order.id} className="order-card-simple">
             <div>
-              <strong>Order ID:</strong> PO-{order.id} | <strong>Date:</strong>{' '}
+              <strong>Order ID:</strong> {order.id} | <strong>Date:</strong>{' '}
               {new Date(order.date_created).toLocaleDateString()}
             </div>
             <div className="order-items-grid-simple">

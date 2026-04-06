@@ -35,7 +35,7 @@ const DeliveryGuarantee = () => {
             <p style={smallNote}>
               Under special circumstances such as natural disasters, credits may not apply.
               <br />
-              <a href="#" style={linkStyle}>See policy page &gt;</a>
+              <a href="/shippinginfo" style={linkStyle}>See shipping info &gt;</a>
             </p>
           </div>
 
@@ -63,7 +63,7 @@ const DeliveryGuarantee = () => {
             <p style={smallNote}>
               In rare force majeure events, refund might not be possible.
               <br />
-              <a href="#" style={linkStyle}>See policy page &gt;</a>
+              <a href="/return-policy" style={linkStyle}>See return policy &gt;</a>
             </p>
           </div>
 
@@ -83,7 +83,7 @@ const DeliveryGuarantee = () => {
             <p style={smallNote}>
               In rare cases like disasters, refund or reshipment may not apply.
               <br />
-              <a href="#" style={linkStyle}>See policy page &gt;</a>
+              <a href="/return-policy" style={linkStyle}>See return policy &gt;</a>
             </p>
           </div>
         </div>

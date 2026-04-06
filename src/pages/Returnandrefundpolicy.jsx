@@ -365,6 +365,9 @@ const ReturnPolicyPage = () => {
         ref={contentRef}
         className="hide-scrollbar rp-content"
       >
+      <p style={{ ...styles.text, ...(isMobile ? mobileStyles.text : {}), fontWeight: 600, marginTop: 0, marginBottom: 28 }}>
+        Last updated: April 6, 2026
+      </p>
       {sections.map(({ id, title, content }) => (
   <section key={id} id={id} style={styles.section}>
     <h2

@@ -84,40 +84,71 @@
   gap: 20px;
 }
 
-.safety-grid button {
+.safety-card {
   background-color: #fafafa;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 18px 24px;
   flex: 1 1 calc(33.333% - 20px);
-  font-size: 15px;
-  font-weight: 500;
-  color: #111827;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
+  min-height: 190px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
   text-align: left;
+  box-sizing: border-box;
 }
 
-.safety-grid button:hover {
+.safety-card:hover {
   background-color: #f0fdf4;
   border-color: #34d399;
   box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
   transform: translateY(-2px);
 }
 
-/* === Image inside button (optional) === */
-.safety-grid button img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
+.safety-card-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
 }
 
-/* === Full Width for Long Text Buttons === */
-.report-grid button {
-  flex: 1 1 100%;
+.safety-card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #111827;
+}
+
+.safety-card p,
+.safety-intro p,
+.safety-action-strip p {
+  margin: 0;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.safety-intro {
+  margin-bottom: 36px;
+}
+
+.safety-action-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding: 24px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+}
+
+.safety-action-link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: #ff6a00;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 /* === Safety Partners === */
@@ -154,8 +185,9 @@
     border-radius: 12px;
   }
 
-  .safety-grid button {
+  .safety-card {
     flex: 1 1 100%;
+    min-height: auto;
   }
 
   .safety-header {
@@ -168,5 +200,10 @@
 
   .safety-header .subtitle {
     font-size: 16px;
+  }
+
+  .safety-action-strip {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

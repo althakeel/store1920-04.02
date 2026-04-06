@@ -18,7 +18,7 @@ const SupportDropdownMenu = ({ isOpen, onClose }) => {
     // { label: 'Chat with Store1920', icon: Chat, link: '/chat' },
     // { label: 'Store1920 Purchase Protection', icon: Protection, link: '/protection' },
     { label: 'Privacy Policy', icon: PrivacyPolicy, link: '/privacy-policy' },
-    { label: 'Terms of Use', icon: Terms, link: '/Terms-0f-use' },
+    { label: 'Terms of Use', icon: Terms, link: '/terms-0f-use' },
   ];
 
   return (
