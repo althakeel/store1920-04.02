@@ -11,6 +11,14 @@ import emptyAddressImg from '../assets/images/adress-not-found.png';
 import ProductsUnder20AED from './ProductsUnder20AED';
 import { useCart } from '../contexts/CartContext';
 import CouponDiscount from '../components/sub/account/CouponDiscount';
+import {
+  CHECKOUT_FORM_STORAGE_KEY,
+  getUserScopedAddressKey,
+  mapAccountAddressToCheckoutForm,
+  mapCheckoutFormToAccountAddress,
+  readAddressBook,
+  writeAddressBook,
+} from '../utils/checkoutAddress';
 
 
 const API_BASE = 'https://db.store1920.com/wp-json/custom/v1';
@@ -37,6 +45,8 @@ export default function CheckoutLeft({
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [selectedShippingMethodId, setSelectedShippingMethodId] = useState(null);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [preferredAddressId, setPreferredAddressId] = useState(null);
 
   const { removeFromCart } = useCart();
 
@@ -72,16 +82,6 @@ export default function CheckoutLeft({
   }, []);
   // -------------------------------
   const handleDeleteAddress = () => {
-      {isMobile && !showForm && (
-        <div className="orderSummaryResponsive">
-          <h2>Order Summary</h2>
-          <CouponDiscount onApplyCoupon={() => {}} />
-          <div className="summaryRowCR">
-            <span>Total:</span>
-            <span>AED {subtotal?.toFixed(2)}</span>
-          </div>
-        </div>
-      )}
     const emptyAddress = {
       first_name: '', last_name: '', email: '', street: '', apartment: '',
       city: '', state: '', postal_code: '', country: '', phone_number: ''
@@ -116,8 +116,37 @@ export default function CheckoutLeft({
     setSelectedShippingMethodId(formData.shippingMethodId || null);
   }, [formData.shippingMethodId]);
 
+  useEffect(() => {
+    const storageKey = getUserScopedAddressKey(localStorage.getItem('userId'));
+    const addressBook = readAddressBook(storageKey);
+    setSavedAddresses(addressBook.addresses);
+    setPreferredAddressId(addressBook.preferredAddressId);
+  }, [formData.shipping?.street, formData.shipping?.first_name, formData.shipping?.last_name]);
+
   const handleShippingMethodChange = (id) => {
     setFormData(prev => ({ ...prev, shippingMethodId: id }));
+  };
+
+  const applySavedAddressToCheckout = (address) => {
+    if (!address) return;
+
+    const mappedAddress = mapAccountAddressToCheckoutForm(
+      address,
+      formData.shipping?.email || formData.billing?.email || ''
+    );
+
+    const nextFormData = {
+      ...formData,
+      ...mappedAddress,
+      shippingMethodId: formData.shippingMethodId,
+      paymentMethod: formData.paymentMethod,
+      paymentMethodTitle: formData.paymentMethodTitle,
+      paymentMethodLogo: formData.paymentMethodLogo,
+      addressModalOpen: formData.addressModalOpen,
+    };
+
+    setFormData(nextFormData);
+    localStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(nextFormData));
   };
 
   // -------------------------------
@@ -180,6 +209,30 @@ export default function CheckoutLeft({
       });
       if (!res.ok) throw new Error('Failed to save address');
       await res.json();
+      localStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(formData));
+      const storageKey = getUserScopedAddressKey(localStorage.getItem('userId'));
+      const currentAddress = mapCheckoutFormToAccountAddress(formData);
+      const currentBook = readAddressBook(storageKey);
+      const nextAddressId = currentAddress.id || currentBook.preferredAddressId;
+      const savedAddress = {
+        ...currentAddress,
+        id: nextAddressId,
+      };
+      const nextAddresses = nextAddressId
+        ? currentBook.addresses.map((address) => (address.id === nextAddressId ? savedAddress : address))
+        : [...currentBook.addresses, savedAddress];
+      const resolvedAddresses =
+        nextAddressId && currentBook.addresses.some((address) => address.id === nextAddressId)
+          ? nextAddresses
+          : [...currentBook.addresses, savedAddress];
+      const nextPreferredId = formData.saveAsDefault ? savedAddress.id : currentBook.preferredAddressId || savedAddress.id;
+      const nextBook = writeAddressBook(
+        storageKey,
+        resolvedAddresses,
+        nextPreferredId
+      );
+      setSavedAddresses(nextBook.addresses);
+      setPreferredAddressId(nextBook.preferredAddressId);
       setSaveSuccess(true);
       setShowForm(false);
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -259,6 +312,55 @@ export default function CheckoutLeft({
               </div>
             )}
           </div>
+
+          {!!savedAddresses.length && !showForm && (
+            <div style={{ marginTop: '16px', display: 'grid', gap: '12px' }}>
+              {savedAddresses.map((address) => {
+                const isActive = address.id === formData.selectedAddressId;
+                const isPreferred = address.id === preferredAddressId;
+
+                return (
+                  <div
+                    key={address.id}
+                    style={{
+                      border: `1px solid ${isActive ? '#ff9800' : '#e5e7eb'}`,
+                      borderRadius: '12px',
+                      padding: '12px 14px',
+                      background: isActive ? '#fffaf3' : '#fff',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'flex-start' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, color: '#222' }}>
+                          {address.first_name} {address.last_name}
+                        </div>
+                        <div style={{ fontSize: '0.92rem', color: '#555', marginTop: '4px' }}>
+                          {address.address_1}{address.address_2 ? `, ${address.address_2}` : ''}, {address.city}
+                        </div>
+                        <div style={{ fontSize: '0.92rem', color: '#555', marginTop: '4px' }}>
+                          +971{String(address.phone || '').replace(/^\+?971/, '')}
+                        </div>
+                        {isPreferred && (
+                          <div style={{ fontSize: '0.85rem', color: '#ff6f00', marginTop: '6px', fontWeight: 600 }}>
+                            Preferred address
+                          </div>
+                        )}
+                      </div>
+                      {!isActive && (
+                        <button
+                          type="button"
+                          onClick={() => applySavedAddressToCheckout(address)}
+                          className="btn-add-address1"
+                        >
+                          Use This Address
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 

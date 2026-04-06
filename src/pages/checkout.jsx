@@ -8,6 +8,14 @@ import CheckoutRight from '../components/CheckoutRight';
 import AutoFetchLocation from '../components/AutoFetchLocation';
 // import SignInModal from '../components/sub/SignInModal';
 import '../assets/styles/checkout.css';
+import {
+  CHECKOUT_FORM_STORAGE_KEY,
+  createEmptyCheckoutFormData,
+  getPreferredAddress,
+  getUserScopedAddressKey,
+  mapAccountAddressToCheckoutForm,
+  readAddressBook,
+} from '../utils/checkoutAddress';
 
 const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
 const CK = 'ck_e09e8cedfae42e5d0a37728ad6c3a6ce636695dd';
@@ -51,8 +59,6 @@ export default function CheckoutPage() {
   const { cartItems: contextCartItems, clearCart } = useCart();
   const { user } = useAuth(); 
 
-    const LOCAL_STORAGE_KEY = 'checkoutFormData';
-
 
   const [cartItems, setCartItems] = useState([]);
   const [showForm, setShowForm] = useState(false); 
@@ -60,41 +66,7 @@ export default function CheckoutPage() {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [discount, setDiscount] = useState(0);
   const [coinDiscount, setCoinDiscount] = useState(0);
-  const [formData, setFormData] = useState({
-    shipping: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      street: '',
-      apartment: '',
-      floor: '',
-      city: '',
-      state: '',
-      postal_code: '',
-      country: 'AE',
-      phone_prefix: '50',
-      phone_number: '',
-    },
-    billing: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      street: '',
-      apartment: '',
-      floor: '',
-      city: '',
-      state: '',
-      postal_code: '',
-      country: 'AE',
-      phone_prefix: '50',
-      phone_number: '',
-    },
-    billingSameAsShipping: true,
-    paymentMethod: 'cod',
-    paymentMethodTitle: 'Cash On Delivery',
-    paymentMethodLogo: null,
-    shippingMethodId: null,
-  });
+  const [formData, setFormData] = useState(createEmptyCheckoutFormData);
 
   const [orderId, setOrderId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -110,13 +82,26 @@ export default function CheckoutPage() {
   const deliveryFee = discountedSubtotal > 0 && discountedSubtotal < 100 ? DELIVERY_FEE : 0;
 
   useEffect(() => {
-    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const savedData = localStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
     if (savedData) {
       try {
         setFormData(JSON.parse(savedData));
+        return;
       } catch {}
     }
-  }, []);
+
+    const addressBook = readAddressBook(
+      getUserScopedAddressKey(user?.id || localStorage.getItem('userId'))
+    );
+    const savedAddress = getPreferredAddress(addressBook);
+
+    if (savedAddress) {
+      setFormData((prev) => ({
+        ...prev,
+        ...mapAccountAddressToCheckoutForm(savedAddress, user?.email || ''),
+      }));
+    }
+  }, [user?.email, user?.id]);
 
 
   const showAlert = (message, type = 'info') => {
@@ -139,11 +124,9 @@ export default function CheckoutPage() {
 useEffect(() => {
   if (!user?.id) return;
 
-  const LOCAL_STORAGE_KEY = 'checkoutFormData';
-
   const loadAddresses = async () => {
     // 1. Try to load from localStorage first
-    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const savedData = localStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
     if (savedData) {
       try {
         setFormData(JSON.parse(savedData));
@@ -151,6 +134,16 @@ useEffect(() => {
       } catch (err) {
         console.warn('Failed to parse saved checkout data:', err);
       }
+    }
+
+    const addressBook = readAddressBook(getUserScopedAddressKey(user.id));
+    const savedAddress = getPreferredAddress(addressBook);
+
+    if (savedAddress) {
+      const mappedData = mapAccountAddressToCheckoutForm(savedAddress, user.email || '');
+      setFormData(mappedData);
+      localStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(mappedData));
+      return;
     }
 
     // 2. Fetch from WooCommerce if no localStorage data
@@ -208,7 +201,7 @@ useEffect(() => {
         };
 
         setFormData(fetchedData);
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(fetchedData));
+        localStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(fetchedData));
       }
     } catch (err) {
       console.warn('Could not load saved addresses:', err.message);

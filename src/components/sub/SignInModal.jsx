@@ -4,7 +4,6 @@ import axios from "axios";
 import "../../assets/styles/SignInModal.css";
 import { useAuth } from "../../contexts/AuthContext";
 import GoogleSignInButton from '../../components/sub/GoogleSignInButton';
-import FacebookSignInButton from "../../components/sub/FacebookSignInButton";
 
 // ===================== Alert Component =====================
 const Alert = ({ children, onClose }) => (
@@ -590,10 +589,10 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
             onLogin?.(userInfo);
             onClose();
           }} />
-          <FacebookSignInButton onLogin={(userInfo) => {
+          {/* <FacebookSignInButton onLogin={(userInfo) => {
             onLogin?.(userInfo);
             onClose();
-          }} />
+          }} /> */}
         </div>
 
         <div className="signin-terms">

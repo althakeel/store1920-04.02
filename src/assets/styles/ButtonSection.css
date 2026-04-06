@@ -17,17 +17,17 @@
 /* Common button styles */
 .button-section button {
   flex: 1 1 calc(50% - 5px);
-  padding: 13px 14px;
-  min-height: 44px;
-  border-radius: 999px;
+  padding: 12px 16px;
+  min-height: 48px;
+  border-radius: 10px;
   cursor: pointer;
   border: 1px solid transparent;
-  font-weight: 800;
+  font-weight: 700;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.98rem;
-  letter-spacing: 0.25px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
-  transition: transform 0.16s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 0;
+  box-shadow: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.16s ease, box-shadow 0.2s ease;
 }
 
 /* Individual buttons */
@@ -37,26 +37,26 @@
 }
 
 .go-to-cart-btn {
-  background: linear-gradient(180deg, #ff4a4a 0%, #f11414 58%, #d90f0f 100%);
-  border-color: #e21a1a;
-  color: #fff;
+  background: #ffd8bf;
+  border-color: #ffb88a;
+  color: #cc5200;
 }
 
 .go-to-checkout-btn {
-  background: linear-gradient(180deg, #ffbc45 0%, #ff9800 58%, #ee8100 100%);
-  border-color: #f2930e;
+  background: #ff6600;
+  border-color: #ff6600;
   color: #fff;
 }
 
 .buy-now-btn {
-  background: linear-gradient(180deg, #ffbc45 0%, #ff9800 58%, #ee8100 100%);
-  border-color: #f2930e;
+  background: #ff6600;
+  border-color: #ff6600;
   color: #fff;
 }
 
 .select-option-btn {
-  background: linear-gradient(180deg, #ff9300 0%, #ff8400 58%, #ff7a00 100%);
-  border-color: #f08a04;
+  background: #ff6600;
+  border-color: #ff6600;
   color: #fff;
   flex: 0 1 420px !important;
   margin: 0 auto;
@@ -67,15 +67,15 @@
   width: 100%;
   max-width: none;
   margin: 0;
-  background: linear-gradient(180deg, #ff9d00 0%, #ff8a00 58%, #ff7a00 100%);
-  border-color: #f08a04;
+  background: #ff6600;
+  border-color: #ff6600;
   color: #fff;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  padding: 10px 16px !important;
+  padding: 12px 16px !important;
   min-height: 56px !important;
 }
 
@@ -90,23 +90,38 @@
 
 .sale-add-to-cart-sub {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
   text-transform: none;
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .button-section button:hover {
-  filter: brightness(1.02);
+  filter: none;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 18px rgba(255, 102, 0, 0.18);
 }
 
 .button-section button:active {
-  filter: brightness(0.97);
+  filter: none;
   transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.14);
+}
+
+.go-to-cart-btn:hover {
+  background: #ffc9a3;
+  border-color: #ffab75;
+  color: #b54700;
+}
+
+.go-to-checkout-btn:hover,
+.buy-now-btn:hover,
+.select-option-btn:hover,
+.sale-add-to-cart-btn:hover {
+  background: #e65c00;
+  border-color: #e65c00;
 }
 
 /* Responsive fix for small screens (below 480px) */
@@ -120,8 +135,8 @@
   .button-section button {
     font-size: 14px;
     padding: 11px 12px;
-    min-height: 42px;
-    border-radius: 999px;
+    min-height: 44px;
+    border-radius: 10px;
   }
 
   .sale-add-to-cart-btn {

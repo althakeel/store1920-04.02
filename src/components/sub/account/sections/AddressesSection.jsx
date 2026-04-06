@@ -1,85 +1,166 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../../../../assets/styles/myaccount/addressesSection.css';
 import { useAuth } from '../../../../contexts/AuthContext';
+import {
+  CHECKOUT_FORM_STORAGE_KEY,
+  UAE_EMIRATES,
+  getPreferredAddress,
+  getUserScopedAddressKey,
+  mapAccountAddressToCheckoutForm,
+  normalizeAccountAddress,
+  readAddressBook,
+  writeAddressBook,
+} from '../../../../utils/checkoutAddress';
+import {
+  normalizePhoneDigits,
+  normalizePhoneForSave,
+  validateUAEPhoneNumber,
+} from '../../../../utils/uaePhoneValidation';
 
 const API_BASE = 'https://db.store1920.com/wp-json/custom/v1';
-const LOCAL_ADDRESS_KEY = 'store1920_saved_address';
 
-const getStoredAddress = (storageKey) => {
-  try {
-    const stored = localStorage.getItem(storageKey);
-    return stored ? JSON.parse(stored) : null;
-  } catch (error) {
-    console.error('Failed to read saved address from localStorage', error);
-    return null;
-  }
-};
+const UAE_CITIES = [
+  'Abu Dhabi',
+  'Dubai',
+  'Sharjah',
+  'Ajman',
+  'Umm Al Quwain',
+  'Ras Al Khaimah',
+  'Fujairah',
+  'Al Ain',
+];
 
-const toAddressCard = (address) => {
-  if (!address) {
-    return null;
-  }
+const createInitialFormData = (email = '') => ({
+  id: null,
+  country: 'AE',
+  city: '',
+  state: '',
+  firstName: '',
+  lastName: '',
+  email,
+  phone: '',
+  isWhatsappSame: 'yes',
+  street: '',
+  apartment: '',
+  floor: '',
+  additional: '',
+  saveAsDefault: true,
+});
 
-  const fullName = address.fullName || address.full_name || '';
-  const firstName = address.first_name || fullName.split(' ').shift() || '';
-  const lastName = address.last_name || fullName.split(' ').slice(1).join(' ') || '';
-  const address1 = address.address_1 || address.address1 || '';
+const toAddressFormData = (address, fallbackEmail = '') => ({
+  id: address?.id || null,
+  country: 'AE',
+  city: address?.city || '',
+  state: address?.state || '',
+  firstName: address?.first_name || '',
+  lastName: address?.last_name || '',
+  email: address?.email || fallbackEmail || '',
+  phone: normalizePhoneForSave(address?.phone || ''),
+  isWhatsappSame: 'yes',
+  street: address?.address_1 || '',
+  apartment: address?.apartment || address?.address_2 || '',
+  floor: address?.floor || '',
+  additional: '',
+  saveAsDefault: Boolean(address?.saveAsDefault),
+});
 
-  if (!address1) {
-    return null;
-  }
+const toAddressCard = (address) => normalizeAccountAddress(address);
+
+const formatAddressPayload = (formData) => {
+  const normalizedPhone = normalizePhoneForSave(formData.phone);
 
   return {
-    first_name: firstName,
-    last_name: lastName,
-    address_1: address1,
-    address_2: address.address_2 || address.address2 || '',
-    city: address.city || '',
-    state: address.state || '',
-    country: address.country || '',
-    phone: address.phone || '',
+    billing: {
+      fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+      address1: formData.street,
+      address2: formData.apartment || formData.additional,
+      city: formData.city,
+      state: formData.state,
+      postalCode: '',
+      country: 'AE',
+      phone: `+971${normalizedPhone}`,
+      email: formData.email,
+    },
+    shipping: {
+      fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+      address1: formData.street,
+      address2: formData.apartment || formData.additional,
+      city: formData.city,
+      state: formData.state,
+      postalCode: '',
+      country: 'AE',
+      email: formData.email,
+    },
   };
+};
+
+const buildSavedAddress = (formData) => {
+  const normalizedPhone = normalizePhoneForSave(formData.phone);
+
+  return normalizeAccountAddress({
+    id: formData.id,
+    first_name: formData.firstName,
+    last_name: formData.lastName,
+    email: formData.email,
+    address_1: formData.street,
+    address_2: formData.apartment || formData.additional,
+    apartment: formData.apartment,
+    floor: formData.floor,
+    city: formData.city,
+    state: formData.state,
+    country: 'AE',
+    phone: `+971${normalizedPhone}`,
+    delivery_type: 'Home',
+    saveAsDefault: Boolean(formData.saveAsDefault),
+  });
+};
+
+const syncCheckoutAddress = (storageKey, addresses, preferredAddressId, fallbackEmail = '') => {
+  const addressBook = writeAddressBook(storageKey, addresses, preferredAddressId);
+  const preferredAddress = getPreferredAddress(addressBook);
+
+  if (preferredAddress) {
+    localStorage.setItem(
+      CHECKOUT_FORM_STORAGE_KEY,
+      JSON.stringify(mapAccountAddressToCheckoutForm(preferredAddress, fallbackEmail))
+    );
+  } else {
+    localStorage.removeItem(CHECKOUT_FORM_STORAGE_KEY);
+  }
+
+  return addressBook;
 };
 
 const AddressesSection = () => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id || localStorage.getItem('userId');
-  const storageKey = userId ? `${LOCAL_ADDRESS_KEY}_${userId}` : LOCAL_ADDRESS_KEY;
+  const storageKey = getUserScopedAddressKey(userId);
 
   const [addresses, setAddresses] = useState([]);
+  const [preferredAddressId, setPreferredAddressId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState({
-    country: '',
-    city: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    isWhatsappSame: 'yes',
-    street: '',
-    additional: '',
-  });
-  const [citiesOptions, setCitiesOptions] = useState([]);
-  const [countries, setCountries] = useState([]);
+  const [editingAddressId, setEditingAddressId] = useState(null);
+  const [phoneError, setPhoneError] = useState('');
+  const [formData, setFormData] = useState(createInitialFormData(user?.email || ''));
 
-  // Fetch countries for dropdown
   useEffect(() => {
-    axios
-      .get('https://db.store1920.com/wp-json/wc/v3/data/countries', {
-        params: {
-          consumer_key: 'ck_2e4ba96dde422ed59388a09a139cfee591d98263',
-          consumer_secret: 'cs_43b449072b8d7d63345af1b027f2c8026fd15428',
-        },
-      })
-      .then((res) => setCountries(res.data || []))
-      .catch(() => setCountries([]));
-  }, []);
+    setFormData((prev) => ({
+      ...prev,
+      email: prev.email || user?.email || '',
+    }));
+  }, [user?.email]);
 
-  // Fetch saved address from the custom session endpoint
   useEffect(() => {
-    if (authLoading) {
+    if (authLoading) return;
+
+    const cachedBook = readAddressBook(storageKey);
+    if (cachedBook.addresses.length) {
+      setAddresses(cachedBook.addresses);
+      setPreferredAddressId(cachedBook.preferredAddressId);
+      setLoading(false);
       return;
     }
 
@@ -89,6 +170,7 @@ const AddressesSection = () => {
     }
 
     setLoading(true);
+
     axios
       .get(`${API_BASE}/get-address`, {
         withCredentials: true,
@@ -96,110 +178,103 @@ const AddressesSection = () => {
       .then((res) => {
         const shipping = toAddressCard(res.data?.shipping);
         const billing = toAddressCard(res.data?.billing);
-        const savedAddress = shipping || billing;
+        const fetchedAddress = shipping || billing;
 
-        if (savedAddress) {
-          setAddresses([savedAddress]);
-          localStorage.setItem(storageKey, JSON.stringify(savedAddress));
-        } else {
-          const cachedAddress = getStoredAddress(storageKey);
-          setAddresses(cachedAddress ? [cachedAddress] : []);
+        if (!fetchedAddress) {
+          setAddresses([]);
+          setPreferredAddressId(null);
+          return;
         }
+
+        const addressBook = syncCheckoutAddress(
+          storageKey,
+          [{ ...fetchedAddress, saveAsDefault: true }],
+          fetchedAddress.id,
+          user?.email || ''
+        );
+
+        setAddresses(addressBook.addresses);
+        setPreferredAddressId(addressBook.preferredAddressId);
       })
       .catch(() => {
-        const cachedAddress = getStoredAddress(storageKey);
-        setAddresses(cachedAddress ? [cachedAddress] : []);
+        setAddresses([]);
+        setPreferredAddressId(null);
       })
       .finally(() => setLoading(false));
-  }, [authLoading, storageKey, userId]);
+  }, [authLoading, storageKey, user?.email, userId]);
 
-  // Update cities list if country is AE
-  useEffect(() => {
-    if (formData.country === 'AE') {
-      setCitiesOptions([
-        'Abu Dhabi',
-        'Dubai',
-        'Sharjah',
-        'Ajman',
-        'Umm Al Quwain',
-        'Ras Al Khaimah',
-        'Fujairah',
-      ]);
-    } else {
-      setCitiesOptions([]);
-      setFormData((prev) => ({ ...prev, city: '' }));
-    }
-  }, [formData.country]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const resetForm = () => {
+    setFormData(createInitialFormData(user?.email || ''));
+    setPhoneError('');
+    setEditingAddressId(null);
   };
 
-  // Save address through the custom session endpoint
+  const openAddForm = () => {
+    resetForm();
+    setShowForm(true);
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const nextValue =
+      name === 'phone'
+        ? normalizePhoneDigits(value).startsWith('5')
+          ? normalizePhoneDigits(value).slice(0, 9)
+          : normalizePhoneDigits(value)
+        : value;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : nextValue,
+    }));
+
+    if (name === 'phone') {
+      setPhoneError(validateUAEPhoneNumber(nextValue));
+    }
+  };
+
+  const persistAddressToBackend = async (nextFormData) => {
+    await axios.post(`${API_BASE}/save-address`, formatAddressPayload(nextFormData), {
+      withCredentials: true,
+    });
+  };
+
   const handleSave = async () => {
     if (!userId) {
       alert('User not logged in.');
       return;
     }
 
+    const nextPhoneError = validateUAEPhoneNumber(formData.phone);
+    if (nextPhoneError) {
+      setPhoneError(nextPhoneError);
+      return;
+    }
+
     setSaving(true);
 
-    const payload = {
-      billing: {
-        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-        address1: formData.street,
-        address2: formData.additional,
-        city: formData.city,
-        state: '',
-        postalCode: '',
-        country: formData.country,
-        phone: formData.phone,
-      },
-      shipping: {
-        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-        address1: formData.street,
-        address2: formData.additional,
-        city: formData.city,
-        state: '',
-        postalCode: '',
-        country: formData.country,
-      },
-    };
-
     try {
-      await axios.post(`${API_BASE}/save-address`, payload, {
-        withCredentials: true,
-      });
+      await persistAddressToBackend(formData);
 
-      alert('Address saved successfully.');
+      const savedAddress = buildSavedAddress(formData);
+      const updatedAddresses = editingAddressId
+        ? addresses.map((address) => (address.id === editingAddressId ? savedAddress : address))
+        : [...addresses, savedAddress];
 
-      const savedAddress = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        address_1: formData.street,
-        address_2: formData.additional,
-        city: formData.city,
-        state: '',
-        country: formData.country,
-        phone: formData.phone,
-      };
+      const nextPreferredId =
+        formData.saveAsDefault || !preferredAddressId ? savedAddress.id : preferredAddressId;
 
-      localStorage.setItem(storageKey, JSON.stringify(savedAddress));
-      setAddresses([savedAddress]);
+      const addressBook = syncCheckoutAddress(
+        storageKey,
+        updatedAddresses,
+        nextPreferredId,
+        formData.email || user?.email || ''
+      );
 
-      // Reset form and hide
-      setFormData({
-        country: '',
-        city: '',
-        firstName: '',
-        lastName: '',
-        phone: '',
-        isWhatsappSame: 'yes',
-        street: '',
-        additional: '',
-      });
+      setAddresses(addressBook.addresses);
+      setPreferredAddressId(addressBook.preferredAddressId);
       setShowForm(false);
+      resetForm();
     } catch (error) {
       console.error(error);
       alert('Failed to save address. Please try again.');
@@ -208,8 +283,32 @@ const AddressesSection = () => {
     }
   };
 
+  const handleEdit = (address) => {
+    setEditingAddressId(address.id);
+    setFormData(toAddressFormData(address, user?.email || ''));
+    setPhoneError('');
+    setShowForm(true);
+  };
+
+  const handleSetPreferred = async (addressId) => {
+    const selectedAddress = addresses.find((address) => address.id === addressId);
+    if (!selectedAddress) return;
+
+    setPreferredAddressId(addressId);
+    const addressBook = syncCheckoutAddress(storageKey, addresses, addressId, user?.email || '');
+    setAddresses(addressBook.addresses);
+    setPreferredAddressId(addressBook.preferredAddressId);
+
+    try {
+      await persistAddressToBackend(toAddressFormData(selectedAddress, user?.email || ''));
+    } catch (error) {
+      console.error('Failed to sync preferred address to backend', error);
+    }
+  };
+
   const handleCancel = () => {
     setShowForm(false);
+    resetForm();
   };
 
   if (loading) {
@@ -218,36 +317,66 @@ const AddressesSection = () => {
 
   return (
     <section className="addresses-section">
-      <h2 className="section-title">Shipping Addresses</h2>
+      <div className="addresses-header">
+        <h2 className="section-title">Shipping Addresses</h2>
+        {!showForm && (
+          <button className="btn-primary" onClick={openAddForm}>
+            {addresses.length ? 'Add New Address' : 'Add Address'}
+          </button>
+        )}
+      </div>
 
       {!addresses.length && !showForm && (
         <div className="no-addresses">
           <p className="no-address-text">You don't have any shipping addresses saved.</p>
-          <p className="encryption-note">All data you add will be encrypted.</p>
-          <button className="btn-primary" onClick={() => setShowForm(true)}>
-            Add New Address
-          </button>
+          <p className="encryption-note">Your preferred address will automatically fill checkout.</p>
         </div>
       )}
 
       {addresses.length > 0 && !showForm && (
-        <>
-          <div className="address-list">
-            {addresses.map((addr, idx) => (
-              <div className="address-card" key={idx}>
-                <p><strong>{addr.first_name} {addr.last_name}</strong></p>
+        <div className="address-list">
+          {addresses.map((addr) => {
+            const isPreferred = addr.id === preferredAddressId;
+
+            return (
+              <div className={`address-card ${isPreferred ? 'preferred' : ''}`} key={addr.id}>
+                <div className="address-card-top">
+                  <div>
+                    <p><strong>{addr.first_name} {addr.last_name}</strong></p>
+                    {isPreferred && <span className="preferred-badge">Preferred Address</span>}
+                  </div>
+                  <label className="preferred-toggle">
+                    <input
+                      type="radio"
+                      name="preferred-address"
+                      checked={isPreferred}
+                      onChange={() => handleSetPreferred(addr.id)}
+                    />
+                    Use as preferred
+                  </label>
+                </div>
+
                 <p>{addr.address_1}</p>
                 {addr.address_2 && <p>{addr.address_2}</p>}
                 <p>{addr.city}, {addr.state}</p>
-                <p>{addr.country}</p>
+                <p>United Arab Emirates</p>
                 <p>Phone: {addr.phone}</p>
+                {addr.email && <p>Email: {addr.email}</p>}
+
+                <div className="address-actions">
+                  <button className="btn-secondary" onClick={() => handleEdit(addr)}>
+                    Edit Address
+                  </button>
+                  {!isPreferred && (
+                    <button className="btn-primary" onClick={() => handleSetPreferred(addr.id)}>
+                      Make Preferred
+                    </button>
+                  )}
+                </div>
               </div>
-            ))}
-          </div>
-          <button className="btn-primary mt-20" onClick={() => setShowForm(true)}>
-            Add Another Address
-          </button>
-        </>
+            );
+          })}
+        </div>
       )}
 
       {showForm && (
@@ -258,37 +387,31 @@ const AddressesSection = () => {
             if (!saving) handleSave();
           }}
         >
-          <h3 className="form-title">Add New Address</h3>
+          <h3 className="form-title">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
 
           <label className="input-label">
             Country / Region <span className="required">*</span>
-            <select name="country" value={formData.country} onChange={handleChange} required>
-              <option value="">Select Country</option>
-              {countries.map((c) => (
-                <option key={c.code} value={c.code}>{c.name}</option>
+            <input type="text" value="United Arab Emirates" readOnly disabled />
+          </label>
+
+          <label className="input-label">
+            City / Emirate <span className="required">*</span>
+            <select name="city" value={formData.city} onChange={handleChange} required>
+              <option value="">Select City</option>
+              {UAE_CITIES.map((city) => (
+                <option key={city} value={city}>{city}</option>
               ))}
             </select>
           </label>
 
           <label className="input-label">
-            City / Emirate <span className="required">*</span>
-            {citiesOptions.length ? (
-              <select name="city" value={formData.city} onChange={handleChange} required>
-                <option value="">Select City</option>
-                {citiesOptions.map((city) => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="Enter city"
-                required
-              />
-            )}
+            Province / Emirates <span className="required">*</span>
+            <select name="state" value={formData.state} onChange={handleChange} required>
+              <option value="">Select Emirate</option>
+              {UAE_EMIRATES.map((state) => (
+                <option key={state.code} value={state.code}>{state.name}</option>
+              ))}
+            </select>
           </label>
 
           <label className="input-label">
@@ -316,16 +439,29 @@ const AddressesSection = () => {
           </label>
 
           <label className="input-label">
+            Email Address <span className="required">*</span>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              required
+            />
+          </label>
+
+          <label className="input-label">
             Phone Number <span className="required">*</span>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="+971 5xxxxxxx"
+              placeholder="501234564"
               required
             />
-            <small className="hint">9-digit number starting with 5 for UAE</small>
+            <small className="hint">Example: 501234564. Enter 9 digits starting with 5 only.</small>
+            {phoneError && <small className="hint hint-error">{phoneError}</small>}
           </label>
 
           <fieldset className="whatsapp-fieldset">
@@ -353,14 +489,37 @@ const AddressesSection = () => {
           </fieldset>
 
           <label className="input-label">
-            Street name / Street number / Landmark <span className="required">*</span>
+            Apartment / House / Office No <span className="required">*</span>
+            <input
+              type="text"
+              name="apartment"
+              value={formData.apartment}
+              onChange={handleChange}
+              placeholder="Apartment / House / Office No"
+              required
+            />
+          </label>
+
+          <label className="input-label">
+            Building Name / Street <span className="required">*</span>
             <input
               type="text"
               name="street"
               value={formData.street}
               onChange={handleChange}
-              placeholder="4A St, Building no, Floor no, Flat no or Landmark"
+              placeholder="Building Name / Street"
               required
+            />
+          </label>
+
+          <label className="input-label">
+            Floor / Unit (optional)
+            <input
+              type="text"
+              name="floor"
+              value={formData.floor}
+              onChange={handleChange}
+              placeholder="Floor / Unit"
             />
           </label>
 
@@ -371,8 +530,18 @@ const AddressesSection = () => {
               name="additional"
               value={formData.additional}
               onChange={handleChange}
-              placeholder="Building no, Floor no, Flat no or Landmark"
+              placeholder="Landmark or extra details"
             />
+          </label>
+
+          <label className="input-label input-label-inline">
+            <input
+              type="checkbox"
+              name="saveAsDefault"
+              checked={formData.saveAsDefault}
+              onChange={handleChange}
+            />
+            Save as preferred address for checkout
           </label>
 
           <div className="form-buttons">
@@ -380,7 +549,7 @@ const AddressesSection = () => {
               Cancel
             </button>
             <button type="submit" className="btn-primary" disabled={saving}>
-              {saving ? 'Saving...' : 'Save Address'}
+              {saving ? 'Saving...' : editingAddressId ? 'Update Address' : 'Save Address'}
             </button>
           </div>
         </form>

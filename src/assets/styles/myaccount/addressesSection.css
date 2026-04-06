@@ -5,6 +5,14 @@ a.addresses-section {
   color: #222;
 }
 
+.addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .section-title {
   font-weight: 600;
   font-size: 1.6rem;
@@ -78,8 +86,48 @@ a.addresses-section {
   background-color: #fafafa;
 }
 
+.address-card.preferred {
+  border-color: #ff8a50;
+  background: #fff8f4;
+}
+
+.address-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.preferred-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff1e8;
+  color: #e64a19;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.preferred-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
 .address-card p {
   margin: 4px 0;
+}
+
+.address-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
 }
 
 .address-form {
@@ -129,6 +177,10 @@ a.addresses-section {
   margin-top: 4px;
 }
 
+.hint-error {
+  color: #d32f2f;
+}
+
 .whatsapp-fieldset {
   border: none;
   margin-top: 10px;
@@ -153,4 +205,14 @@ a.addresses-section {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 10px;
+}
+
+.input-label-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-label-inline input {
+  margin-top: 0;
 }
