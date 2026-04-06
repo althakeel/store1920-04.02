@@ -341,6 +341,9 @@ export const API_BASE = "https://db.store1920.com/wp-json/wc/v3";
 export const CONSUMER_KEY = "ck_8dfeb134379e51fa95e3a22769f67bd6b4f0e507";
 export const CONSUMER_SECRET = "cs_2e5da71434cc874771a8ab0ef2dae2ffef3591c0";
 const SHORT_DESC_API_BASE = "https://db.store1920.com/wp-json/store1920/v1/product";
+const STORE1920_API_BASE = "https://db.store1920.com/wp-json/store1920/v1";
+const WP_MEDIA_API_BASE = "https://db.store1920.com/wp-json/wp/v2/media";
+const WP_PRODUCTS_API_BASE = "https://db.store1920.com/wp-json/wp/v2/product";
 
 const authParams = `consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
 
@@ -380,6 +383,41 @@ export async function fetchAPI(endpoint) {
   } catch (error) {
     console.error("fetchAPI error:", error);
     return null;
+  }
+}
+
+export async function getMediaByIds(ids = []) {
+  const uniqueIds = Array.from(
+    new Set(
+      (Array.isArray(ids) ? ids : [])
+        .map((id) => Number.parseInt(id, 10))
+        .filter((id) => Number.isFinite(id) && id > 0)
+    )
+  );
+
+  if (!uniqueIds.length) return [];
+
+  try {
+    const response = await axios.get(
+      `${WP_MEDIA_API_BASE}?include=${uniqueIds.join(",")}&per_page=${Math.min(uniqueIds.length, 100)}&_fields=id,source_url,alt_text,title`
+    );
+
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error("getMediaByIds error:", error);
+    return [];
+  }
+}
+
+export async function getVariationGalleries(productId) {
+  if (!productId) return [];
+
+  try {
+    const response = await axios.get(`${STORE1920_API_BASE}/products/${productId}/variation-galleries`);
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.warn("getVariationGalleries error:", error?.message || error);
+    return [];
   }
 }
 
@@ -631,8 +669,48 @@ export const getProductsByTagSlugs = async (slugs = [], page = 1, perPage = 42, 
 export const getNewArrivalsProducts = (page = 1, perPage = 24) => getProductsByTagSlugs(["new-arrivals"], page, perPage);
 export const getRatedProducts = (page = 1, perPage = 24) => getProductsByTagSlugs(["rated"], page, perPage, "rating");
 export const getFestSaleProducts = (page = 1, perPage = 24) => getProductsByTagSlugs(["fest-sale"], page, perPage);
-export const getLatestPublishedProducts = (page = 1, perPage = 24) =>
-  fetchAPI(`/products?per_page=${perPage}&page=${page}&orderby=date&order=desc&status=publish`);
+export const getLatestPublishedProducts = async (page = 1, perPage = 24) => {
+  try {
+    const publishedResponse = await axios.get(
+      `${WP_PRODUCTS_API_BASE}?per_page=${perPage}&page=${page}&orderby=date&order=desc&status=publish&_fields=id,date,date_gmt`
+    );
+
+    const publishedProducts = Array.isArray(publishedResponse?.data) ? publishedResponse.data : [];
+    const publishedIds = publishedProducts
+      .map((product) => Number(product?.id))
+      .filter((id) => Number.isFinite(id) && id > 0);
+
+    if (!publishedIds.length) {
+      return [];
+    }
+
+    const wooProducts = await fetchAPI(
+      `/products?include=${publishedIds.join(",")}&orderby=include&status=publish&catalog_visibility=visible&per_page=${publishedIds.length}&_fields=id,name,slug,type,images,price,regular_price,sale_price,stock_status,stock_quantity,variations,enable_offer,date_created,date_created_gmt`
+    );
+
+    const wooProductMap = new Map(
+      (Array.isArray(wooProducts) ? wooProducts : [])
+        .filter(Boolean)
+        .map((product) => [Number(product.id), product])
+    );
+
+    return publishedProducts
+      .map((publishedProduct) => {
+        const product = wooProductMap.get(Number(publishedProduct.id));
+        if (!product) return null;
+
+        return {
+          ...product,
+          date_created: product.date_created || publishedProduct.date,
+          date_created_gmt: product.date_created_gmt || publishedProduct.date_gmt,
+        };
+      })
+      .filter(Boolean);
+  } catch (error) {
+    console.error("getLatestPublishedProducts error:", error);
+    return [];
+  }
+};
 // Use Woo's supported alias 'popularity' (maps to total_sales)
 export const getTopSellingItemsProducts = (page = 1, perPage = 24) =>
   getProductsByTagSlugs(["top-selling"], page, perPage, "popularity");

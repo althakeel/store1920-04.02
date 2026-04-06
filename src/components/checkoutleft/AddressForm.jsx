@@ -159,7 +159,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
       case 'phone_number': {
         const digits = (value || "").toString().replace(/\D/g, "");
 
-        if (!digits) return 'Phone number is required';
+        // if (!digits) return 'Phone number is required';
 
         // If user typed 971 or 0 - show clear error (don't auto-remove in input)
         if (digits.startsWith("971")) return 'Do not type 971. Start with 5 (e.g., 501234567)';
@@ -217,6 +217,9 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
 
   const saveAddress = async (e) => {
     e.preventDefault();
+    if (typeof document !== 'undefined' && document.body.dataset.signinModalOpen === 'true') {
+      return;
+    }
     if (isSubmitting) return; // Prevent double clicks
     setIsSubmitting(true);
 

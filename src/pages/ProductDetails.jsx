@@ -11,8 +11,10 @@ import SignInModal from '../components/sub/SignInModal';
 import { getProductReviewsWoo } from '../data/wooReviews';
 import {
   fetchAPI,
+  getMediaByIds,
   getProductById,
   getProductBySlug,
+  getVariationGalleries,
 } from '../api/woocommerce';
 
 const RelatedProducts = lazy(() => import('../components/RelatedProducts'));
@@ -74,9 +76,211 @@ function getAvatarColor(name = '') {
   return colors[index];
 }
 
+const VARIATION_GALLERY_META_KEYS = [
+  'woo_variation_gallery_images',
+  'variation_gallery_images',
+  'variation_image_gallery',
+  'product_variation_gallery',
+  'rtwpvg_images',
+  'wavi_value',
+  'wdmWooVariationGallery',
+  '_wc_additional_variation_images',
+  'woodmart_additional_variation_images_data',
+];
+
+function normalizeRestImage(image) {
+  if (!image) return null;
+  if (typeof image === 'string') {
+    return image ? { src: image, alt: '' } : null;
+  }
+
+  const src = image.src || image.source_url || image.url || '';
+  if (!src) return null;
+
+  return {
+    id: image.id,
+    src,
+    alt: image.alt || image.alt_text || image.name || image.title?.rendered || '',
+    name: image.name || image.title?.rendered || '',
+  };
+}
+
+function extractGalleryValue(value) {
+  if (!value) return { images: [], ids: [] };
+
+  if (Array.isArray(value)) {
+    return value.reduce(
+      (acc, item) => {
+        const nested = extractGalleryValue(item);
+        acc.images.push(...nested.images);
+        acc.ids.push(...nested.ids);
+        return acc;
+      },
+      { images: [], ids: [] }
+    );
+  }
+
+  if (typeof value === 'object') {
+    if (value.src || value.source_url || value.url) {
+      return { images: [normalizeRestImage(value)].filter(Boolean), ids: [] };
+    }
+
+    if (value.id && Object.keys(value).length === 1) {
+      return { images: [], ids: [value.id] };
+    }
+
+    return Object.values(value).reduce(
+      (acc, item) => {
+        const nested = extractGalleryValue(item);
+        acc.images.push(...nested.images);
+        acc.ids.push(...nested.ids);
+        return acc;
+      },
+      { images: [], ids: [] }
+    );
+  }
+
+  if (typeof value === 'number') {
+    return { images: [], ids: [value] };
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return { images: [], ids: [] };
+
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      try {
+        return extractGalleryValue(JSON.parse(trimmed));
+      } catch {
+        // Fall through to plain parsing below.
+      }
+    }
+
+    if (/^https?:\/\//i.test(trimmed)) {
+      return { images: [normalizeRestImage(trimmed)].filter(Boolean), ids: [] };
+    }
+
+    const ids = trimmed
+      .split(/[\s,|]+/)
+      .map((item) => Number.parseInt(item, 10))
+      .filter((id) => Number.isFinite(id) && id > 0);
+
+    return { images: [], ids };
+  }
+
+  return { images: [], ids: [] };
+}
+
+async function enrichVariationsWithGallery(variationList) {
+  const variationsArray = Array.isArray(variationList) ? variationList : [];
+  if (!variationsArray.length) return [];
+
+  const pendingMediaIds = new Set();
+
+  const normalizedVariations = variationsArray.map((variation) => {
+    const directImages = [
+      ...(variation?.gallery_images || []),
+      ...(variation?.variation_gallery_images || []),
+    ]
+      .map(normalizeRestImage)
+      .filter(Boolean);
+
+    const metaEntries = Array.isArray(variation?.meta_data) ? variation.meta_data : [];
+    const metaGallery = metaEntries.reduce(
+      (acc, entry) => {
+        if (!VARIATION_GALLERY_META_KEYS.includes(entry?.key)) return acc;
+        const extracted = extractGalleryValue(entry?.value);
+        acc.images.push(...extracted.images.filter(Boolean));
+        extracted.ids.forEach((id) => pendingMediaIds.add(id));
+        return acc;
+      },
+      { images: [] }
+    );
+
+    return {
+      ...variation,
+      gallery_images: [...directImages, ...metaGallery.images].filter(
+        (img, idx, arr) => img?.src && arr.findIndex((item) => item.src === img.src) === idx
+      ),
+    };
+  });
+
+  if (!pendingMediaIds.size) {
+    return normalizedVariations;
+  }
+
+  const mediaItems = await getMediaByIds(Array.from(pendingMediaIds));
+  const mediaById = new Map(
+    mediaItems
+      .map((item) => [
+        Number(item.id),
+        normalizeRestImage({
+          id: item.id,
+          source_url: item.source_url,
+          alt_text: item.alt_text,
+          title: item.title,
+        }),
+      ])
+      .filter(([, image]) => image?.src)
+  );
+
+  return normalizedVariations.map((variation) => {
+    const metaEntries = Array.isArray(variation?.meta_data) ? variation.meta_data : [];
+    const resolvedMetaImages = metaEntries.reduce((acc, entry) => {
+      if (!VARIATION_GALLERY_META_KEYS.includes(entry?.key)) return acc;
+      const extracted = extractGalleryValue(entry?.value);
+      extracted.ids.forEach((id) => {
+        const image = mediaById.get(Number(id));
+        if (image?.src) acc.push(image);
+      });
+      return acc;
+    }, []);
+
+    const galleryImages = [...(variation.gallery_images || []), ...resolvedMetaImages].filter(
+      (img, idx, arr) => img?.src && arr.findIndex((item) => item.src === img.src) === idx
+    );
+
+    return {
+      ...variation,
+      gallery_images: galleryImages,
+      variation_gallery_images: galleryImages,
+    };
+  });
+}
+
+function mergeVariationGalleryData(variationsList, galleryPayload) {
+  if (!Array.isArray(variationsList) || !variationsList.length) return [];
+  if (!Array.isArray(galleryPayload) || !galleryPayload.length) return variationsList;
+
+  const galleriesById = new Map(
+    galleryPayload
+      .filter((item) => item?.id)
+      .map((item) => [
+        Number(item.id),
+        [
+          normalizeRestImage(item.image),
+          ...(Array.isArray(item.gallery_images) ? item.gallery_images : []).map(normalizeRestImage),
+          ...(Array.isArray(item.variation_gallery_images) ? item.variation_gallery_images : []).map(normalizeRestImage),
+        ].filter((img, idx, arr) => img?.src && arr.findIndex((entry) => entry.src === img.src) === idx),
+      ])
+  );
+
+  return variationsList.map((variation) => {
+    const mergedGallery = galleriesById.get(Number(variation.id));
+    if (!mergedGallery?.length) return variation;
+
+    return {
+      ...variation,
+      gallery_images: mergedGallery,
+      variation_gallery_images: mergedGallery,
+    };
+  });
+}
+
 const QUALITY_MARQUEE_TEXT =
   "• Each item passes rigorous quality checks. • Safe packaging to prevent any damage. • Shipping available all over the UAE. • Hassle-free returns. • 100% secure payment and data protection. • Money-back guarantee if you’re not satisfied. • Fast and reliable delivery to your doorstep.";
 const QUALITY_MARQUEE_LOOP_TEXT = QUALITY_MARQUEE_TEXT.replace(/•/g, ' • ');
+const LOCAL_HISTORY_KEY = 'store1920_browsing_history';
 const TRUST_BAR_THEMES = [
   {
     background: 'linear-gradient(90deg, #111827 0%, #1f2937 45%, #111827 100%)',
@@ -169,6 +373,38 @@ export default function ProductDetails() {
   const desktopStickyTop = headerStickyOffset;
   const uiFontFamily = 'miui, system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", Helvetica, Arial, sans-serif';
 
+  const persistBrowsingHistory = useCallback((productData) => {
+    if (!productData?.id) return;
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(LOCAL_HISTORY_KEY) || '[]');
+      const existingHistory = Array.isArray(stored) ? stored : [];
+      const entry = {
+        id: productData.id,
+        title: productData.name,
+        image: productData.images?.[0]?.src || '',
+        product_link: productData.permalink || window.location.href,
+        date: new Date().toISOString(),
+        email: user?.email || '',
+      };
+
+      const filteredHistory = existingHistory.filter((item) => {
+        if (user?.email) {
+          return !(String(item.id) === String(productData.id) && item.email === user.email);
+        }
+
+        return String(item.id) !== String(productData.id);
+      });
+
+      localStorage.setItem(
+        LOCAL_HISTORY_KEY,
+        JSON.stringify([entry, ...filteredHistory].slice(0, 30))
+      );
+    } catch (error) {
+      console.error('Failed to persist browsing history:', error);
+    }
+  }, [user?.email]);
+
   // Fetch minimal/full product
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id || slug],
@@ -191,8 +427,9 @@ export default function ProductDetails() {
         price: product.price,
         category: product.categories?.[0]?.name || 'Uncategorized',
       });
+      persistBrowsingHistory(product);
     }
-  }, [product]);
+  }, [product, persistBrowsingHistory]);
 
   useEffect(() => {
     console.log('📸 mainImageUrl changed to:', mainImageUrl);
@@ -208,7 +445,10 @@ export default function ProductDetails() {
     async function fetchVariations() {
       try {
         const data = await fetchAPI(`/products/${product.id}/variations?per_page=100`);
-        setVariations(data || []);
+        const enrichedVariations = await enrichVariationsWithGallery(data || []);
+        const galleryPayload = await getVariationGalleries(product.id);
+        const mergedVariations = mergeVariationGalleryData(enrichedVariations, galleryPayload);
+        setVariations(mergedVariations);
       } catch {
         setVariations([]);
       }
@@ -260,6 +500,38 @@ export default function ProductDetails() {
       (img, idx, arr) => arr.findIndex(i => i.src === img.src) === idx
     );
   }, [product, extraImages]);
+
+  const selectedVariationImages = useMemo(() => {
+    if (!selectedVariation) return [];
+
+    const variationGallery = [
+      selectedVariation.image,
+      ...(selectedVariation.gallery_images || []),
+      ...(selectedVariation.variation_gallery_images || []),
+    ]
+      .filter((img) => img?.src)
+      .filter((img, idx, arr) => arr.findIndex((item) => item.src === img.src) === idx);
+
+    return variationGallery;
+  }, [selectedVariation]);
+
+  const galleryImages = useMemo(() => {
+    if (selectedVariationImages.length > 1) return selectedVariationImages;
+    return combinedImages.length > 0 ? combinedImages : (product?.images || []);
+  }, [combinedImages, product, selectedVariationImages]);
+
+  useEffect(() => {
+    if (!selectedVariation) return;
+    if (selectedVariationImages.length <= 1) return;
+
+    const currentImageStillExists = selectedVariationImages.some(
+      (img) => img?.src && img.src === mainImageUrl
+    );
+
+    if (!currentImageStillExists && selectedVariationImages[0]?.src) {
+      setMainImageUrl(selectedVariationImages[0].src);
+    }
+  }, [mainImageUrl, selectedVariation, selectedVariationImages]);
 
   // Fetch reviews
   useEffect(() => {
@@ -703,7 +975,7 @@ export default function ProductDetails() {
             }}
           >
             <ProductGallery
-              images={combinedImages.length > 0 ? combinedImages : product.images || []}
+              images={galleryImages}
               mainImageUrl={mainImageUrl || product.images?.[0]?.src}
               setMainImageUrl={setMainImageUrl}
               activeModal={activeModal}

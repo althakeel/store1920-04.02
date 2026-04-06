@@ -104,6 +104,49 @@
   align-items: center;
 }
 
+.ps-profile-picture-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffaf5 0%, #ffffff 100%);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ps-profile-picture-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ps-profile-picture-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222831;
+}
+
+.ps-profile-picture-subtitle {
+  margin: 6px 0 0 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.ps-profile-picture-actions {
+  display: flex;
+  align-items: center;
+}
+
+.ps-profile-picture-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 2px;
+}
+
 .ps-avatar {
   width: 65px;
   height: 65px;
@@ -111,6 +154,13 @@
   border: 2px solid #ccd1d1;
   object-fit: cover;
   flex-shrink: 0;
+}
+
+.ps-avatar-large {
+  width: 120px;
+  height: 120px;
+  border-width: 3px;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
 }
 
 .ps-avatar-initials {
@@ -245,6 +295,13 @@
   .ps-main {
     flex-direction: column;
     align-items: center;
+  }
+  .ps-profile-picture-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ps-profile-picture-actions {
+    justify-content: flex-start;
   }
   .ps-info {
     min-width: auto;

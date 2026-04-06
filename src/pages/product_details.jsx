@@ -4,6 +4,8 @@ import ProductImageGallery from '../components/ProductImageGallery'
 import '../assets/styles/ProductDetails.css'
 import { getProductBySlug } from '../api/woocommerce'
 
+const LOCAL_HISTORY_KEY = 'store1920_browsing_history'
+
 const ProductDetails = () => {
   const { slug } = useParams()
   const [product, setProduct] = useState(null)
@@ -38,6 +40,33 @@ const ProductDetails = () => {
       fetchProduct()
     }
   }, [slug])
+
+  useEffect(() => {
+    if (!product?.id) return
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(LOCAL_HISTORY_KEY) || '[]')
+      const existingHistory = Array.isArray(stored) ? stored : []
+      const entry = {
+        id: product.id,
+        title: product.name,
+        image: product.images?.[0]?.src || '',
+        product_link: product.permalink || window.location.href,
+        date: new Date().toISOString(),
+      }
+
+      const filteredHistory = existingHistory.filter(
+        (item) => String(item.id) !== String(product.id)
+      )
+
+      localStorage.setItem(
+        LOCAL_HISTORY_KEY,
+        JSON.stringify([entry, ...filteredHistory].slice(0, 30))
+      )
+    } catch (error) {
+      console.error('Failed to persist browsing history:', error)
+    }
+  }, [product])
 
   // Show loading state
   if (loading) {

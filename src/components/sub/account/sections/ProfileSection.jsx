@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../../../assets/styles/myaccount/ProfileSection.css';
-
-const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
-const CONSUMER_KEY = 'ck_2e4ba96dde422ed59388a09a139cfee591d98263';
-const CONSUMER_SECRET = 'cs_43b449072b8d7d63345af1b027f2c8026fd15428';
+import { API_BASE, CONSUMER_KEY, CONSUMER_SECRET } from '../../../../api/woocommerce';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 function getInitials(user) {
   if (user.first_name && user.last_name) {
@@ -31,7 +29,120 @@ function getColorForInitials(initials) {
   return colors[charCode % colors.length];
 }
 
+function buildProfileShell(authUser, fallbackUserId) {
+  const displayName = authUser?.name || '';
+  const nameParts = displayName.trim().split(/\s+/).filter(Boolean);
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ');
+
+  return {
+    id: fallbackUserId || authUser?.id || null,
+    first_name: firstName,
+    last_name: lastName,
+    email: authUser?.email || '',
+    billing: {
+      first_name: firstName,
+      last_name: lastName,
+      phone: '',
+      address_1: '',
+      address_2: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: 'AE',
+    },
+    shipping: {
+      first_name: firstName,
+      last_name: lastName,
+      address_1: '',
+      address_2: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: 'AE',
+    },
+    avatar_url: authUser?.image || authUser?.photoURL || '',
+    date_created: new Date().toISOString(),
+  };
+}
+
+function buildFormData(profile) {
+  return {
+    fullName: `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+    email: profile.email || '',
+    phone: profile.billing?.phone || '',
+    billing: { ...(profile.billing || {}) },
+    shipping: { ...(profile.shipping || {}) },
+  };
+}
+
+function normalizeCustomerId(...candidates) {
+  for (const candidate of candidates) {
+    if (candidate === undefined || candidate === null) {
+      continue;
+    }
+
+    const value = String(candidate).trim();
+    if (!value || value === 'undefined' || value === 'null') {
+      continue;
+    }
+
+    return value;
+  }
+
+  return null;
+}
+
+function getProfileImageStorageKey(email, customerId) {
+  if (email) {
+    return `store1920_profile_image_${String(email).trim().toLowerCase()}`;
+  }
+
+  if (customerId) {
+    return `store1920_profile_image_user_${String(customerId).trim()}`;
+  }
+
+  return null;
+}
+
+function getStoredProfileImage(email, customerId) {
+  const key = getProfileImageStorageKey(email, customerId);
+  if (!key) {
+    return '';
+  }
+
+  try {
+    return localStorage.getItem(key) || '';
+  } catch (error) {
+    console.error('Failed to read profile image from localStorage', error);
+    return '';
+  }
+}
+
+function saveStoredProfileImage(email, customerId, image) {
+  const key = getProfileImageStorageKey(email, customerId);
+  if (!key) {
+    return;
+  }
+
+  try {
+    if (image) {
+      localStorage.setItem(key, image);
+    } else {
+      localStorage.removeItem(key);
+    }
+  } catch (error) {
+    console.error('Failed to save profile image to localStorage', error);
+  }
+}
+
 const ProfileSection = ({ userId }) => {
+  const { user: authUser, updateUser } = useAuth();
+  const effectiveUserId = normalizeCustomerId(
+    userId,
+    authUser?.id,
+    localStorage.getItem('userId')
+  );
   const [user, setUser] = useState(null);
   const [ordersCount, setOrdersCount] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,9 +150,35 @@ const ProfileSection = ({ userId }) => {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState('');
+  const persistedProfileImage = getStoredProfileImage(authUser?.email, effectiveUserId);
 
   useEffect(() => {
-    if (!userId) {
+    const fallbackProfile = buildProfileShell(authUser, effectiveUserId);
+
+    if (!effectiveUserId) {
+      setUser(fallbackProfile);
+      setFormData(buildFormData(fallbackProfile));
+      setAvatarPreview(
+        authUser?.image || authUser?.photoURL || persistedProfileImage || fallbackProfile.avatar_url || ''
+      );
+      setEditMode(true);
+      setOrdersCount(0);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    if (!userId && authUser?.email) {
+      setUser(fallbackProfile);
+      setFormData(buildFormData(fallbackProfile));
+      setAvatarPreview(
+        authUser?.image || authUser?.photoURL || persistedProfileImage || fallbackProfile.avatar_url || ''
+      );
+      setEditMode(true);
+    }
+
+    if (!effectiveUserId) {
       setUser(null);
       setOrdersCount(null);
       setLoading(false);
@@ -52,39 +189,48 @@ const ProfileSection = ({ userId }) => {
       setLoading(true);
       setError(null);
       try {
-        const userRes = await axios.get(`${API_BASE}/customers/${userId}`, {
-          auth: { username: CONSUMER_KEY, password: CONSUMER_SECRET },
+        const userRes = await axios.get(`${API_BASE}/customers/${effectiveUserId}`, {
           timeout: 8000,
+          params: { consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET },
         });
         setUser(userRes.data);
-
-        // Initialize formData with fullName
-        setFormData({
-          fullName: `${userRes.data.first_name || ''} ${userRes.data.last_name || ''}`.trim(),
-          email: userRes.data.email || '',
-          phone: userRes.data.billing?.phone || '',
-          billing: { ...userRes.data.billing },
-          shipping: { ...userRes.data.shipping },
-        });
+        setFormData(buildFormData(userRes.data));
+        setAvatarPreview(
+          authUser?.image ||
+          authUser?.photoURL ||
+          persistedProfileImage ||
+          userRes.data.avatar_url ||
+          ''
+        );
+        setEditMode(false);
 
         const ordersRes = await axios.get(`${API_BASE}/orders`, {
-          auth: { username: CONSUMER_KEY, password: CONSUMER_SECRET },
           timeout: 8000,
-          params: { customer: userId, per_page: 1 },
+          params: {
+            customer: effectiveUserId,
+            per_page: 1,
+            consumer_key: CONSUMER_KEY,
+            consumer_secret: CONSUMER_SECRET,
+          },
         });
         const totalOrders = parseInt(ordersRes.headers['x-wp-total'], 10) || 0;
         setOrdersCount(totalOrders);
       } catch (e) {
-        setError('Failed to load profile data.');
-        setUser(null);
-        setOrdersCount(null);
+        setError(null);
+        setUser(fallbackProfile);
+        setFormData(buildFormData(fallbackProfile));
+        setAvatarPreview(
+          authUser?.image || authUser?.photoURL || persistedProfileImage || fallbackProfile.avatar_url || ''
+        );
+        setOrdersCount(0);
+        setEditMode(true);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserAndOrders();
-  }, [userId]);
+  }, [authUser, effectiveUserId, persistedProfileImage, userId]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => {
@@ -110,18 +256,37 @@ const ProfileSection = ({ userId }) => {
 
   const cancelEdit = () => {
     if (user) {
-      setFormData({
-        fullName: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
-        email: user.email || '',
-        phone: user.billing?.phone || '',
-        billing: { ...user.billing },
-        shipping: { ...user.shipping },
-      });
+      setFormData(buildFormData(user));
     }
+    setAvatarPreview(
+      authUser?.image || authUser?.photoURL || persistedProfileImage || user?.avatar_url || ''
+    );
     setEditMode(false);
   };
 
+  const handleAvatarChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const nextImage = typeof reader.result === 'string' ? reader.result : '';
+      setAvatarPreview(nextImage);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const saveProfile = async () => {
+    if (!effectiveUserId) {
+      alert('Profile cannot be saved because no user account id was found.');
+      return;
+    }
+
     setSaving(true);
     try {
       // Split fullName into first and last name
@@ -129,19 +294,58 @@ const ProfileSection = ({ userId }) => {
       const first_name = names.shift() || '';
       const last_name = names.join(' ') || '';
 
+      const billing = {
+        first_name,
+        last_name,
+        company: formData.billing?.company || '',
+        address_1: formData.billing?.address_1 || '',
+        address_2: formData.billing?.address_2 || '',
+        city: formData.billing?.city || '',
+        state: formData.billing?.state || '',
+        postcode: formData.billing?.postcode || '',
+        country: formData.billing?.country || 'AE',
+        email: formData.email || '',
+        phone: formData.billing?.phone || '',
+      };
+
+      const shipping = {
+        first_name,
+        last_name,
+        company: formData.shipping?.company || '',
+        address_1: formData.shipping?.address_1 || '',
+        address_2: formData.shipping?.address_2 || '',
+        city: formData.shipping?.city || '',
+        state: formData.shipping?.state || '',
+        postcode: formData.shipping?.postcode || '',
+        country: formData.shipping?.country || 'AE',
+      };
+
       const payload = {
         first_name,
         last_name,
         email: formData.email,
-        billing: formData.billing,
-        shipping: formData.shipping,
+        billing,
+        shipping,
       };
 
-      await axios.put(`${API_BASE}/customers/${userId}`, payload, {
-        auth: { username: CONSUMER_KEY, password: CONSUMER_SECRET },
+      await axios.put(`${API_BASE}/customers/${effectiveUserId}`, payload, {
+        params: { consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET },
       });
 
-      setUser((prev) => ({ ...prev, ...payload }));
+      const nextUser = {
+        ...user,
+        ...payload,
+        avatar_url: avatarPreview || user?.avatar_url || '',
+      };
+
+      saveStoredProfileImage(formData.email, effectiveUserId, avatarPreview || user?.avatar_url || '');
+
+      setUser(nextUser);
+      updateUser({
+        name: `${first_name} ${last_name}`.trim() || formData.email,
+        email: formData.email,
+        image: avatarPreview || null,
+      });
       setEditMode(false);
       alert('Profile updated successfully!');
     } catch (e) {
@@ -166,15 +370,17 @@ const ProfileSection = ({ userId }) => {
     return <p className="ps-loading">Loading profile...</p>;
   if (error)
     return <p className="ps-error">{error}</p>;
-  if (!user)
-    return (
-      <p className="ps-no-user">
-        No user profile found. Please sign in to view your profile.
-      </p>
-    );
+  if (!user || !formData)
+    return <p className="ps-loading">Loading profile...</p>;
 
   const initials = getInitials(user);
   const bgColor = getColorForInitials(initials);
+  const displayAvatar =
+    avatarPreview ||
+    authUser?.image ||
+    authUser?.photoURL ||
+    persistedProfileImage ||
+    user.avatar_url;
 
   return (
     <section className="ps-section">
@@ -191,24 +397,53 @@ const ProfileSection = ({ userId }) => {
         )}
       </header>
 
-      <div className="ps-main">
-        {user.avatar_url ? (
-          <img
-            src={user.avatar_url}
-            alt="Avatar"
-            className="ps-avatar"
-            loading="lazy"
-          />
-        ) : (
-          <div
-            className="ps-avatar ps-avatar-initials"
-            style={{ backgroundColor: bgColor }}
-            aria-label="Profile initials"
-          >
-            {initials}
+      <div className="ps-profile-picture-card">
+        <div className="ps-profile-picture-header">
+          <div>
+            <h2 className="ps-profile-picture-title">Profile Picture</h2>
+          </div>
+        </div>
+
+        <div className="ps-profile-picture-preview">
+          {displayAvatar ? (
+            <img
+              src={displayAvatar}
+              alt="Profile"
+              className="ps-avatar ps-avatar-large"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              className="ps-avatar ps-avatar-initials ps-avatar-large"
+              style={{ backgroundColor: bgColor }}
+              aria-label="Profile initials"
+            >
+              {initials}
+            </div>
+          )}
+        </div>
+
+        {editMode && (
+          <div className="ps-profile-picture-actions">
+            <label
+              htmlFor="profile-avatar-upload"
+              className="ps-btn ps-btn-edit"
+              style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer' }}
+            >
+              Change Photo
+            </label>
+            <input
+              id="profile-avatar-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ display: 'none' }}
+            />
           </div>
         )}
+      </div>
 
+      <div className="ps-main">
         <div className="ps-info">
           {editMode ? (
             <input

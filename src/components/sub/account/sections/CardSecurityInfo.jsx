@@ -1,5 +1,12 @@
 import React from 'react';
 import '../../../../assets/styles/myaccount/PaymentMethodsSection.css';
+import Image1 from '../../../../assets/images/Footer icons/1.webp';
+import Image2 from '../../../../assets/images/Footer icons/4.webp';
+import Image3 from '../../../../assets/images/Footer icons/7.webp';
+import Image4 from '../../../../assets/images/Footer icons/8.webp';
+import Image5 from '../../../../assets/images/Footer icons/9.webp';
+import Image6 from '../../../../assets/images/Footer icons/10.webp';
+import Image7 from '../../../../assets/images/Footer icons/21.webp';
 
 const CardSecurityInfo = () => {
   return (
@@ -13,13 +20,13 @@ const CardSecurityInfo = () => {
       </ul>
 
       <div className="security-logos">
-            <img src="https://db.store1920.com/wp-content/uploads/2025/07/219cc18d-0462-47ae-bf84-128d38206065.png.slim_.webp" alt="SSL" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/96e8ab9b-d0dc-40ac-ad88-5513379c5ab3.png.slim_.webp" alt="ID Check" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/80d57653-6e89-4bd5-82c4-ac1e8e2489fd.png.slim_.webp" alt="SafeKey" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/65e96f45-9ff5-435a-afbf-0785934809ef.png.slim-1.webp" alt="PCI" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/058c1e09-2f89-4769-9fd9-a3cac76e13e5-1.webp" alt="APWG" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/28a227c9-37e6-4a82-b23b-0ad7814feed1.png.slim_.webp" alt="PCI" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/1f29a857-fe21-444e-8617-f57f5aa064f4.png.slim_.webp" alt="APWG" />
+        <img src={Image1} alt="SSL" />
+        <img src={Image2} alt="ID Check" />
+        <img src={Image3} alt="SafeKey" />
+        <img src={Image4} alt="PCI" />
+        <img src={Image5} alt="APWG" />
+        <img src={Image6} alt="PCI" />
+        <img src={Image7} alt="APWG" />
       </div>
     </div>
   );

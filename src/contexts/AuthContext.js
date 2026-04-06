@@ -7,6 +7,13 @@ import { getRedirectResult } from "firebase/auth";
 
 const AuthContext = createContext();
 
+const normalizeUserId = (candidate) => {
+  if (candidate === undefined || candidate === null) return null;
+  const value = String(candidate).trim();
+  if (!value || value === 'undefined' || value === 'null') return null;
+  return value;
+};
+
 export const AuthProvider = ({ children }) => {
   // Initialize user from localStorage
   const [user, setUser] = useState(() => {
@@ -23,6 +30,16 @@ export const AuthProvider = ({ children }) => {
   });
 
   const [loading, setLoading] = useState(true);
+
+  const updateUser = (updates) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        ...updates,
+      };
+    });
+  };
 
   // Sync user across tabs
   useEffect(() => {
@@ -58,11 +75,20 @@ export const AuthProvider = ({ children }) => {
   // Persist user to localStorage
   useEffect(() => {
     if (user) {
-      localStorage.setItem("userData", JSON.stringify(user));
+      const normalizedUser = {
+        ...user,
+        id: normalizeUserId(user.id),
+      };
+
+      localStorage.setItem("userData", JSON.stringify(normalizedUser));
       // Keep legacy keys for backwards compatibility
-      localStorage.setItem("userId", user.id);
-      localStorage.setItem("email", user.email);
-      if (user.token) localStorage.setItem("token", user.token);
+      if (normalizedUser.id) {
+        localStorage.setItem("userId", normalizedUser.id);
+      } else {
+        localStorage.removeItem("userId");
+      }
+      localStorage.setItem("email", normalizedUser.email);
+      if (normalizedUser.token) localStorage.setItem("token", normalizedUser.token);
     } else {
       localStorage.removeItem("userData");
       localStorage.removeItem("userId");
@@ -184,7 +210,7 @@ const logout = async () => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

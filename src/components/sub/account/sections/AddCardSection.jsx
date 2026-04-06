@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
 import '../../../../assets/styles/myaccount/AddCardSection.css';
+import FooterVisa from '../../../../assets/images/Footer icons/11.webp';
+import FooterMastercard from '../../../../assets/images/Footer icons/12.webp';
+import FooterAmex from '../../../../assets/images/Footer icons/13.webp';
+import FooterPaypal from '../../../../assets/images/Footer icons/14.png';
+import FooterApplePay from '../../../../assets/images/Footer icons/15.png';
+import FooterGooglePay from '../../../../assets/images/Footer icons/16.webp';
+import CardSecurityInfo from './CardSecurityInfo';
 
-const AddCardSection = () => {
+const detectCardBrand = (number) => {
+  if (/^4/.test(number)) return 'Visa';
+  if (/^(5[1-5]|2[2-7])/.test(number)) return 'Mastercard';
+  if (/^3[47]/.test(number)) return 'American Express';
+  if (/^6(?:011|5)/.test(number)) return 'Discover';
+  return 'Card';
+};
+
+const AddCardSection = ({ onSave, onClose }) => {
+  const [cardholderName, setCardholderName] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
@@ -15,10 +31,10 @@ const AddCardSection = () => {
   // Allow only digits and slash for expiry MM/YY, max length 5
   const handleExpiryChange = (e) => {
     let value = e.target.value;
-    // Remove anything not digit or slash
-    value = value.replace(/[^\d/]/g, '');
-    // Limit to max length 5
-    if (value.length > 5) value = value.slice(0, 5);
+    value = value.replace(/\D/g, '').slice(0, 4);
+    if (value.length >= 3) {
+      value = `${value.slice(0, 2)}/${value.slice(2)}`;
+    }
     setExpiry(value);
   };
 
@@ -34,20 +50,68 @@ const AddCardSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here, handle submission (e.g. send token to backend)
-    alert(`Card Number: ${cardNumber}\nExpiry: ${expiry}\nCVV: ${cvv}`);
+
+    if (cardNumber.length < 12) {
+      alert('Please enter a valid card number.');
+      return;
+    }
+
+    if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+      alert('Please enter expiry as MM/YY.');
+      return;
+    }
+
+    if (cvv.length < 3) {
+      alert('Please enter a valid CVV.');
+      return;
+    }
+
+    const brand = detectCardBrand(cardNumber);
+    const savedCard = {
+      id: `${Date.now()}`,
+      brand,
+      cardholderName: cardholderName.trim() || 'Cardholder',
+      last4: cardNumber.slice(-4),
+      expiry,
+    };
+
+    onSave?.(savedCard);
+
+    setCardholderName('');
+    setCardNumber('');
+    setExpiry('');
+    setCvv('');
+    onClose?.();
   };
 
   return (
     <div className="add-card-container">
       <h2 className="card-title">Add a new card</h2>
-      <form className="card-form" onSubmit={handleSubmit}>
+      <div className="accepted-cards accepted-cards--top">
+        <img src={FooterVisa} alt="Visa" />
+        <img src={FooterMastercard} alt="Mastercard" />
+        <img src={FooterAmex} alt="American Express" />
+        <img src={FooterPaypal} alt="PayPal" />
+        <img src={FooterApplePay} alt="Apple Pay" />
+        <img src={FooterGooglePay} alt="Google Pay" />
+      </div>
+
+      <form className="card-form" onSubmit={handleSubmit} noValidate>
+        <label className="form-label">Name on Card</label>
+        <input
+          className="form-input"
+          type="text"
+          placeholder="Cardholder name"
+          value={cardholderName}
+          onChange={(e) => setCardholderName(e.target.value)}
+          autoComplete="cc-name"
+        />
+
         <label className="form-label">Card Number</label>
         <input
           className="form-input"
           type="text"
           placeholder="Card number"
-          required
           value={cardNumber}
           onChange={handleCardNumberChange}
           maxLength={19}
@@ -62,7 +126,6 @@ const AddCardSection = () => {
               className="form-input"
               type="text"
               placeholder="MM/YY"
-              required
               value={expiry}
               onChange={handleExpiryChange}
               maxLength={5}
@@ -76,7 +139,6 @@ const AddCardSection = () => {
               className="form-input"
               type="text"
               placeholder="3-4 digits"
-              required
               value={cvv}
               onChange={handleCvvChange}
               maxLength={4}
@@ -88,25 +150,7 @@ const AddCardSection = () => {
 
         <button type="submit" className="submit-card">Add your card</button>
       </form>
-
-      <div className="accepted-cards">
-        <img src="https://db.store1920.com/wp-content/uploads/2025/07/ec0c5d69-1717-4571-a193-9950ec73c8af.png.slim_.webp" alt="PayPal" />
-        <img src="https://db.store1920.com/wp-content/uploads/2025/07/da7f463a-916f-4d91-bcbb-047317a1c35e.png.slim_.webp" alt="Cash" />
-        <img src="https://db.store1920.com/wp-content/uploads/2025/07/c3e5eb19-1b60-4c2b-87e1-4528fb390cbf.png.slim_.webp" alt="Apple Pay" />
-        <img src="https://db.store1920.com/wp-content/uploads/2025/07/bcb8bf23-78c9-45ab-b480-f7020d1a5f66.png.slim_.webp" alt="Apple Pay" />
-        <img src="https://db.store1920.com/wp-content/uploads/2025/07/b79a2dc3-b089-4cf8-a907-015a25ca12f2.png.slim_.webp" alt="Apple Pay" />
-        <img src="https://db.store1920.com/wp-content/uploads/2025/07/936bf9dc-9bb2-4935-9c5a-a70b800d4cf1.png.slim_.webp" alt="Apple Pay" />
-      </div>
-
-      <div className="card-security-info">
-        <h4 className="security-heading">Store1920 protects your card information</h4>
-        <ul className="security-list">
-          <li>Store1920 follows the Payment Card Industry Data Security Standard (PCI DSS) when handling card data</li>
-          <li>Card information is secure and uncompromised</li>
-          <li>All data is encrypted</li>
-          <li>Store1920 never sells your card information</li>
-        </ul>
-      </div>
+      <CardSecurityInfo />
     </div>
   );
 };

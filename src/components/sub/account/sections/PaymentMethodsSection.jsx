@@ -1,11 +1,130 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import '../../../../assets/styles/myaccount/PaymentMethodsSection.css';
 import CardSecurityInfo from './CardSecurityInfo';
 import AddCardModal from './AddCardModal';
 import Card from '../../../../assets/images/Purse (1).png';
+import FooterVisa from '../../../../assets/images/Footer icons/11.webp';
+import FooterMastercard from '../../../../assets/images/Footer icons/12.webp';
+import FooterAmex from '../../../../assets/images/Footer icons/13.webp';
+import FooterPaypal from '../../../../assets/images/Footer icons/14.png';
+import FooterApplePay from '../../../../assets/images/Footer icons/15.png';
+import FooterGooglePay from '../../../../assets/images/Footer icons/16.webp';
+import FooterCash from '../../../../assets/images/Footer icons/17.webp';
+import { useAuth } from '../../../../contexts/AuthContext';
+
+const LOCAL_CARDS_KEY = 'store1920_saved_cards';
+
+const getBrandLogo = (brand) => {
+  switch (brand) {
+    case 'Visa':
+      return FooterVisa;
+    case 'Mastercard':
+      return FooterMastercard;
+    case 'American Express':
+      return FooterAmex;
+    case 'PayPal':
+      return FooterPaypal;
+    case 'Apple Pay':
+      return FooterApplePay;
+    case 'Google Pay':
+      return FooterGooglePay;
+    default:
+      return Card;
+  }
+};
+
+const getStoredCards = (storageKey) => {
+  try {
+    const stored = localStorage.getItem(storageKey);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Failed to read saved cards from localStorage', error);
+    return [];
+  }
+};
 
 const PaymentMethodsSection = () => {
+  const { user } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
+  const storageKey = user?.id ? `${LOCAL_CARDS_KEY}_${user.id}` : LOCAL_CARDS_KEY;
+  const [savedCards, setSavedCards] = useState(() => getStoredCards(storageKey));
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const acceptedCardIcons = useMemo(
+    () => [
+      { src: FooterVisa, alt: 'Visa' },
+      { src: FooterMastercard, alt: 'Mastercard' },
+      { src: FooterAmex, alt: 'American Express' },
+      { src: FooterPaypal, alt: 'PayPal' },
+      { src: FooterApplePay, alt: 'Apple Pay' },
+      { src: FooterGooglePay, alt: 'Google Pay' },
+      { src: FooterCash, alt: 'Cash on Delivery' },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const userCards = getStoredCards(storageKey);
+    const legacyCards = getStoredCards(LOCAL_CARDS_KEY);
+
+    if (!user?.id && userCards.length === 0) {
+      setSavedCards(legacyCards);
+      return;
+    }
+
+    if (user?.id && userCards.length === 0 && legacyCards.length > 0) {
+      setSavedCards(legacyCards);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(legacyCards));
+      } catch (error) {
+        console.error('Failed to migrate saved cards to user storage', error);
+      }
+      return;
+    }
+
+    setSavedCards(userCards);
+  }, [storageKey, user?.id]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(savedCards));
+    } catch (error) {
+      console.error('Failed to save cards to localStorage', error);
+    }
+  }, [savedCards, storageKey]);
+
+  useEffect(() => {
+    if (!successMessage) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [successMessage]);
+
+  const handleSaveCard = (cardData) => {
+    setSavedCards((prevCards) => {
+      const nextCards = [cardData, ...prevCards];
+
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(nextCards));
+      } catch (error) {
+        console.error('Failed to persist card immediately', error);
+      }
+
+      return nextCards;
+    });
+
+    setModalOpen(false);
+    setSuccessMessage('Card saved successfully.');
+  };
+
+  const handleRemoveCard = (cardId) => {
+    setSavedCards((prevCards) => prevCards.filter((card) => card.id !== cardId));
+  };
 
   return (
     <div className="payment-wrapper">
@@ -13,6 +132,22 @@ const PaymentMethodsSection = () => {
         Your payment methods <span className="lock-icon">🔒</span>
         <span className="encrypted-text">All data is encrypted</span>
       </h2>
+
+      {successMessage && (
+        <div
+          style={{
+            background: '#edf8ee',
+            border: '1px solid #b7dfbc',
+            color: '#1d6b2b',
+            borderRadius: '12px',
+            padding: '12px 16px',
+            marginBottom: '16px',
+            fontWeight: 600,
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
 
       <div className="payment-card-box">
         <div className="payment-graphic">
@@ -31,21 +166,50 @@ const PaymentMethodsSection = () => {
         </button>
 
         <div className="card-icons">
-             <img src="https://db.store1920.com/wp-content/uploads/2025/07/058c1e09-2f89-4769-9fd9-a3cac76e13e5-1.webp" alt="Visa" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/6fad9cde-cc9c-4364-8583-74bb32612cea.webp" alt="MasterCard" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/3a626fff-bbf7-4a26-899a-92c42eef809a.png.slim_.webp" alt="AmEx" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/ec0c5d69-1717-4571-a193-9950ec73c8af.png.slim_.webp" alt="PayPal" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/da7f463a-916f-4d91-bcbb-047317a1c35e.png.slim_.webp" alt="Cash" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/c3e5eb19-1b60-4c2b-87e1-4528fb390cbf.png.slim_.webp" alt="Apple Pay" />
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/bcb8bf23-78c9-45ab-b480-f7020d1a5f66.png.slim_.webp" alt="Apple Pay" />   
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/b79a2dc3-b089-4cf8-a907-015a25ca12f2.png.slim_.webp" alt="Apple Pay" />   
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/ae5e15c1-ffe8-42c4-9ddb-bb9ed1fdcf6a.png.slim_.webp" alt="Apple Pay" />   
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/936bf9dc-9bb2-4935-9c5a-a70b800d4cf1.png.slim_.webp" alt="Apple Pay" />   
-              <img src="https://db.store1920.com/wp-content/uploads/2025/07/ac293ffc-9957-4588-a4df-f3397b4a54e0.png.slim_.webp" alt="Apple Pay" />   
+          {acceptedCardIcons.map((icon) => (
+            <img key={icon.alt} src={icon.src} alt={icon.alt} />
+          ))}
         </div>
-       </div>
+      </div>
 
-      <AddCardModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      {savedCards.length > 0 && (
+        <div className="saved-cards-section">
+          <h3 className="saved-cards-title">Saved cards</h3>
+          <div className="saved-cards-grid">
+            {savedCards.map((card) => (
+              <article key={card.id} className="saved-card">
+                <div className="saved-card-top">
+                  <img
+                    src={getBrandLogo(card.brand)}
+                    alt={card.brand}
+                    className="saved-card-brand"
+                  />
+                  <button
+                    type="button"
+                    className="saved-card-remove"
+                    onClick={() => handleRemoveCard(card.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div className="saved-card-number">
+                  •••• •••• •••• {card.last4}
+                </div>
+                <div className="saved-card-meta">
+                  <span>{card.cardholderName}</span>
+                  <span>Exp {card.expiry}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <AddCardModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleSaveCard}
+      />
       <CardSecurityInfo />
     </div>
   );

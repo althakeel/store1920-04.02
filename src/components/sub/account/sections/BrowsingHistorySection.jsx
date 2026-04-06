@@ -4,28 +4,50 @@ import '../../../../assets/styles/myaccount/browsingHistorySection.css';
 import NoItemImage from '../../../../assets/images/noitem.png';
 
 const API_BASE = 'https://db.store1920.com/wp-json/custom/v1';
+const LOCAL_HISTORY_KEY = 'store1920_browsing_history';
+
+const getLocalHistory = (customerEmail) => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(LOCAL_HISTORY_KEY) || '[]');
+    if (!Array.isArray(stored)) return [];
+
+    return stored.filter((item) => {
+      if (!customerEmail) return true;
+      return !item.email || item.email === customerEmail;
+    });
+  } catch (error) {
+    console.error('Error reading local browsing history:', error);
+    return [];
+  }
+};
 
 const BrowsingHistorySection = ({ customerEmail }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!customerEmail) return;
-
     const fetchHistory = async () => {
+      const localHistory = getLocalHistory(customerEmail);
+
+      if (!customerEmail) {
+        setHistory(localHistory);
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await axios.get(`${API_BASE}/history`, {
           params: { email: customerEmail },
         });
 
         if (Array.isArray(res.data)) {
-          setHistory(res.data);
+          setHistory(res.data.length > 0 ? res.data : localHistory);
         } else {
-          setHistory([]);
+          setHistory(localHistory);
         }
       } catch (error) {
         console.error('Error fetching browsing history:', error);
-        setHistory([]);
+        setHistory(localHistory);
       } finally {
         setLoading(false);
       }

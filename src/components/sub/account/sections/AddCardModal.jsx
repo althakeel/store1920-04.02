@@ -2,7 +2,7 @@ import React from 'react';
 import '../../../../assets/styles/myaccount/AddCardModal.css';
 import AddCardSection from './AddCardSection';
 
-const AddCardModal = ({ isOpen, onClose }) => {
+const AddCardModal = ({ isOpen, onClose, onSave }) => {
   if (!isOpen) return null;
 
   // When user clicks on overlay, close modal
@@ -19,7 +19,7 @@ const AddCardModal = ({ isOpen, onClose }) => {
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content" onClick={handleContentClick}>
         <button className="close-button" onClick={onClose}>✕</button>
-        <AddCardSection />
+        <AddCardSection onSave={onSave} onClose={onClose} />
       </div>
     </div>
   );

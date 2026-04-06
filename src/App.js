@@ -260,7 +260,7 @@ const AppContent = () => {
   }, [cartItems]); */
 
 
-  const excludeMiniCartPaths = ['/cart', '/checkout', '/lost-password', '/order-success', '/order-cancel'];
+  const excludeMiniCartPaths = ['/cart', '/checkout', '/lost-password', '/reset-password', '/order-success', '/order-cancel'];
 
   const shouldShowMiniCart =
     !isMobile &&
@@ -400,6 +400,7 @@ const AppContent = () => {
                     <Route path="/season-sale" element={<SeasonSale />} />
                     <Route path="/cookies-settings" element={<CookiesSettings />} />
                     <Route path="/lost-password" element={<LostPassword />} />
+                    <Route path="/reset-password" element={<LostPassword />} />
                     <Route path="/my-coins" element={<MyCoins />} />
                     <Route path="/top-selling-item" element={<TopSellingitems />} />
                     <Route path="*" element={<NotFound />} />
@@ -428,7 +429,7 @@ const AppContent = () => {
           {shouldShowCookiePopup && <CookiePopup />}
        {/* <ChatBot /> */}
 {isHomePage && <NewUserBonusPopup />}
-              <Footer />
+              {!onCheckoutPage && <Footer />}
 
            {isMobile &&
   !excludeMiniCartPaths.some(

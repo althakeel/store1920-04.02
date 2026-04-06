@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import "../../assets/styles/SignInModal.css";
 import { useAuth } from "../../contexts/AuthContext";
-import FacebookIcon from "../../assets/images/facebook.png";
 import GoogleSignInButton from '../../components/sub/GoogleSignInButton';
-
+import FacebookSignInButton from "../../components/sub/FacebookSignInButton";
 
 // ===================== Alert Component =====================
 const Alert = ({ children, onClose }) => (
@@ -40,23 +40,40 @@ const parseErrorMsg = (rawMsg) => {
   return <>{rawMsg.replace(/<[^>]+>/g, "").trim()}</>;
 };
 
-const splitName = (fullName) => {
-  const trimmedName = fullName.trim();
-  if (!trimmedName) {
-    return { firstName: "", lastName: "" };
+const getLoginErrorMessage = (rawMsg) => {
+  const normalized = typeof rawMsg === "string" ? rawMsg.replace(/<[^>]+>/g, "").trim() : "";
+
+  if (!normalized) {
+    return "Login failed";
   }
 
-  const [firstName, ...lastNameParts] = trimmedName.split(/\s+/);
-  return {
-    firstName,
-    lastName: lastNameParts.join(" ") || "User",
-  };
+  if (/otp/i.test(normalized) || /attempts left/i.test(normalized)) {
+    return "Invalid email or password.";
+  }
+
+  return normalized;
+};
+
+const resolveUserId = (...candidates) => {
+  for (const candidate of candidates) {
+    if (candidate === undefined || candidate === null) {
+      continue;
+    }
+
+    const value = String(candidate).trim();
+    if (!value || value === "undefined" || value === "null") {
+      continue;
+    }
+
+    return value;
+  }
+
+  return null;
 };
 
 // ===================== Main Component =====================
 const SignInModal = ({ isOpen, onClose, onLogin }) => {
   const { login } = useAuth();
-  const formRef = useRef(null);
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -65,12 +82,37 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     confirmPassword: "",
     phone: "",
   });
+  const [pendingRegistration, setPendingRegistration] = useState(null);
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpMessage, setOtpMessage] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const FRONTEND_URL = "https://store1920.com";
   const WP_API = "https://db.store1920.com/wp-json";
+  const isSignInMode = !isRegister;
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    setIsRegister(false);
+    setPendingRegistration(null);
+    setOtp("");
+    setOtpSent(false);
+    setOtpMessage("");
+    setSuccessMsg("");
+    setErrorMsg(null);
+    setShowPassword(false);
+
+    document.body.dataset.signinModalOpen = "true";
+
+    return () => {
+      delete document.body.dataset.signinModalOpen;
+    };
+  }, [isOpen]);
 
   // ===================== Handlers =====================
   const handleChange = (e) => {
@@ -81,121 +123,251 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
     }
   };
 
+  const resetRegisterFlow = () => {
+    setPendingRegistration(null);
+    setOtp("");
+    setOtpSent(false);
+    setOtpMessage("");
+    setErrorMsg(null);
+  };
+
+  const switchToLoginMode = (message = "") => {
+    resetRegisterFlow();
+    setIsRegister(false);
+    setShowPassword(false);
+    setSuccessMsg(message);
+  };
+
+  const switchToRegisterMode = () => {
+    resetRegisterFlow();
+    setIsRegister(true);
+    setSuccessMsg("");
+  };
+
+  const moveToLoginAfterVerification = (message) => {
+    switchToLoginMode(message || "Email verified successfully. Please sign in.");
+  };
+
   const handleForgotPassword = () => {
     onClose();
     window.location.href = `${FRONTEND_URL}/lost-password`;
   };
 
   // ===================== Validation =====================
-  const validateRegister = (values) => {
-    if (!values.name.trim()) return setErrorMsg("Name is required"), false;
-    if (!values.email.trim()) return setErrorMsg("Email is required"), false;
-    if (!values.phone.trim()) return setErrorMsg("Phone number is required"), false;
-    if (!values.password) return setErrorMsg("Password is required"), false;
-    if (values.password !== values.confirmPassword)
-      return setErrorMsg("Passwords do not match"), false;
+  const validateRegister = () => {
+    if (!formData.name.trim()) {
+      setErrorMsg("Name is required");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      setErrorMsg("Email is required");
+      return false;
+    }
+    // if (!formData.phone.trim()) {
+    //   setErrorMsg("Phone number is required");
+    //   return false;
+    // }
+    if (!formData.password) {
+      setErrorMsg("Password is required");
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMsg("Passwords do not match");
+      return false;
+    }
     setErrorMsg(null);
     return true;
   };
 
-  const validateLogin = (values) => {
-    if (!values.email.trim()) return setErrorMsg("Email is required"), false;
-    if (!values.password) return setErrorMsg("Password is required"), false;
-    setErrorMsg(null);
-    return true;
-  };
+  const loginAfterRegistration = async (registrationData = pendingRegistration || formData) => {
+    try {
+      const loginRes = await axios.post(
+        `${WP_API}/custom/v1/login`,
+        {
+          login: registrationData.email,
+          username: registrationData.email,
+          password: registrationData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-  const getFormValues = () => {
-    if (!formRef.current) {
-      return formData;
+      if (loginRes.data?.success) {
+        const profileRes = await axios.get(`${WP_API}/custom/v1/me`, {
+          withCredentials: true,
+        });
+
+        const userInfo = {
+          name: profileRes.data?.name || registrationData.name,
+          image: "",
+          token: "wordpress_session",
+          id: resolveUserId(
+            profileRes.data?.id,
+            loginRes.data?.user?.id,
+            loginRes.data?.id,
+            JSON.parse(localStorage.getItem("userData") || "null")?.id
+          ),
+          email: profileRes.data?.email || registrationData.email,
+          user: profileRes.data || loginRes.data?.user || null,
+        };
+        login(userInfo);
+        if (userInfo.id) {
+          localStorage.setItem("userId", userInfo.id);
+        }
+        localStorage.setItem("email", userInfo.email);
+        localStorage.setItem("token", userInfo.token);
+        onLogin?.(userInfo);
+        onClose();
+        return true;
+      }
+    } catch (error) {
+      console.warn("Auto login after registration failed", error);
     }
 
-    const formValues = new FormData(formRef.current);
-    return {
-      name: (formValues.get("name") || "").toString().trim(),
-      email: (formValues.get("email") || "").toString().trim(),
-      password: (formValues.get("password") || "").toString(),
-      confirmPassword: (formValues.get("confirmPassword") || "").toString(),
-      phone: (formValues.get("phone") || "").toString().trim(),
-    };
+    moveToLoginAfterVerification("Email verified successfully. Please sign in.");
+    return false;
+  };
+
+  const validateLogin = () => {
+    if (!formData.email.trim()) {
+      setErrorMsg("Email is required");
+      return false;
+    }
+    if (!formData.password) {
+      setErrorMsg("Password is required");
+      return false;
+    }
+    setErrorMsg(null);
+    return true;
   };
 
   // ===================== API Calls =====================
-  const registerUser = async (values) => {
-    if (!validateRegister(values)) return;
+  const sendEmailOtp = async () => {
+    if (otpSent) {
+      setLoading(true);
+      setErrorMsg(null);
+      setSuccessMsg("");
+
+      try {
+        const res = await axios.post(`${WP_API}/custom/v1/send-email-otp`, {
+          name: pendingRegistration?.name || formData.name.trim(),
+          email: pendingRegistration?.email || formData.email.trim(),
+          password: pendingRegistration?.password || formData.password,
+          phone: pendingRegistration?.phone || formData.phone.trim(),
+        });
+        setOtpMessage(res.data?.message || "OTP sent to your email.");
+      } catch (err) {
+        setErrorMsg(parseErrorMsg(err.response?.data?.message || "Unable to resend OTP"));
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    if (!validateRegister()) return;
+
+    const registrationData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      phone: formData.phone.trim(),
+    };
     setLoading(true);
     setErrorMsg(null);
+    setSuccessMsg("");
 
     try {
-      const registerRes = await axios.post(`${WP_API}/custom/v2/register`, {
-        email: values.email,
-        password: values.password,
-        name: values.name,
-        phone: values.phone,
+      const res = await axios.post(`${WP_API}/custom/v1/send-email-otp`, {
+        name: registrationData.name,
+        email: registrationData.email,
+        password: registrationData.password,
+        phone: registrationData.phone,
       });
-
-      if (!registerRes.data?.success) {
-        const msg = registerRes.data?.message || "Registration failed";
-        const code = registerRes.data?.code || "";
-        if (code === "email_exists") {
-          setErrorMsg("This email is already registered. Please sign in instead.");
-        } else {
-          setErrorMsg(msg);
-        }
-        return;
-      }
-
-      const res = registerRes.data;
-
-      // Token is generated server-side in the register endpoint to bypass OTP interceptors
-      const userInfo = {
-        name: values.name,
-        image: "",
-        token: res.token || "wordpress_session",
-        id: res.id || res.user_id,
-        email: values.email,
-        user: res,
-      };
-      login(userInfo);
-      localStorage.setItem("userId", userInfo.id);
-      localStorage.setItem("email", userInfo.email);
-      localStorage.setItem("token", userInfo.token);
-      onLogin?.(userInfo);
-      onClose();
+      setPendingRegistration(registrationData);
+      setOtpSent(true);
+      setOtpMessage(res.data?.message || "OTP sent to your email.");
     } catch (err) {
-      setErrorMsg(parseErrorMsg(err.message || err?.data?.message || err?.message || "Registration failed"));
+      setErrorMsg(parseErrorMsg(err.response?.data?.message || "Registration failed"));
     } finally {
       setLoading(false);
     }
   };
 
-  const loginUser = async (values) => {
-    if (!validateLogin(values)) return;
+  const verifyEmailOtp = async () => {
+    if (!otp.trim()) {
+      setErrorMsg("OTP is required");
+      return;
+    }
+
     setLoading(true);
     setErrorMsg(null);
+    setSuccessMsg("");
 
     try {
-      const res = await axios.post(`${WP_API}/jwt-auth/v1/token`, {
-        username: values.email,
-        password: values.password,
+      const res = await axios.post(`${WP_API}/custom/v1/verify-email-otp`, {
+        email: pendingRegistration?.email || formData.email,
+        otp: otp.trim(),
       });
 
-      if (res.data?.token) {
-        const profileRes = await axios.get(`${WP_API}/wp/v2/users/me`, {
-          headers: { Authorization: `Bearer ${res.data.token}` },
+      setOtpMessage(res.data?.message || "Email verified successfully.");
+      await loginAfterRegistration(pendingRegistration || formData);
+    } catch (err) {
+      const attemptsLeft = err.response?.data?.data?.attempts_left;
+      const baseMessage = err.response?.data?.message || "OTP verification failed";
+      if (typeof attemptsLeft === "number") {
+        setErrorMsg(`${baseMessage}. Attempts left: ${attemptsLeft}`);
+      } else {
+        setErrorMsg(parseErrorMsg(baseMessage));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginUser = async () => {
+    switchToLoginMode();
+    if (!validateLogin()) return;
+    setLoading(true);
+    setErrorMsg(null);
+    setSuccessMsg("");
+
+    try {
+      const res = await axios.post(
+        `${WP_API}/custom/v1/login`,
+        {
+          login: formData.email,
+          username: formData.email,
+          password: formData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.data?.success) {
+        const profileRes = await axios.get(`${WP_API}/custom/v1/me`, {
+          withCredentials: true,
         });
 
         const userInfo = {
-          name: profileRes.data.name || values.email,
+          name: profileRes.data.name || formData.email,
           image: "",
-          token: res.data.token,
-          id: profileRes.data.id,
-          email: values.email,
-          user: profileRes.data,
+          token: "wordpress_session",
+          id: resolveUserId(
+            profileRes.data?.id,
+            res.data?.user?.id,
+            res.data?.id,
+            JSON.parse(localStorage.getItem("userData") || "null")?.id
+          ),
+          email: profileRes.data.email || formData.email,
+          user: profileRes.data || res.data?.user || null,
         };
 
         login(userInfo);
-        localStorage.setItem("userId", userInfo.id);
+        if (userInfo.id) {
+          localStorage.setItem("userId", userInfo.id);
+        }
         localStorage.setItem("email", userInfo.email);
         localStorage.setItem("token", userInfo.token);
         onLogin?.(userInfo);
@@ -204,32 +376,40 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
         setErrorMsg("Invalid login credentials");
       }
     } catch (err) {
-      setErrorMsg(parseErrorMsg(err.response?.data?.message || "Login failed"));
+      setErrorMsg(getLoginErrorMessage(err.response?.data?.message || "Login failed"));
     } finally {
       setLoading(false);
     }
   };
 
-  // ===================== Social Login (WordPress Nextend) =====================
-  const handleSocialLogin = (provider) => {
-    const baseUrl = "https://db.store1920.com/wp-login.php?loginSocial=";
-    window.location.href = `${baseUrl}${provider}`;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const values = getFormValues();
-    setFormData(values);
-    isRegister ? registerUser(values) : loginUser(values);
+    if (isSignInMode) {
+      loginUser();
+      return;
+    }
+    if (isRegister) {
+      if (otpSent) {
+        verifyEmailOtp();
+      } else {
+        sendEmailOtp();
+      }
+      return;
+    }
   };
 
   if (!isOpen) return null;
 
   // ===================== Render =====================
-  return (
+  return ReactDOM.createPortal(
     <>
       <div className="signin-modal-overlay" onClick={onClose} />
-      <div className="signin-modal-container" role="dialog" aria-modal="true">
+      <div
+        className="signin-modal-container"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="signin-modal-close" onClick={onClose} aria-label="Close modal">
           ✕
         </button>
@@ -248,43 +428,31 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           </div>
         </div>
 
-        <form ref={formRef} className="signin-modal-form" onSubmit={handleSubmit} noValidate>
+        <form className="signin-modal-form" onSubmit={handleSubmit} noValidate>
           {errorMsg && <Alert onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>}
-
-          {isRegister && (
-            <>
-              <input
-                type="text"
-                name="name"
-                placeholder="Full name"
-                value={formData.name}
-                onChange={handleChange}
-                className="signin-modal-input"
-                required
-              />
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone number"
-                value={formData.phone}
-                onChange={handleChange}
-                className="signin-modal-input"
-                required
-              />
-            </>
+          {successMsg && (
+            <div className="signin-success-alert">
+              <div className="signin-success-content">{successMsg}</div>
+            </div>
+          )}
+          {isRegister && otpMessage && (
+            <div className="signin-success-alert">
+              <div className="signin-success-content">{otpMessage}</div>
+            </div>
           )}
 
           <input
             type="text"
             name="email"
-            placeholder={isRegister ? "Email address" : "Email or phone number"}
+            placeholder="Email or username"
             value={formData.email}
             onChange={handleChange}
             className="signin-modal-input"
             required
+            disabled={isRegister && otpSent}
           />
 
-          {!isRegister && (
+          {isSignInMode && (
             <>
               <input
                 type={showPassword ? "text" : "password"}
@@ -311,6 +479,26 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           {isRegister && (
             <>
               <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                className="signin-modal-input"
+                required
+                disabled={otpSent}
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                className="signin-modal-input"
+                required
+                disabled={otpSent}
+              />
+              <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
@@ -318,6 +506,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 onChange={handleChange}
                 className="signin-modal-input"
                 required
+                disabled={otpSent}
               />
               <input
                 type={showPassword ? "text" : "password"}
@@ -327,6 +516,7 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                 onChange={handleChange}
                 className="signin-modal-input"
                 required
+                disabled={otpSent}
               />
               <div className="signin-show-password">
                 <label>
@@ -338,15 +528,54 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
                   Show password
                 </label>
               </div>
+              {otpSent && (
+                <>
+                  <input
+                    type="text"
+                    name="otp"
+                    placeholder="Enter Email OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    className="signin-modal-input"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="signin-secondary-btn"
+                    onClick={sendEmailOtp}
+                    disabled={loading}
+                  >
+                    Resend OTP
+                  </button>
+                  <button
+                    type="button"
+                    className="signin-secondary-link-btn"
+                    onClick={resetRegisterFlow}
+                    disabled={loading}
+                  >
+                    Change email or details
+                  </button>
+                </>
+              )}
             </>
           )}
 
-          <button type="submit" className="signin-submit-btn" disabled={loading}>
-            {loading ? "Please wait..." : isRegister ? "Register" : "Continue"}
+          <button
+            type="submit"
+            className="signin-submit-btn"
+            disabled={loading}
+          >
+            {loading
+              ? "Please wait..."
+              : isRegister
+                ? otpSent
+                  ? "Verify OTP"
+                  : "Send OTP"
+                : "Continue"}
           </button>
         </form>
 
-        {!isRegister && (
+        {isSignInMode && (
           <div className="signin-forgot-password-text" onClick={handleForgotPassword}>
             Trouble signing in?
           </div>
@@ -361,18 +590,10 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
             onLogin?.(userInfo);
             onClose();
           }} />
-
-          <button onClick={() => handleSocialLogin("facebook")}>
-            <img src={FacebookIcon} alt="Facebook" />
-          </button>
-          <button disabled>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-              alt="Apple"
-              width="30px"
-              height="50px"
-            />
-          </button>
+          <FacebookSignInButton onLogin={(userInfo) => {
+            onLogin?.(userInfo);
+            onClose();
+          }} />
         </div>
 
         <div className="signin-terms">
@@ -386,7 +607,9 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
               Already have an account?{" "}
               <button
                 type="button"
-                onClick={() => setIsRegister(false)}
+                onClick={() => {
+                  switchToLoginMode();
+                }}
                 className="signin-toggle-link"
               >
                 Sign In
@@ -397,7 +620,9 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
               Don’t have an account?{" "}
               <button
                 type="button"
-                onClick={() => setIsRegister(true)}
+                onClick={() => {
+                  switchToRegisterMode();
+                }}
                 className="signin-toggle-link"
               >
                 Register
@@ -406,7 +631,8 @@ const SignInModal = ({ isOpen, onClose, onLogin }) => {
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
 
