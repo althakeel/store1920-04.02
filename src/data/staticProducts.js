@@ -307,8 +307,8 @@ const staticProducts = [
       "Transform the way you wash your car, bike, and home surfaces with the 68V Portable Car Wash Gun. Say goodbye to stubborn dirt, messy hoses, and expensive car wash visits — enjoy professional-level cleaning right at home.",
     section2list: [
       "Blast away dirt, mud, and grime effortlessly",
-      "Wash anywhere with cordless portability",
-      "Wash anywhere with cordless portability",
+      "Clean patios, bikes, and garden tools without dragging a hose",
+      "Switch quickly between focused rinsing and wider spray coverage",
       "Perfect for cars, bikes, gardens, floors, and more",
     ],
     section2contentPoints: [
@@ -3668,7 +3668,7 @@ reviews: [
     {
       type: "Bundle of 2",
       id: 529509,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Portable Bottle Warmer",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
       price: 125.90, 
@@ -3681,7 +3681,7 @@ reviews: [
     {
       type: "Bundle of 3",
       id: 532756,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Portable Bottle Warmer",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
       price: 171.90, 
@@ -3768,7 +3768,7 @@ reviews: [
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+    "We’re confident this warmer will make feeding on the go easier. If it does not suit your routine, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
   Faq1Q: "Does it include the  Quran or only selected Surahs?",
@@ -3808,16 +3808,16 @@ reviews: [
 // quran speaker===========================
 {
   id: 530990, 
-  name: "Holy Wall Speaker Bluetooth Quran Light Speaker",
+  name: "Holy Wall Quran Speaker with Bluetooth, Remote and Ambient Light",
   slug: "holy-wall-speaker-bluetooth-quran-light-speaker", 
   price: 79.90,
   salePrice: 79.90,
   regularPrice: 150.99,
 
   description:
-    " Screen-Free Daily Quran Recitation for Your Home",
+    "A wall-mounted Quran speaker that combines built-in recitation, Bluetooth playback, soft ambient lighting, and simple remote control for everyday listening at home.",
   shortdesc:
-    " Screen-Free Daily Quran Recitation for Your Home",
+    "Wall-mounted Quran speaker with built-in recitation, Bluetooth audio, remote control, and soft ambient light.",
 
   subdesc: "Built-In Quran Audio",
   subdesc1: "Bluetooth Connectivity",
@@ -3843,7 +3843,7 @@ reviews: [
       {
       type: "Buy 1",
       id: 530991,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Holy Wall Quran Speaker",
       label: "Buy 1 for only 79.90 AED",
       discount: 0,
       slug: "quran-magnet-speaker-built-in-surah-player",
@@ -3855,7 +3855,7 @@ reviews: [
     {
       type: "Bundle of 2",
       id: 530992,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Holy Wall Quran Speaker",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
       price: 143.90, 
@@ -3868,7 +3868,7 @@ reviews: [
     {
       type: "Bundle of 3",
       id: 530993,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Holy Wall Quran Speaker",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
       price: 196.90, 
@@ -3883,7 +3883,7 @@ reviews: [
   BundleTitle: "BUNDLE AND SAVE MORE!",
 
   // 🔹 Section 2 – Problem + Solution + Features
-  section2contentTitle: "Emotional Story Block",
+  section2contentTitle: "Bring Daily Quran Listening Back Into the Home",
   section2contentDesc:
     "The Quran Should Be Heard Daily — Not Lost in Notifications.",
   section2list: [
@@ -3912,7 +3912,7 @@ reviews: [
   sectionProgress: [
     {
       title: "Daily Quran Listening",
-      desc: " Families listen more consistently when the  Quran is easily accessible.",
+      desc: "Families listen more consistently when Quran recitation is easy to access from a shared room.",
       percent: 96,
     },
     {
@@ -3952,7 +3952,7 @@ reviews: [
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+    "We’re confident this Quran speaker will become a meaningful part of your home. If it is not the right fit for your space, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
   Faq1Q: "Does it include Quran recitations built in?",

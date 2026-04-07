@@ -186,9 +186,9 @@ import CulturalTraditional from '../../assets/images/megamenu/Sub catogory Webp/
 import WorkwearUniforms from '../../assets/images/megamenu/Sub catogory Webp/Workwear & Uniforms copy.webp';
 // new categories and their images can be added here following the same pattern
 // ===== Sheet Categories Images (Dummy for now) =====
-import KitchenDining from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
-import KitchenTools from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
-import FoodStorage from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
+import KitchenDining from '../../assets/images/megamenu/Sub catogory Webp/kitchen-dining.webp';
+import KitchenTools from '../../assets/images/megamenu/Sub catogory Webp/kitchen-tools.webp';
+import FoodStorage from '../../assets/images/megamenu/Sub catogory Webp/food-storage.webp';
 import Drinkware from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
 import DisposableTableware from '../../assets/images/megamenu/Sub catogory Webp/Kitchen Appliances copy.webp';
 
@@ -538,8 +538,8 @@ export const megaMenuCategories = [
   subCategories: [
     { id: 2001, name: "Kitchen & Dining", image: KitchenDining, path: "/category/kitchen-dining" },
     { id: 2002, name: "Kitchen Tools", image: KitchenTools, path: "/category/kitchen-tools" },
-    { id: 2003, name: "Kitchen Accessories", image: KitchenTools, path: "/category/kitchen-accessories" },
-    { id: 2004, name: "Food Storage", image: FoodStorage, path: "/category/food-storage" },
+    { id: 2003, name: "Kitchen Accessories", image: KitchenDiningFurniture, path: "/category/kitchen-accessories" },
+    { id: 2004, name: "Food Storage", image: StorageOrganization, path: "/category/food-storage" },
     // { id: 2005, name: "Drinkware", image: Drinkware, path: "/category/drinkware" },
     // { id: 2006, name: "Disposable Tableware", image: DisposableTableware, path: "/category/disposable-tableware" },
   ]
@@ -552,7 +552,7 @@ export const megaMenuCategories = [
   subCategories: [
     { id: 2011, name: "Lighting", image: LightingImg, path: "/category/lighting" },
     { id: 2012, name: "Storage & Organization", image: StorageOrgImg, path: "/category/storage-organization" },
-    { id: 2013, name: "Gift & Packaging", image: StorageOrgImg, path: "/category/gift-packaging" },
+    { id: 2013, name: "Gift & Packaging", image: BagsBackpacksImg, path: "/category/gift-packaging" },
   ]
 },
 
@@ -571,7 +571,7 @@ export const megaMenuCategories = [
   //slug /beauty-personal-care
   subCategories: [
     { id: 2031, name: "Hair Care Appliances", image: HairCareAppliancesImg, path: "/category/hair-care-appliances" },
-    { id: 2032, name: "Hair Care Tools", image: HairCareAppliancesImg, path: "/category/hair-care-tools" },
+    { id: 2032, name: "Hair Care Tools", image: HairToolsAccessories, path: "/category/hair-care-tools" },
     { id: 2033, name: "Makeup Accessories", image: MakeupAccessoriesImg, path: "/category/makeup-accessories" },
     // { id: 2034, name: "Bath Accessories", image: MakeupAccessoriesImg, path: "/category/bath-accessories" },
   ]
@@ -582,7 +582,7 @@ export const megaMenuCategories = [
   name: "Baby & Kids",
   //slug /baby-kids
   subCategories: [
-    { id: 2041, name: "Baby Travel Gear", image: BabyCareImg, path: "/category/baby-travel-gear" },
+    { id: 2041, name: "Baby Travel Gear", image: ActivityGear, path: "/category/baby-travel-gear" },
     { id: 2042, name: "Baby Care", image: BabyCareImg, path: "/category/baby-care" },
     // { id: 2043, name: "Feeding Accessories", image: BabyCareImg, path: "/category/feeding-accessories" },
   ]
@@ -712,7 +712,7 @@ export const megaMenuCategories = [
       { name: "Wireless Earbuds",image: Wireless_Earbuds, path: "/category/wireless-earbuds" },
       { name: "Headphones", image: Headphones, path: "/category/headphones" },
       { name: "Smart Watches", image: Smart_Watches, path: "/category/smart-watches" },
-      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+      { name: "Car Accessories", image: Car_Charger, path: "/category/car-accessories" },
       { name: "Lighting",image: Lighting, path: "/category/lighting" },
       { name: "Chargers", image: Charger, path: "/category/chargers" },
     ]
@@ -723,7 +723,7 @@ export const megaMenuCategories = [
     subCategories: [
       { name: "Keyboards", image: Keyboards, path: "/category/keyboards" },
       { name: "Mouse", image: Mouse, path: "/category/mouse" },
-      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+      { name: "Car Accessories", image: CarElectronics, path: "/category/car-accessories" },
     ]
   },
   {  id: 304,
@@ -739,7 +739,7 @@ export const megaMenuCategories = [
     name: "Car Accessories",
     //slug /car-accessories
     subCategories: [
-      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+      { name: "Car Accessories", image: CarExterior, path: "/category/car-accessories" },
     ]
   },
   {  id: 306,
@@ -747,7 +747,7 @@ export const megaMenuCategories = [
     //slug /cables-connectivity
     subCategories: [
       { name: "Cables", image: Cables, path: "/category/cables" },
-      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+      { name: "Car Accessories", image: CarInterior, path: "/category/car-accessories" },
     ]
   },
   {  id: 307,
@@ -766,7 +766,7 @@ export const megaMenuCategories = [
       { name: "Speakers", image: Speakers, path: "/category/speakers" },
       { name: "Headphones", image: Headphones, path: "/category/headphones" },
 
-      { name: "Car Accessories", image: Car_Accessories, path: "/category/car-accessories" },
+      { name: "Car Accessories", image: CarToolsImg, path: "/category/car-accessories" },
     ]
   },
   {  id: 309,

@@ -11,8 +11,7 @@ import FooterApplePay from '../../../../assets/images/Footer icons/15.png';
 import FooterGooglePay from '../../../../assets/images/Footer icons/16.webp';
 import FooterCash from '../../../../assets/images/Footer icons/17.webp';
 import { useAuth } from '../../../../contexts/AuthContext';
-
-const LOCAL_CARDS_KEY = 'store1920_saved_cards';
+import { getStoredCards, getUserScopedCardsKey, LOCAL_CARDS_KEY } from '../../../../utils/savedCards';
 
 const getBrandLogo = (brand) => {
   switch (brand) {
@@ -33,20 +32,10 @@ const getBrandLogo = (brand) => {
   }
 };
 
-const getStoredCards = (storageKey) => {
-  try {
-    const stored = localStorage.getItem(storageKey);
-    return stored ? JSON.parse(stored) : [];
-  } catch (error) {
-    console.error('Failed to read saved cards from localStorage', error);
-    return [];
-  }
-};
-
 const PaymentMethodsSection = () => {
   const { user } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
-  const storageKey = user?.id ? `${LOCAL_CARDS_KEY}_${user.id}` : LOCAL_CARDS_KEY;
+  const storageKey = getUserScopedCardsKey(user?.id);
   const [savedCards, setSavedCards] = useState(() => getStoredCards(storageKey));
   const [successMessage, setSuccessMessage] = useState('');
 

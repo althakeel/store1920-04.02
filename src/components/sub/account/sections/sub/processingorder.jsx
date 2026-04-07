@@ -77,7 +77,7 @@ const ProcessingOrders = ({
               }}
             >
               <span>
-                Order ID: <span style={{ color: '#0070f3' }}>PO-{order.id}</span>
+                Order ID: <span style={{ color: '#0070f3' }}>{order.id}</span>
               </span>{' '}
               |{' '}
               <span>

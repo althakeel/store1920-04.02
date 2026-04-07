@@ -114,7 +114,7 @@ const staticProducts = [
 
    {
     id: "600013",
-    name: "neck-face-massager ",
+    name: "Neck & Face Microcurrent Massager",
     price: "99.99",
     regular_price: "149.90",
     sale_price: "99.99",
@@ -129,7 +129,7 @@ const staticProducts = [
 
   {
     id: "600012",
-    name: "Drill Machine",
+    name: "21V Cordless Electric Drill Driver Kit",
     price: "124.00",
     regular_price: "150.00",
     sale_price: "124.00",
@@ -143,7 +143,7 @@ const staticProducts = [
   },
    {
     id: "600011",
-    name: "CCTV Camera",
+    name: "1080p Smart Wi-Fi CCTV Security Camera",
     price: "124.00",
     regular_price: "150.00",
     sale_price: "124.00",
@@ -158,7 +158,7 @@ const staticProducts = [
   
    {
     id: "600010",
-    name: "Boxing Machine",
+    name: "Music Boxing Machine Smart Wall Trainer",
     price: "124.00",
     regular_price: "150.00",
     sale_price: "124.00",
@@ -200,7 +200,7 @@ const staticProducts = [
   },
   {
     id: "850w-electric-paint-sprayer-uae",
-    name: "Electric Paint Sprayer",
+    name: "850W Electric Paint Sprayer with Adjustable Nozzles",
     price: "99.90",
     regular_price: "250.0",
     sale_price: "99.90",
@@ -242,7 +242,7 @@ const staticProducts = [
   },
   {
     id: "7",
-    name: "Cordless Leaf Blower",
+    name: "Cordless 2-in-1 Leaf Blower and Vacuum",
     price: "59.90",
     regular_price: "189.00",
     sale_price: "59.90",

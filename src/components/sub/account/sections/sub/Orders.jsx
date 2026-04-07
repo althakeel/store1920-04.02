@@ -282,6 +282,12 @@ const canReturn = (order) => {
   return new Date() <= returnDeadline;
 };
 
+  const isDetailsOpen = (orderId) => detailedOrder?.id === orderId;
+
+  const toggleOrderDetails = (order) => {
+    setDetailedOrder((currentOrder) => (currentOrder?.id === order.id ? null : order));
+  };
+
   return (
     <div className="order-list">
       <ToastContainer position="bottom-center" autoClose={2000} hideProgressBar />
@@ -311,7 +317,7 @@ const canReturn = (order) => {
       {returningOrder && (
         <div className="return-modal-overlay">
           <div className="return-modal">
-            <h2>Return Product - PO-{returningOrder.id}</h2>
+            <h2>Return Product - {returningOrder.id}</h2>
             <p>Please select a reason for returning this product:</p>
 
             <div className="return-reasons">
@@ -403,8 +409,8 @@ const canReturn = (order) => {
               {new Date(order.date_created).toLocaleDateString()}
             </div>
             <button
-              onClick={() => setDetailedOrder(order)}
-              aria-expanded={false}
+              onClick={() => toggleOrderDetails(order)}
+              aria-expanded={isDetailsOpen(order.id)}
               style={{
                 background: 'none',
                 border: 'none',
@@ -464,7 +470,7 @@ const canReturn = (order) => {
                 timeZone: 'Asia/Dubai',
               }).format(new Date(order.date_created))}
             </div>
-            <div>Order ID: PO-{order.id}</div>
+            <div>Order ID: {order.id}</div>
             <div>Payment method: {order.payment_method_title || order.payment_method}</div>
           </div>
 

@@ -101,7 +101,7 @@ const OrderDelivered = ({ orders, handleProductClick, slugify, viewOrderDetails 
           {/* Header */}
           <div className="order-header-simple">
             <div>
-              <strong>Order ID:</strong> PO-{order.id} | <strong>Date:</strong>{' '}
+              <strong>Order ID:</strong> {order.id} | <strong>Date:</strong>{' '}
               {new Date(order.date_created).toLocaleDateString()} | <strong>Email:</strong> {order.billing.email}
             </div>
           </div>
@@ -213,7 +213,7 @@ const OrderDelivered = ({ orders, handleProductClick, slugify, viewOrderDetails 
               maxWidth: '90%',
             }}
           >
-            <h3>Return Order PO-{returningOrder.id}</h3>
+            <h3>Return Order {returningOrder.id}</h3>
             <div style={{ marginTop: 16 }}>
               <select
                 value={selectedReason}

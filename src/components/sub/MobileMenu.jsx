@@ -46,24 +46,24 @@ const MobileMenu = ({
 
         <ul className="mobile-menu-unique__list" role="menu">
           <li className="mobile-menu-unique__item" role="none">
-            <a
-              href="#"
+            <Link
+              to="/topselling"
               role="menuitem"
               onClick={closeMobileMenu}
               className="mobile-menu-unique__link"
             >
               Best Rated
-            </a>
+            </Link>
           </li>
           <li className="mobile-menu-unique__item" role="none">
-            <a
-              href="#"
+            <Link
+              to="/rated"
               role="menuitem"
               onClick={closeMobileMenu}
               className="mobile-menu-unique__link"
             >
               5-Star Rated
-            </a>
+            </Link>
           </li>
           <li className="mobile-menu-unique__categories-title" aria-hidden="true">
             Categories
@@ -138,7 +138,7 @@ const MobileMenu = ({
                 >
                   <li role="none">
                     <a
-                      href="/orders"
+                      href="/myaccount/orders"
                       role="menuitem"
                       onClick={() => {
                         closeUserDropdown();
@@ -150,7 +150,7 @@ const MobileMenu = ({
                   </li>
                   <li role="none">
                     <a
-                      href="/reviews"
+                      href="/myaccount/reviews"
                       role="menuitem"
                       onClick={() => {
                         closeUserDropdown();
@@ -162,7 +162,7 @@ const MobileMenu = ({
                   </li>
                   <li role="none">
                     <a
-                      href="/profile"
+                      href="/myaccount/profile"
                       role="menuitem"
                       onClick={() => {
                         closeUserDropdown();
@@ -174,7 +174,7 @@ const MobileMenu = ({
                   </li>
                   <li role="none">
                     <a
-                      href="/coupons"
+                      href="/myaccount/coupons"
                       role="menuitem"
                       onClick={() => {
                         closeUserDropdown();
@@ -186,7 +186,7 @@ const MobileMenu = ({
                   </li>
                   <li role="none">
                     <a
-                      href="/notifications"
+                      href="/myaccount/orders"
                       role="menuitem"
                       onClick={() => {
                         closeUserDropdown();
@@ -198,7 +198,7 @@ const MobileMenu = ({
                   </li>
                   <li role="none">
                     <a
-                      href="/history"
+                      href="/myaccount/history"
                       role="menuitem"
                       onClick={() => {
                         closeUserDropdown();
@@ -282,21 +282,21 @@ const MobileMenu = ({
 
           <div className="mobile-menu-unique__bottom-links">
             <a
-              href="/terms"
+              href="/terms-0f-use"
               className="mobile-menu-unique__bottom-link"
               tabIndex={isOpen ? 0 : -1}
             >
               Terms & Conditions
             </a>
             <a
-              href="/privacy"
+              href="/privacy-policy"
               className="mobile-menu-unique__bottom-link"
               tabIndex={isOpen ? 0 : -1}
             >
               Privacy Policy
             </a>
             <a
-              href="/help"
+              href="/support"
               className="mobile-menu-unique__bottom-link"
               tabIndex={isOpen ? 0 : -1}
             >

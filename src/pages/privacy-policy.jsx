@@ -4,7 +4,7 @@ const privacyPolicy = () => {
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 20,fontFamily: 'Montserrat, sans-serif', lineHeight: 1.6,fontSize:'13px' }}>
       <h1>Privacy Policy</h1>
-      <p>Last updated: August 14, 2025</p>
+      <p>Last updated: April 6, 2026</p>
 
 
 

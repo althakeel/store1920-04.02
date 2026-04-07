@@ -189,7 +189,7 @@ export default function OrderPerks() {
                     The first return of one or multiple returnable items for EVERY order is free! This item can be returned within 90 days from the date of purchase.<br />
                     If the returned item is used, damaged, missing parts/accessories, the refund will be reduced to compensate for the lost value of the item.
                   </p>
-                  <a href="#" onClick={e => e.preventDefault()}>Learn more</a>
+                  <a href="/return-policy">Learn more</a>
                 </td>
               </tr>
               <tr>

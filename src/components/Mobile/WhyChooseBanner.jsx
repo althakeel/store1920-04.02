@@ -2,24 +2,29 @@ import React, { useEffect, useState } from 'react';
 
 const details = {
   'Safe payments': {
-    description: 'Your transactions are secured with encrypted payment gateways.',
-    image: 'https://via.placeholder.com/150?text=Safe+Payments',
+    description:
+      'Your checkout information is processed through secure payment flows designed to protect card and billing data.',
+    badge: 'Secure Checkout',
   },
   'Free returns': {
-    description: 'Return your items within 30 days without any hassle.',
-    image: 'https://via.placeholder.com/150?text=Free+Returns',
+    description:
+      'Eligible items can be returned according to the return policy, with clear guidance available from support when needed.',
+    badge: 'Return Support',
   },
   '24/7 support': {
-    description: 'Our team is available around the clock to assist you.',
-    image: 'https://via.placeholder.com/150?text=24/7+Support',
+    description:
+      'Our support resources are available to help with orders, account questions, delivery issues, and policy guidance.',
+    badge: 'Always Here',
   },
   'Secure checkout': {
-    description: 'Your personal info and card details are fully protected.',
-    image: 'https://via.placeholder.com/150?text=Secure+Checkout',
+    description:
+      'We encourage customers to complete payment only through the official Store1920 checkout page and verified payment providers.',
+    badge: 'Verified Only',
   },
   'Buyer protection': {
-    description: 'We’ve got your back if something goes wrong with your order.',
-    image: 'https://via.placeholder.com/150?text=Buyer+Protection',
+    description:
+      'If something goes wrong with an eligible order, support and policy pages explain the next steps for resolution.',
+    badge: 'Order Help',
   },
 };
 
@@ -31,11 +36,11 @@ const WhyChooseBanner = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false); // start fade out
+      setFade(false);
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % rightTexts.length);
-        setFade(true); // fade in new text
-      }, 400); // fade duration matches transition time
+        setFade(true);
+      }, 400);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -64,7 +69,6 @@ const WhyChooseBanner = () => {
           cursor: 'pointer',
         }}
       >
-        {/* Left side */}
         <div style={{ display: 'flex', alignItems: 'center', fontWeight: '600' }}>
           <span
             style={{
@@ -85,7 +89,6 @@ const WhyChooseBanner = () => {
           Why choose Store1920
         </div>
 
-        {/* Right side text with fade animation */}
         <div
           style={{
             minWidth: '130px',
@@ -114,7 +117,6 @@ const WhyChooseBanner = () => {
         </div>
       </div>
 
-      {/* Popup */}
       {showPopup && (
         <div
           onClick={closePopup}
@@ -144,11 +146,19 @@ const WhyChooseBanner = () => {
             }}
           >
             <h3>{rightTexts[index]}</h3>
-            <img
-              src={details[rightTexts[index]].image}
-              alt={rightTexts[index]}
-              style={{ width: '100%', borderRadius: '8px', marginBottom: '10px' }}
-            />
+            <div
+              style={{
+                width: '100%',
+                borderRadius: '8px',
+                marginBottom: '10px',
+                padding: '28px 16px',
+                background: 'linear-gradient(135deg, #e9f7eb 0%, #f7fff8 100%)',
+                color: '#138000',
+                fontWeight: '700',
+              }}
+            >
+              {details[rightTexts[index]].badge}
+            </div>
             <p>{details[rightTexts[index]].description}</p>
             <button
               onClick={closePopup}

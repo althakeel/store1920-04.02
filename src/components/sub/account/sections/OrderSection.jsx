@@ -178,7 +178,7 @@ const fetchOrders = async () => {
     setError(null);
 
     try {
-      const orderId = trimmed.replace(/^PO-/, '');
+      const orderId = trimmed.replace(/^PO-/i, '');
       const response = await axios.get(`${API_BASE_URL}/${orderId}`, {
         auth: API_AUTH,
       });
@@ -328,7 +328,7 @@ const fetchOrders = async () => {
         <div className="order-search">
           <input
             type="text"
-            placeholder="Search by Order ID (e.g. PO-12345)"
+            placeholder="Search by Order ID (e.g. 12345)"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />

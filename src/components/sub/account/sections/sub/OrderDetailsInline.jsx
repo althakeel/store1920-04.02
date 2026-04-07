@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import OrderReceiptPrint from './OrderReceiptPrint';
+import VisaSecureLogo from '../../../../../assets/images/Footer icons/17.webp';
+import JcbLogo from '../../../../../assets/images/Footer icons/18.webp';
+import VisaLogo from '../../../../../assets/images/Footer icons/19.webp';
+import PaypalLogo from '../../../../../assets/images/Footer icons/20.webp';
+import SafeKeyLogo from '../../../../../assets/images/Footer icons/21.webp';
 
-const OrderDetails = ({ order }) => {
+const OrderDetails = ({ order, onClose }) => {
   const [showReceipt, setShowReceipt] = useState(false);
 
   if (!order) return null;
 
-  const certificationLogos = [
-    "https://db.store1920.com/wp-content/uploads/2025/07/219cc18d-0462-47ae-bf84-128d38206065.png.slim_.webp",
-    "https://db.store1920.com/wp-content/uploads/2025/07/96e8ab9b-d0dc-40ac-ad88-5513379c5ab3.png.slim_.webp",
-    "https://db.store1920.com/wp-content/uploads/2025/07/80d57653-6e89-4bd5-82c4-ac1e8e2489fd.png.slim_.webp",
-    "https://db.store1920.com/wp-content/uploads/2025/07/65e96f45-9ff5-435a-afbf-0785934809ef.png.slim-1.webp",
-    "https://db.store1920.com/wp-content/uploads/2025/07/058c1e09-2f89-4769-9fd9-a3cac76e13e5-1.webp",
-    "https://db.store1920.com/wp-content/uploads/2025/07/28a227c9-37e6-4a82-b23b-0ad7814feed1.png.slim_.webp",
-    "https://db.store1920.com/wp-content/uploads/2025/07/1f29a857-fe21-444e-8617-f57f5aa064f4.png.slim_.webp",
-  ];
+  const certificationLogos = [VisaSecureLogo, JcbLogo, VisaLogo, PaypalLogo, SafeKeyLogo];
 
   const getPaymentIcon = (method) => {
     switch (method) {
@@ -28,49 +25,58 @@ const OrderDetails = ({ order }) => {
         return 'https://img.icons8.com/ios-filled/50/12b76a/bank-card-back-side.png';
     }
   };
+
   const statusColors = {
-  pending: '#ff3300ff',     // orange
-  processing: '#28a745',  // green (Confirmed)
-  confirmed: '#28a745',   // green
-  completed: '#007bff',   // blue
-  cancelled: '#6c757d',   // gray
-  refunded: '#17a2b8',    // teal
-  failed: '#dc3545',      // red
-};
+    pending: '#ff3300ff',
+    processing: '#28a745',
+    confirmed: '#28a745',
+    completed: '#007bff',
+    cancelled: '#6c757d',
+    refunded: '#17a2b8',
+    failed: '#dc3545',
+  };
 
   const closeModal = () => setShowReceipt(false);
 
   return (
     <div style={styles.container}>
       <div style={styles.innerBox}>
+        {typeof onClose === 'function' && (
+          <div style={styles.headerActions}>
+            <button type="button" style={styles.closeDetailsBtn} onClick={onClose}>
+              Close
+            </button>
+          </div>
+        )}
 
-        {/* Status & Order info */}
         <div style={styles.statusSection}>
-<strong style={{ color: statusColors[order.status] || '#000' }}>
-  {order.status === 'processing' ? 'Confirmed' : order.status} Order
-</strong>          <p style={styles.orderInfo}>
+          <strong style={{ color: statusColors[order.status] || '#000' }}>
+            {order.status === 'processing' ? 'Confirmed' : order.status} Order
+          </strong>
+          <p style={styles.orderInfo}>
             Order time: {new Date(order.date_created).toLocaleString()} | Order ID: {order.id}
           </p>
         </div>
 
-        {/* Shipping & Delivery - grid 2 cols */}
         <div style={styles.grid2Cols}>
-
           <section style={styles.card}>
             <h4 style={styles.cardTitleShipping}>Shipping to</h4>
             <p style={styles.cardText}>
-              {order.shipping.first_name} {order.shipping.last_name}<br />
-              {order.shipping.address_1} {order.shipping.address_2 && `, ${order.shipping.address_2}`}<br />
-              {order.shipping.city}, {order.shipping.state} {order.shipping.postcode}<br />
+              {order.shipping.first_name} {order.shipping.last_name}
+              <br />
+              {order.shipping.address_1}
+              {order.shipping.address_2 && `, ${order.shipping.address_2}`}
+              <br />
+              {order.shipping.city}, {order.shipping.state} {order.shipping.postcode}
+              <br />
               {order.shipping.country}
             </p>
           </section>
 
           <section style={styles.card}>
             <h4 style={styles.cardTitle}>Delivery time</h4>
-            
             <ul style={styles.deliveryList}>
-              <li>AED20.00 Credit for delay</li>
+              <li>AED20.00 credit for delay</li>
               <li>Return if item damaged</li>
               <li>15-day no update refund</li>
               <li>40-day no delivery refund</li>
@@ -78,8 +84,7 @@ const OrderDetails = ({ order }) => {
           </section>
         </div>
 
-        {/* Line items */}
-        {order.line_items.map(item => (
+        {order.line_items.map((item) => (
           <div key={item.id} style={styles.lineItem}>
             <img
               src={item.image?.src || 'https://via.placeholder.com/80x80.png?text=Image'}
@@ -89,109 +94,14 @@ const OrderDetails = ({ order }) => {
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={styles.lineItemName}>{item.name}</p>
               <p style={styles.lineItemQty}>Qty: {item.quantity}</p>
-              <p style={styles.lineItemPrice}>{order.currency} {order.total}</p>
+              <p style={styles.lineItemPrice}>
+                {order.currency} {order.total}
+              </p>
             </div>
           </div>
         ))}
 
-        {/* Action Buttons */}
-     <div style={styles.buttonsWrapper}>
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => alert('Track clicked!')}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    Track
-  </button>
-
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => alert('Speed up again clicked!')}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    Speed up again
-  </button>
-
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => alert('Buy this again clicked!')}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    Buy this again
-  </button>
-
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => {
-      if (order.receipt_url) {
-        setShowReceipt(true);
-      } else {
-        alert('Receipt not available yet.');
-      }
-    }}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    View receipt
-  </button>
-  {showReceipt && (
-  <div style={modalStyles.overlay}>
-    <div style={modalStyles.modal}>
-      <button
-        onClick={closeModal}
-        style={modalStyles.closeBtn}
-        aria-label="Close receipt popup"
-        type="button"
-      >
-        ✖
-      </button>
-      <OrderReceiptPrint order={order} />
-    </div>
-  </div>
-)}
-
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => alert('Price adjustment clicked!')}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    Price adjustment
-  </button>
-
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => alert('Change address clicked!')}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    Change address
-  </button>
-
-  <button
-    type="button"
-    style={styles.actionBtn}
-    onClick={() => alert('Cancel items clicked!')}
-    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f3f3f3'}
-    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fff'}
-  >
-    Cancel items
-  </button>
-</div>
-
-
-        {/* Payment details and payment method side by side */}
         <div style={styles.grid2Cols}>
-
           <section style={styles.card}>
             <h4 style={styles.cardTitle}>Payment details</h4>
             <p style={styles.paymentRow}>
@@ -206,16 +116,38 @@ const OrderDetails = ({ order }) => {
             </p>
             <p style={{ ...styles.paymentRow, fontWeight: 600, fontSize: '1.1rem' }}>
               <span>Subtotal:</span>
-              <span>{order.currency} {order.total}</span>
+              <span>
+                {order.currency} {order.total}
+              </span>
             </p>
-            <p style={{ ...styles.paymentRow, fontWeight: 700, fontSize: '1.2rem', marginTop: '1rem', color: '#f60' }}>
+            <p
+              style={{
+                ...styles.paymentRow,
+                fontWeight: 700,
+                fontSize: '1.2rem',
+                marginTop: '1rem',
+                color: '#f60',
+              }}
+            >
               <span>You saved:</span>
               <span>- {order.currency} 313.95</span>
             </p>
           </section>
 
           <section style={styles.card}>
-            <h4 style={styles.cardTitle}>Payment Method</h4>
+            <div style={styles.paymentHeaderRow}>
+              <h4 style={styles.cardTitle}>Payment Method</h4>
+              {!!order.receipt_url && (
+                <button
+                  type="button"
+                  style={styles.receiptButton}
+                  onClick={() => setShowReceipt(true)}
+                >
+                  View receipt
+                </button>
+              )}
+            </div>
+
             <div style={styles.paymentMethodHeader}>
               <img
                 src={getPaymentIcon(order.payment_method)}
@@ -229,7 +161,7 @@ const OrderDetails = ({ order }) => {
             </div>
 
             <p style={styles.paymentStatus}>
-              <strong>Status:</strong> {order.status === 'completed' ? '✅ Paid' : order.status}
+              <strong>Status:</strong> {order.status === 'completed' ? 'Paid' : order.status}
             </p>
 
             {order.transaction_id && (
@@ -242,21 +174,20 @@ const OrderDetails = ({ order }) => {
               Paid on {new Date(order.date_paid || order.date_created).toLocaleDateString()}
             </p>
 
-            <div style={styles.secureNote}>✅ All data is safeguarded</div>
+            <div style={styles.secureNote}>All data is safeguarded</div>
             <div style={styles.secureDesc}>
               We follow PCI DSS standards, use strong encryption, and perform regular reviews to protect your payment information.
             </div>
 
             <div style={styles.certifications}>
               {certificationLogos.map((logo, idx) => (
-                <img key={idx} src={logo} alt="certification" style={styles.certLogo} loading="lazy" />
+                <img key={idx} src={logo} alt="payment security badge" style={styles.certLogo} loading="lazy" />
               ))}
             </div>
           </section>
         </div>
       </div>
 
-      {/* Receipt popup/modal */}
       {showReceipt && (
         <div style={modalStyles.overlay}>
           <div style={modalStyles.modal}>
@@ -266,7 +197,7 @@ const OrderDetails = ({ order }) => {
               aria-label="Close receipt popup"
               type="button"
             >
-              ✖
+              x
             </button>
             <OrderReceiptPrint order={order} />
           </div>
@@ -279,7 +210,10 @@ const OrderDetails = ({ order }) => {
 const modalStyles = {
   overlay: {
     position: 'fixed',
-    top: 0, left: 0, right: 0, bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.5)',
     display: 'flex',
     justifyContent: 'center',
@@ -304,8 +238,9 @@ const modalStyles = {
     right: '15px',
     background: 'transparent',
     border: 'none',
-    fontSize: '1.5rem',
+    fontSize: '1.2rem',
     cursor: 'pointer',
+    textTransform: 'uppercase',
   },
 };
 
@@ -324,14 +259,23 @@ const styles = {
     borderRadius: '12px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   },
+  headerActions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: '0.5rem',
+  },
+  closeDetailsBtn: {
+    backgroundColor: '#fff7ed',
+    color: '#f60',
+    border: '1px solid #fed7aa',
+    borderRadius: '999px',
+    padding: '8px 14px',
+    fontSize: '0.9rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+  },
   statusSection: {
     marginBottom: '1rem',
-  },
-  statusText: {
-    color: '#12b76a',
-    fontSize: '1rem',
-    marginBottom: '0.4rem',
-    fontWeight: 600,
   },
   orderInfo: {
     fontSize: '0.95rem',
@@ -410,24 +354,22 @@ const styles = {
     margin: '0.2rem 0',
     color: '#f60',
   },
-  buttonsWrapper: {
+  paymentHeaderRow: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: '10px',
-    marginTop: '1.5rem',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '12px',
   },
-  actionBtn: {
+  receiptButton: {
     backgroundColor: '#fff',
-    color: '#333',
-    border: '1px solid #ddd',
-    padding: '8px 16px',
-    borderRadius: '6px',
+    color: '#f60',
+    border: '1px solid #fed7aa',
+    borderRadius: '999px',
+    padding: '8px 14px',
     fontSize: '0.85rem',
+    fontWeight: 600,
     cursor: 'pointer',
-    flex: '1 1 120px',
-    outline: 'none',
-    transition: 'all 0.3s ease',
-    minWidth: '120px',
+    whiteSpace: 'nowrap',
   },
   paymentRow: {
     display: 'flex',
@@ -467,9 +409,9 @@ const styles = {
   },
   secureNote: {
     marginTop: '1.5rem',
-    fontSize: '0.9rem',
+    fontSize: '0.95rem',
     color: '#12b76a',
-    fontWeight: 500,
+    fontWeight: 600,
   },
   secureDesc: {
     fontSize: '0.9rem',
@@ -486,6 +428,7 @@ const styles = {
   },
   certLogo: {
     height: '32px',
+    objectFit: 'contain',
     filter: 'drop-shadow(0 0 1px rgba(0,0,0,0.1))',
   },
 };

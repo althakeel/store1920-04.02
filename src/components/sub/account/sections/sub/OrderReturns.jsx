@@ -97,7 +97,7 @@ const OrderReturns = ({ orders, handleProductClick, slugify, isCancelable, cance
       {returningOrder && (
         <div className="return-modal-overlay">
           <div className="return-modal">
-            <h2>Return Product - PO-{returningOrder.id}</h2>
+            <h2>Return Product - {returningOrder.id}</h2>
             <p>Please select a reason for returning this product:</p>
             <div className="return-reasons">
               <select
@@ -205,7 +205,7 @@ const OrderReturns = ({ orders, handleProductClick, slugify, isCancelable, cance
                 hour12: false, timeZone: 'Asia/Dubai',
               }).format(new Date(order.date_created))}
             </div>
-            <div>Order ID: PO-{order.id}</div>
+            <div>Order ID: {order.id}</div>
             <div>Payment method: {order.payment_method_title || order.payment_method}</div>
           </div>
 

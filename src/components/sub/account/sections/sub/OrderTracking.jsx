@@ -181,7 +181,7 @@ export default function OrderTracking({ order = {}, onBack }) {
               </div>
 
               <div className="ot-modal-footer">
-                For full details, please refer to our <a href="#">policy page</a>.
+                For full details, please refer to our <a href="/return-policy">return policy</a>.
               </div>
             </div>
           </div>

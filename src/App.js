@@ -50,6 +50,8 @@ import CategoryPageid from './pages/CategoryPage';
 import Contact from './pages/contact';
 import Careers from './pages/careers';
 import Search from './pages/search';
+import CodeOfConduct from './pages/code-of-conduct';
+import HumanRightsPolicy from './pages/human-rights-policy';
 import PaymobSuccess from './pages/PaymobSuccess';
 import PaymobCheckoutPage from './pages/PaymobCheckoutPage';
 import StaticProductDetails from './pages/StaticProductDetails';
@@ -390,6 +392,8 @@ const AppContent = () => {
                     <Route path="/Intellectual-property-policy" element={<Intellectualproperty />} />
                     <Route path="/shippinginfo" element={<Shippinginfo />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/code-of-conduct" element={<CodeOfConduct />} />
+                    <Route path="/human-rights-policy" element={<HumanRightsPolicy />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/data-deletion" element={<DataDeletion />} />
                     <Route path="/terms-0f-use" element={<Terms0fuse />} />

@@ -46,6 +46,8 @@ export const createEmptyCheckoutFormData = () => ({
   paymentMethod: 'cod',
   paymentMethodTitle: 'Cash On Delivery',
   paymentMethodLogo: null,
+  selectedSavedCardId: null,
+  selectedSavedCardHint: null,
   shippingMethodId: null,
   saveAsDefault: false,
 });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../../../assets/styles/WhyChoose.css';
 import ReminderIcon from '../../../assets/images/insurance.png'
 import LockIcon from '../../../assets/images/icons/Asset 324@6x.png'
@@ -33,20 +34,20 @@ const WhyChoose = () => {
               <span className="whychoose-title">Why choose Store1920</span>
             </div>
             <div className="whychoose-right">
-              <a href="#">
+              <Link to="/privacy-policy">
                 <img src={SecureIcon} alt="Secure" className="whychoose-link-icon" />
                 <span>Secure privacy</span>
-              </a>
+              </Link>
               <span className="divider">|</span>
-              <a href="#">
+              <Link to="/purchaseprotection">
                 <img src={Cardicon} alt="Payment" className="whychoose-link-icon" />
                 <span>Safe payments</span>
-              </a>
+              </Link>
               <span className="divider">|</span>
-              <a href="#">
+              <Link to="/shippinginfo">
                 <img src={Deliveryicon} alt="Delivery" className="whychoose-link-icon" />
                 <span>Delivery guarantee&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -76,7 +77,7 @@ const WhyChoose = () => {
             <p>
               Store1920 values your privacy and security. We will never send requests for extra payments by SMS or email.
               If you receive any requests claiming to be from Store1920, we strongly suggest you ignore them and do not
-              click on any links they may contain. Here are some <a href="#">common fraud cases</a> for reference.
+              click on any links they may contain. Here are some <Link to="/safetycenter">common fraud cases</Link> for reference.
             </p>
             <p className="report-text">
               If you come across anything suspicious, please report it in time.

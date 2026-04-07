@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const PartnerWithStore1920 = () => {
   const sectionStyle = {
@@ -97,17 +98,23 @@ const PartnerWithStore1920 = () => {
       </p>
       <p style={paragraphStyle}>
         Review our{' '}
-        <a href="#" style={linkStyle}
+        <Link
+          to="/code-of-conduct"
+          style={linkStyle}
           onMouseEnter={e => (e.target.style.color = '#cc4b00')}
-          onMouseLeave={e => (e.target.style.color = '#ff6a00')}>
+          onMouseLeave={e => (e.target.style.color = '#ff6a00')}
+        >
           Code of Conduct
-        </a>{' '}
+        </Link>{' '}
         and{' '}
-        <a href="#" style={linkStyle}
+        <Link
+          to="/human-rights-policy"
+          style={linkStyle}
           onMouseEnter={e => (e.target.style.color = '#cc4b00')}
-          onMouseLeave={e => (e.target.style.color = '#ff6a00')}>
+          onMouseLeave={e => (e.target.style.color = '#ff6a00')}
+        >
           Human Rights Policy
-        </a>{' '}
+        </Link>{' '}
         to learn about our values and operational standards.
       </p>
 
