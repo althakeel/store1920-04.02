@@ -282,6 +282,12 @@ const canReturn = (order) => {
   return new Date() <= returnDeadline;
 };
 
+  const isDetailsOpen = (orderId) => detailedOrder?.id === orderId;
+
+  const toggleOrderDetails = (order) => {
+    setDetailedOrder((currentOrder) => (currentOrder?.id === order.id ? null : order));
+  };
+
   return (
     <div className="order-list">
       <ToastContainer position="bottom-center" autoClose={2000} hideProgressBar />
@@ -403,8 +409,8 @@ const canReturn = (order) => {
               {new Date(order.date_created).toLocaleDateString()}
             </div>
             <button
-              onClick={() => setDetailedOrder(order)}
-              aria-expanded={false}
+              onClick={() => toggleOrderDetails(order)}
+              aria-expanded={isDetailsOpen(order.id)}
               style={{
                 background: 'none',
                 border: 'none',

@@ -549,7 +549,7 @@ return (
   <>
     {/* Auto-fetch customer location on checkout page load */}
     <AutoFetchLocation />
-    
+
     <div className="checkoutGrid" style={{ minHeight: '100vh', overflowY: 'auto' }}>
       <CheckoutLeft
         countries={countries}

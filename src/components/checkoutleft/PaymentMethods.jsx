@@ -142,14 +142,12 @@ console.log('Auth user ID:', user?.id);
   const selectedSavedCard =
     savedCards.find((card) => card.id === resolvedSelectedSavedCardId) || savedCards[0] || null;
 
-  // Handle payment method selection with confirmation popup
   const handlePaymentMethodSelect = (
     methodId,
     methodTitle,
     methodLogo = null,
     extra = {}
   ) => {
-    // Show confirmation popup for card payment
     if (methodId === 'card') {
       setConfirmationMethod({
         id: methodId,
@@ -159,18 +157,15 @@ console.log('Auth user ID:', user?.id);
       });
       setShowPaymentConfirmation(true);
     } else {
-      // For other methods, select directly
       onMethodSelect(methodId, methodTitle, methodLogo, extra);
     }
   };
 
-  // Handle confirmation popup close
   const handleConfirmationClose = () => {
     setShowPaymentConfirmation(false);
     setConfirmationMethod(null);
   };
 
-  // Handle confirmation popup confirm
   const handleConfirmationConfirm = () => {
     if (confirmationMethod) {
       onMethodSelect(
@@ -312,7 +307,6 @@ console.log('Wallet loading:', walletLoading);
         </div>
       )}
 
-      {/* Payment Confirmation Popup */}
       <PaymentConfirmationPopup
         isOpen={showPaymentConfirmation}
         onClose={handleConfirmationClose}
