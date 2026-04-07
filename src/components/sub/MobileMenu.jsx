@@ -150,18 +150,6 @@ const MobileMenu = ({
                   </li>
                   <li role="none">
                     <a
-                      href="/myaccount/reviews"
-                      role="menuitem"
-                      onClick={() => {
-                        closeUserDropdown();
-                        closeMobileMenu();
-                      }}
-                    >
-                      Your Reviews
-                    </a>
-                  </li>
-                  <li role="none">
-                    <a
                       href="/myaccount/profile"
                       role="menuitem"
                       onClick={() => {
@@ -182,18 +170,6 @@ const MobileMenu = ({
                       }}
                     >
                       Coupons & Offers
-                    </a>
-                  </li>
-                  <li role="none">
-                    <a
-                      href="/myaccount/orders"
-                      role="menuitem"
-                      onClick={() => {
-                        closeUserDropdown();
-                        closeMobileMenu();
-                      }}
-                    >
-                      Notifications
                     </a>
                   </li>
                   <li role="none">

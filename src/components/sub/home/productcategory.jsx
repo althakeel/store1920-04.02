@@ -124,7 +124,7 @@ const staticProducts = [
     rating: 4,
     reviews: 18,
     sold: 120,
-    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+    categories: [29688, 6526], // Recommended, Beauty & Personal Care
   },
 
   {
@@ -139,7 +139,7 @@ const staticProducts = [
     rating: 4,
     reviews: 18,
     sold: 120,
-    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+    categories: [29688, 6520, 6561], // Recommended, Home Improvement & Tools, Tools & Hardware
   },
    {
     id: "600011",
@@ -153,7 +153,7 @@ const staticProducts = [
     rating: 4,
     reviews: 18,
     sold: 120,
-    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+    categories: [29688, 498, 29705], // Recommended, Electronics & Smart Devices, Smart Gadgets & Electronics
   },
   
    {
@@ -168,7 +168,7 @@ const staticProducts = [
     rating: 4,
     reviews: 18,
     sold: 120,
-    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+    categories: [29688, 498, 29705], // Recommended, Electronics & Smart Devices, Smart Gadgets & Electronics
   },
   {
     id: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual",
@@ -182,7 +182,7 @@ const staticProducts = [
     rating: 4,
     reviews: 18,
     sold: 120,
-    categories: [29688, 498, 6531], // Recommended, Electronics & Smart, Automotive & Motorcycle
+    categories: [29688, 6531, 29714], // Recommended, Automotive, Car Accessories
   },
   {
     id: "twin-size-air-mattress-with-built-in-rechargeable-pump-16-self-inflating-blow-up-bed-for-home-camping-guests",
@@ -196,7 +196,7 @@ const staticProducts = [
     rating: 5,
     reviews: 45,
     sold: 135,
-    categories: [29688, 6528], // Recommended, Baby, Kids & Maternity
+    categories: [29688, 29708, 29751], // Recommended, Home & Living, Travel & Luggage
   },
   {
     id: "850w-electric-paint-sprayer-uae",
@@ -210,7 +210,7 @@ const staticProducts = [
     rating: 5,
     reviews: 159,
     sold: 195,
-    categories: [29688, 6520], // Recommended, Home Improvement & Tools
+    categories: [29688, 6520, 6561], // Recommended, Home Improvement & Tools, Tools & Hardware
   },
   {
     id: "5",
@@ -224,7 +224,7 @@ const staticProducts = [
     rating: 5,
     reviews: 169,
     sold: 225,
-    categories: [29688, 6520], // Recommended, Home Improvement & Tools
+    categories: [29688, 6520, 29741], // Recommended, Home Improvement & Tools, Home & Garden
   },
   {
     id: "6",
@@ -238,7 +238,7 @@ const staticProducts = [
     rating: 5,
     reviews: 110,
     sold: 185,
-    categories: [29688, 498], // Recommended, Electronics & Smart
+    categories: [29688, 498, 6542], // Recommended, Electronics & Smart Devices, Gaming Accessories
   },
   {
     id: "7",
@@ -252,7 +252,7 @@ const staticProducts = [
     rating: 5,
     reviews: 195,
     sold: 285,
-    categories: [29688, 6531], // Recommended, Automotive & Motorcycle
+    categories: [29688, 6520, 29741], // Recommended, Home Improvement & Tools, Home & Garden
   },
   {
     id: "8",
@@ -266,7 +266,7 @@ const staticProducts = [
     rating: 5,
     reviews: 125,
     sold: 299,
-    categories: [29688, 6531], // Recommended, Automotive & Motorcycle
+    categories: [29688, 6520, 29741], // Recommended, Home Improvement & Tools, Home & Garden
   },
   {
     id: "9",
@@ -280,7 +280,7 @@ const staticProducts = [
     rating: 5,
     reviews: 125,
     sold: 299,
-    categories: [29688, 6519], // Recommended, Home Appliances
+    categories: [29688, 6519, 29708], // Recommended, Home Appliances, Home & Living
   },
   {
     id: "10",
@@ -294,7 +294,7 @@ const staticProducts = [
     rating: 5,
     reviews: 199,
     sold: 305,
-    categories: [29688, 6519], // Recommended, Home Appliances
+    categories: [29688, 29746, 6519], // Recommended, Home & Kitchen, Home Appliances
   },
   {
     id: 526258,
@@ -308,7 +308,7 @@ const staticProducts = [
     rating: 5,
     reviews: 45,
     sold: 135,
-    categories: [29688, 6519], // Recommended, Home Appliances
+    categories: [29688, 29756, 29705], // Recommended, Electronics, Smart Gadgets & Electronics
   },
 ];
  
@@ -821,11 +821,17 @@ const renderProducts = (productsToShowParam) => {
           </div>
           <div className="pcus-prd-info12">
             <h2 className="pcus-prd-title1">{decodeHTML(p.name)}</h2>
-            <div className="pcus-prd-dummy-reviews" style={{ display: "flex", alignItems: "center", margin: "0px 5px" }}>
-              <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(p.rating)}{"☆".repeat(5 - p.rating)}</div>
-              <div style={{ fontSize: "12px", color: "#666", marginRight: "8px" }}>({p.reviews})</div>
-              <div style={{ fontSize: "12px", color: "#666" }}>{p.sold} sold</div>
-            </div>
+            {(Number(p.rating) > 0 || Number(p.reviews) > 0 || Number(p.sold) > 0) && (
+              <div className="pcus-prd-dummy-reviews" style={{ display: "flex", alignItems: "center", margin: "0px 5px" }}>
+                {Number(p.rating) > 0 && Number(p.reviews) > 0 && (
+                  <>
+                    <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(p.rating)}{"☆".repeat(5 - p.rating)}</div>
+                    <div style={{ fontSize: "12px", color: "#666", marginRight: "8px" }}>({p.reviews})</div>
+                  </>
+                )}
+                {Number(p.sold) > 0 && <div style={{ fontSize: "12px", color: "#666" }}>{p.sold} sold</div>}
+              </div>
+            )}
             <div style={{ height: "1px", width: "100%", backgroundColor: "lightgrey", margin: "0px 0 2px 0", borderRadius: "1px" }} />
             <div className="prc-row-abc123">
               <div className="prc-left-abc123">
@@ -887,12 +893,17 @@ const renderProducts = (productsToShowParam) => {
         </div>
         <div className="pcus-prd-info12">
           <h2 className="pcus-prd-title1">{decodeHTML(p.name || p.slug)}</h2>
-          <div className="pcus-prd-dummy-reviews" style={{ display: "flex", alignItems: "center", margin: "0px 5px" }}>
-            {/* API products may not have rating/reviews/sold, so show 0 or blank if missing */}
-            <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(Number(p.rating) || 0)}{"☆".repeat(5 - (Number(p.rating) || 0))}</div>
-            <div style={{ fontSize: "12px", color: "#666", marginRight: "8px" }}>({p.reviews || 0})</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>{p.sold || ''}{p.sold ? ' sold' : ''}</div>
-          </div>
+          {(Number(p.rating) > 0 || Number(p.reviews) > 0 || Number(p.sold) > 0) && (
+            <div className="pcus-prd-dummy-reviews" style={{ display: "flex", alignItems: "center", margin: "0px 5px" }}>
+              {Number(p.rating) > 0 && Number(p.reviews) > 0 && (
+                <>
+                  <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(Number(p.rating))}{"☆".repeat(5 - Number(p.rating))}</div>
+                  <div style={{ fontSize: "12px", color: "#666", marginRight: "8px" }}>({p.reviews})</div>
+                </>
+              )}
+              {Number(p.sold) > 0 && <div style={{ fontSize: "12px", color: "#666" }}>{p.sold} sold</div>}
+            </div>
+          )}
           <div style={{ height: "1px", width: "100%", backgroundColor: "lightgrey", margin: "0px 0 2px 0", borderRadius: "1px" }} />
           <div className="prc-row-abc123" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px' }}>
             <div className="prc-left-abc123" style={{ display: 'flex', alignItems: 'center', padding: '0 4px' }}>

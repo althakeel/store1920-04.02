@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../assets/styles/MainBanner.css';
 
 const preloadImage = (src) =>
@@ -29,6 +30,7 @@ const preloadImage = (src) =>
   });
 
 const MainBanner = ({ banners = [], themeLink }) => {
+  const navigate = useNavigate();
   const [currentBanner, setCurrentBanner] = useState(null);
   const [previousBanner, setPreviousBanner] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -99,11 +101,7 @@ const MainBanner = ({ banners = [], themeLink }) => {
   }, [isTransitioning]);
 
   const handleClick = () => {
-    if (currentBanner?.link) {
-      window.open(currentBanner.link, '_blank');
-    } else if (themeLink) {
-      window.open(themeLink, '_blank');
-    }
+    navigate('/fast-delivery');
   };
 
   if (!currentBanner) {
@@ -117,7 +115,7 @@ const MainBanner = ({ banners = [], themeLink }) => {
       aria-label="Homepage Banner"
       style={{
         backgroundColor: currentBanner.bgColor || 'transparent',
-        cursor: currentBanner.link || themeLink ? 'pointer' : 'default',
+        cursor: 'pointer',
       }}
       onClick={handleClick}
     >

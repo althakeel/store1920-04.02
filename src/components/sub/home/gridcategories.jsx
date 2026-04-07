@@ -23,10 +23,10 @@ const CS = "cs_c65538cff741bd9910071c7584b3dffb";
 
 // Static left categories
 const staticCategories = [
-  { id: 1, name: "Automotive", image: AutomotiveImage, link: "/category/automotive" },
-  { id: 2, name: "Electronics", image: ElectronicsImage, link: "/category/electronics" },
   { id: 3, name: "Travel & Luggage", image: TravelImage, link: "/category/travel-luggage" },
+  { id: 1, name: "Automotive", image: AutomotiveImage, link: "/category/automotive" },
   { id: 4, name: "Fashion", image: FashionImage, link: "/category/fashion" },
+  { id: 2, name: "Electronics", image: ElectronicsImage, link: "/category/electronics" },
 ];
 
 // Initial placeholder products (shown instantly)
@@ -60,6 +60,15 @@ const initialProductPlaceholders = [
     images: [{ src: Static4 }] 
   },
 ];
+
+const shuffleArray = (items) => {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 // Countdown hook
 const useCountdown = (targetDate) => {
@@ -104,7 +113,12 @@ const getNext2AM = () => {
 };
 
 const GridCategories = () => {
-  const [products, setProducts] = useState(initialProductPlaceholders);
+  const [products, setProducts] = useState([
+    initialProductPlaceholders[1],
+    initialProductPlaceholders[3],
+    initialProductPlaceholders[0],
+    initialProductPlaceholders[2],
+  ]);
   const [banners, setBanners] = useState([]);
   const [currentBanner, setCurrentBanner] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -146,7 +160,7 @@ const GridCategories = () => {
             regular_price: prod.regular_price,
             images: prod.images?.length ? prod.images : [{ src: PlaceHolderImage }],
           }));
-          setProducts(formatted);
+          setProducts(shuffleArray(formatted));
         }
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -233,7 +247,11 @@ const GridCategories = () => {
       {/* RIGHT */}
       <div className="gcx-right">
         {isMobile ? (
-          <div className="gcx-banner">
+          <div
+            className="gcx-banner"
+            onClick={() => navigate('/fast-delivery')}
+            style={{ cursor: "pointer" }}
+          >
             <img
               src={banners[currentBanner]?.image}
               alt={`Banner ${banners[currentBanner]?.id}`} 
@@ -242,7 +260,12 @@ const GridCategories = () => {
           </div>
         ) : (
           banners.map((ban) => (
-            <div key={ban.id} className="gcx-banner">
+            <div
+              key={ban.id}
+              className="gcx-banner"
+              onClick={() => navigate('/fast-delivery')}
+              style={{ cursor: "pointer" }}
+            >
               <img src={ban.image} alt={`Banner ${ban.id}`} />
             </div>
           ))
