@@ -2,7 +2,6 @@
 
 import {
   AiOutlineShoppingCart,
-  AiOutlineProfile,
   AiOutlineUser,
   AiOutlineGift,
   AiOutlineCreditCard,
@@ -12,8 +11,6 @@ import {
 
 const accountMenu = [
   { label: 'All orders', slug: 'orders', icon: <AiOutlineShoppingCart /> },
-
-  { label: 'Your reviews', slug: 'reviews', icon: <AiOutlineProfile /> },
   { label: 'Your profile', slug: 'profile', icon: <AiOutlineUser /> },
   { label: 'Coupons & offers', slug: 'coupons', icon: <AiOutlineGift /> },
   { label: 'Browsing history', slug: 'history', icon: <AiOutlineHistory /> },

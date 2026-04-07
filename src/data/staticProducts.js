@@ -882,6 +882,7 @@ const staticProducts = [
     description: "Paint Like a Pro – Anywhere, Anytime",
     shortdesc:
       "Save time and effort with our upgraded electric pruning shears. Built for gardeners, orchard owners, and farm workers who need sharp, powerful, and safe tools. ",
+    description: "Prune Faster with Clean, Powerful Cordless Cuts",
     subdesc: "2 Rechargeable Batteries (21V, 2Ah)",
     subdesc1: " Cuts up to 30mm (1.2 inch) branches in seconds",
     subdesc2: "Lightweight, ergonomic & cordless design",
@@ -1759,6 +1760,8 @@ const staticProducts = [
       title: "What Makes Us Different",
       description:
         " Ordinary cleaners rely on harsh chemicals and endless scrubbing.With DF-A001 Japan Technology Steam Cleaner, you get professional-grade cleaning right at home.",
+      description:
+        "Ordinary cleaners rely on harsh chemicals and endless scrubbing. With DF-A001 Japan Technology Steam Cleaner, you get powerful steam cleaning for kitchens, bathrooms, fabrics, and tight spaces without harsh chemical residue.",
       headers: ["Feature", "DF-A001™", "Others"],
       rows: [
         { feature: "High-Pressure 1000W Steam", lumineux: true, others: false },
@@ -1910,6 +1913,8 @@ const staticProducts = [
       description:
         " Ordinary cleaners rely on harsh chemicals and endless scrubbing.With DF-A001 Japan Technology Steam Cleaner, you get professional-grade cleaning right at home.",
       headers: ["Feature", "Our Peeler™", "Others"],
+      description:
+        "Skip messy manual peeling and speed up kitchen prep with a compact tool designed for fruits and everyday ingredients. It helps you peel neatly, work faster, and keep food presentation clean and consistent.",
       rows: [
         {
           feature: "Peels grapes & tomatoes intact",
@@ -2146,7 +2151,7 @@ const staticProducts = [
 
   {
   id: 526861, // isko listing wali id se sync rakhna acha hai
-  name: "Music Boxing Machine – Smart Boxing Trainer",
+  name: "Smart Bluetooth Music Boxing Trainer",
   slug: "boxing-machine", // URL: /products/boxing-machine
   price: 124.00,
   salePrice: 124.00,
@@ -2181,7 +2186,7 @@ const staticProducts = [
     {
       type: "Buy 1",
       id: 526874,
-      name: "Music Boxing Machine",
+      name: "Smart Bluetooth Music Boxing Trainer",
       label: "Buy 1 for only 99.90 AED",
       discount: 0,
       slug: "boxing-machine",
@@ -2192,7 +2197,7 @@ const staticProducts = [
     {
       type: "Bundle of 2",
       id: 526873,
-      name: "Music Boxing Machine",
+      name: "Smart Bluetooth Music Boxing Trainer",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
       price: 225.00, // example: 89.9 * 2 * 0.85
@@ -2205,7 +2210,7 @@ const staticProducts = [
     {
       type: "Bundle of 3",
       id: 526887,
-      name: "Music Boxing Machine",
+      name: "Smart Bluetooth Music Boxing Trainer",
       label: "Buy 3 & Get 15% Off",
       discount: 15,
       price: 281.0, // example: 89.9 * 2 * 0.85
@@ -2862,7 +2867,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
 // wrinkle remover product
 {
   id: 526912, // sync with listing id
-  name: "Neck Face Massager",
+  name: "7-Color LED Neck & Face Sculpting Massager",
   slug: "neck-face-massager", // URL: /products/neck-face-massager
 
   // ✅ Price
@@ -2900,7 +2905,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
     {
       type: "Buy 1",
       id: 526927,
-      name: "Neck Face Massager",
+      name: "7-Color LED Neck & Face Sculpting Massager",
       label: "Buy 1 for only AED 79.99",
       discount: 0,
       slug: "neck-face-massager",
@@ -2911,7 +2916,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
     {
       type: "Bundle of 2",
       id: 526926,
-      name: "Neck Face Massager",
+      name: "7-Color LED Neck & Face Sculpting Massager",
       label: "Buy 2 & Save More – Perfect for gifting or couples",
       discount: 15,
       price: 107.90, // you can adjust these later
@@ -2924,7 +2929,7 @@ Upgrade Your Toolbox Today — Power, Precision & Durability for AED 99.90
     {
       type: "Bundle of 3",
       id: 526925,
-      name: "Neck Face Massager",
+      name: "7-Color LED Neck & Face Sculpting Massager",
       label: "Buy 3 & Save More – Family beauty bundle",
       discount: 15,
       price: 146.90, // adjustable
@@ -3509,6 +3514,8 @@ Price AED 79.99
     title: "Why Choose Green Lion Power Trio?",
     description:
       "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
+    description:
+      "Charge your phone, watch, and earbuds from one tidy station with strong magnetic alignment, a foldable stand, and reliable wireless power for your everyday setup.",
     headers: ["Feature", "Green Lion Power Trio", "Basic Chargers "],
     rows: [
       { feature: "N52 Magnetic Technology", lumineux: true, others: false },
@@ -3656,7 +3663,7 @@ reviews: [
       {
       type: "Buy 1",
       id: 529508,
-      name: "Quran Magnet Speaker with Built-In  Quran ",
+      name: "Quran Magnet Speaker with Built-In Quran",
       label: "Buy 1 for only 69.90 AED",
       discount: 0,
       slug: "quran-magnet-speaker-built-in-surah-player",
@@ -3668,7 +3675,7 @@ reviews: [
     {
       type: "Bundle of 2",
       id: 529509,
-      name: "Portable Bottle Warmer",
+      name: "Quran Magnet Speaker with Built-In Quran",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
       price: 125.90, 
@@ -3681,7 +3688,7 @@ reviews: [
     {
       type: "Bundle of 3",
       id: 532756,
-      name: "Portable Bottle Warmer",
+      name: "Quran Magnet Speaker with Built-In Quran",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
       price: 171.90, 
@@ -3753,6 +3760,9 @@ reviews: [
     title: "Why Choose Green Lion Power Trio?",
     description:
       "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
+    title: "Why Choose Quran Magnet Speaker?",
+    description:
+      "Enjoy Quran recitation in a simple, distraction-free format with one-tap playback, clear sound, and an easy setup that suits homes, prayer areas, and meaningful gifting.",
     headers: ["Feature", "Quran Magnet Speaker", "Phone / Bluetooth Speaker "],
     rows: [
   
@@ -3994,7 +4004,7 @@ reviews: [
 
 {
   id: 535718,
-  name: "Portable Bottle Warmer –Keep Every Feed Warm, Anywhere, Anytime",
+  name: "Portable USB Baby Bottle Warmer for Travel & Night Feeds",
   slug: "portable-bottle-warmer", 
   price: 69.90,
   salePrice: 119.90,
@@ -4029,7 +4039,7 @@ reviews: [
       {
       type: "Buy 1",
       id: 535722,
-      name: "Portable Bottle Warmer",
+      name: "Portable USB Baby Bottle Warmer",
       label: "Buy 1 for only 79.90 AED",
       discount: 0,
       slug: "portable-bottle-warmer",
@@ -4040,7 +4050,7 @@ reviews: [
     {
       type: "Bundle of 2",
       id: 535723,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Portable USB Baby Bottle Warmer",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
       price: 125.90, 
@@ -4053,7 +4063,7 @@ reviews: [
     {
       type: "Bundle of 3",
       id: 535728,
-      name: "Quran Magnet Speaker with Built-In  Quran",
+      name: "Portable USB Baby Bottle Warmer",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
       price: 171.90, 

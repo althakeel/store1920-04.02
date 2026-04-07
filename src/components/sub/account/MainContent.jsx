@@ -4,7 +4,6 @@ import React from 'react';
 import '../../../assets/styles/maincontent.css';
 
 import OrderSection from '../../sub/account/sections/OrderSection';
-import ReviewsSection from '../../sub/account/sections/ReviewsSection';
 import ProfileSection from '../../sub/account/sections/ProfileSection';
 import CouponsSection from '../../sub/account/sections/CouponsSection';
 import CreditBalanceSection from '../../sub/account/sections/CreditBalanceSection';
@@ -19,8 +18,6 @@ import NotificationsSection from '../../sub/account/sections/NotificationsSectio
 
 const sectionMap = {
   'All orders': <OrderSection />,
-
-  'Your reviews': <ReviewsSection />,
   'Your profile': <ProfileSection />,
   'Coupons & offers': <CouponsSection />,
   'Credit balance': <CreditBalanceSection />,

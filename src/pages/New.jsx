@@ -9,7 +9,7 @@ import Adsicon from '../assets/images/summer-saving-coloured.png';
 import IconAED from '../assets/images/Dirham 2.png';
 import ProductCardReviews from '../components/temp/productcardreviews';
 
-import { fetchAPI, getFirstVariation, getCurrencySymbol } from '../api/woocommerce';
+import { getLatestPublishedProducts, getFirstVariation } from '../api/woocommerce';
 
 const INITIAL_LOAD_COUNT = 10;
 const LOAD_MORE_COUNT = 10;
@@ -35,15 +35,6 @@ const SkeletonCard = () => (
   </div>
 );
 
-const shuffleArray = (array) => {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-
 const New = () => {
   const navigate = useNavigate();
   const { addToCart, cartItems } = useCart();
@@ -56,13 +47,12 @@ const New = () => {
   const [badgeText, setBadgeText] = useState("HURRY UP");
   const [animateBadge, setAnimateBadge] = useState(true);
 
-  // Fetch latest published products directly from WooCommerce
+  // Fetch latest published products in strict newest-first order
   const fetchProducts = useCallback(async ({ limit, offset, append }) => {
     setLoadingProducts(true);
     try {
-      const data = await fetchAPI(
-        `/products?per_page=${limit}&offset=${offset}&orderby=date&order=desc&status=publish&catalog_visibility=visible`
-      );
+      const page = Math.floor(offset / limit) + 1;
+      const data = await getLatestPublishedProducts(page, limit);
       const validData = Array.isArray(data) ? data : [];
       setProducts((prev) => (append ? [...prev, ...validData] : validData));
       setHasMoreProducts(validData.length === limit);

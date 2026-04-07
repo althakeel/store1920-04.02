@@ -102,6 +102,10 @@ const AppContent = () => {
     trackPageView(pageName, window.location.href);
   }, [location.pathname]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.search]);
+
   const path = location.pathname;
   const cartIconRef = useRef(null);
   const stickyHeaderRef = useRef(null);

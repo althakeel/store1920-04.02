@@ -19,6 +19,10 @@ export default function ProductCardReviews({
     return averageRating;
   }, [averageRating, overrideRating]);
 
+  const reviewCount = reviews.length;
+  const hasVisibleRating = reviewCount > 0 && displayRating > 0;
+  const hasSoldCount = Number(soldCount) > 0;
+
   useEffect(() => {
     async function fetchReviews() {
       console.log("🔎 ProductCardReviews mounted with productId:", productId);
@@ -83,21 +87,25 @@ export default function ProductCardReviews({
 
   if (loading && hideLoading) return null;
   if (loading) {
-    return (
+    return hasSoldCount ? (
       <div className="pi-rating-meta" aria-live="polite">
-        <strong className="pi-rating-score">{displayRating.toFixed(1)}</strong>
-        <div className="pi-stars">{renderStars(displayRating)}</div>
-        <span className="pi-rating-count">(0)</span>
+        <span className="pi-sold-count">{soldCount} sold</span>
       </div>
-    );
+    ) : null;
   }
+
+  if (!hasVisibleRating && !hasSoldCount) return null;
 
   return (
     <div className="pi-rating-meta" aria-live="polite">
-      <strong className="pi-rating-score">{displayRating.toFixed(1)}</strong>
-      <div className="pi-stars">{renderStars(displayRating)}</div>
-      <span className="pi-rating-count">({reviews.length})</span>
-      {soldCount > 0 && <span className="pi-sold-count">{soldCount} sold</span>}
+      {hasVisibleRating && (
+        <>
+          <strong className="pi-rating-score">{displayRating.toFixed(1)}</strong>
+          <div className="pi-stars">{renderStars(displayRating)}</div>
+          <span className="pi-rating-count">({reviewCount})</span>
+        </>
+      )}
+      {hasSoldCount && <span className="pi-sold-count">{soldCount} sold</span>}
     </div>
   );
 }
