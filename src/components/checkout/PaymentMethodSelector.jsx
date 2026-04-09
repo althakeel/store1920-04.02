@@ -3,8 +3,6 @@ import '../../assets/styles/checkout/paymentmethodselector.css';
 import VisaIcon from '../../assets/images/Footer icons/17.webp';
 import MasterIcon from '../../assets/images/Footer icons/16.webp';
 import AmexIcon from '../../assets/images/Footer icons/11.webp';
-import TabbyIcon from '../../assets/images/Footer icons/3.webp';
-import TamaraIcon from '../../assets/images/Footer icons/6.webp';
 
 const PaymentMethodSelector = ({
   isOpen,
@@ -14,7 +12,7 @@ const PaymentMethodSelector = ({
   orderId = null,
   isLoading = false
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState(null);
+  const [selectedMethod, setSelectedMethod] = useState('card');
 
   if (!isOpen) return null;
 
@@ -39,7 +37,7 @@ const PaymentMethodSelector = ({
         <div className="payment-selector-header">
           <h2>Select Payment Method</h2>
           <p className="payment-selector-subtitle">
-            Choose how you'd like to pay
+            Switch to card payment to get the prepaid discount
           </p>
         </div>
 
@@ -65,11 +63,10 @@ const PaymentMethodSelector = ({
           </div>
         </div>
 
-        {/* Payment Methods */}
-        <div className="payment-methods-grid">
-          {/* Card Payment */}
+        {/* Payment Method */}
+        <div className="payment-methods-grid single-option-grid">
           <div 
-            className={`payment-method-card ${selectedMethod === 'card' ? 'selected' : ''}`}
+            className={`payment-method-card single-option-card ${selectedMethod === 'card' ? 'selected' : ''}`}
             onClick={() => handleSelectPaymentMethod('card')}
           >
             <div className="method-icon-container">
@@ -85,48 +82,6 @@ const PaymentMethodSelector = ({
                 name="payment-method" 
                 value="card"
                 checked={selectedMethod === 'card'}
-                readOnly
-              />
-            </div>
-          </div>
-
-          {/* Tabby */}
-          <div 
-            className={`payment-method-card ${selectedMethod === 'tabby' ? 'selected' : ''}`}
-            onClick={() => handleSelectPaymentMethod('tabby')}
-          >
-            <div className="method-icon-container">
-              <img src={TabbyIcon} alt="Tabby" className="payment-method-icon-large" />
-            </div>
-            <h3>Tabby</h3>
-            <p className="method-description">Pay in 4 interest-free installments</p>
-            <div className="method-checkbox">
-              <input 
-                type="radio" 
-                name="payment-method" 
-                value="tabby"
-                checked={selectedMethod === 'tabby'}
-                readOnly
-              />
-            </div>
-          </div>
-
-          {/* Tamara */}
-          <div 
-            className={`payment-method-card ${selectedMethod === 'tamara' ? 'selected' : ''}`}
-            onClick={() => handleSelectPaymentMethod('tamara')}
-          >
-            <div className="method-icon-container">
-              <img src={TamaraIcon} alt="Tamara" className="payment-method-icon-large" />
-            </div>
-            <h3>Tamara</h3>
-            <p className="method-description">Pay in installments with Tamara</p>
-            <div className="method-checkbox">
-              <input 
-                type="radio" 
-                name="payment-method" 
-                value="tamara"
-                checked={selectedMethod === 'tamara'}
                 readOnly
               />
             </div>

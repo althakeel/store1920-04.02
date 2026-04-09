@@ -44,6 +44,9 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
 
     const bundleToCart = {
       id: product?.wooId || product?.id || bundle.wooId || bundle.id || 0,
+      productId: product?.id || bundle.id || 0,
+      wooId: product?.wooId || bundle.wooId || null,
+      isStaticProduct: true,
       name: bundle.type,
       price: fixedPrice,
       originalPrice: bundle.originalPrice,

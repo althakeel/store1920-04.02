@@ -10,6 +10,7 @@ import OrderReturns from './sub/OrderReturns';
 import Wallet from './Wallet';  
 
 const API_BASE_URL = 'https://db.store1920.com/wp-json/wc/v3/orders';
+const PRODUCTS_API_BASE_URL = 'https://db.store1920.com/wp-json/wc/v3/products';
 const API_AUTH = {
   username: 'ck_5441db4d77e2a329dc7d96d2db6a8e2d8b63c29f',
   password: 'cs_81384d5f9e75e0ab81d0ea6b0d2029cba2d52b63',
@@ -25,6 +26,59 @@ const OrderSection = ({ userId }) => {
   const [error, setError] = useState(null);
   const [cancellingOrderId, setCancellingOrderId] = useState(null);
   const navigate = useNavigate();
+
+  const enrichOrdersWithProductData = async (fetchedOrders = []) => {
+    const productIds = Array.from(
+      new Set(
+        fetchedOrders
+          .flatMap((order) => order.line_items || [])
+          .map((item) => item.product_id)
+          .filter(Boolean)
+      )
+    );
+
+    if (!productIds.length) return fetchedOrders;
+
+    const productEntries = await Promise.all(
+      productIds.map(async (productId) => {
+        try {
+          const response = await axios.get(`${PRODUCTS_API_BASE_URL}/${productId}`, {
+            auth: API_AUTH,
+          });
+          const product = response.data;
+          return [
+            productId,
+            {
+              slug: product?.slug || '',
+              image: product?.images?.[0]?.src || '',
+            },
+          ];
+        } catch (error) {
+          return [productId, { slug: '', image: '' }];
+        }
+      })
+    );
+
+    const productMap = new Map(productEntries);
+
+    return fetchedOrders.map((order) => ({
+      ...order,
+      line_items: (order.line_items || []).map((item) => {
+        const productData = productMap.get(item.product_id) || {};
+        return {
+          ...item,
+          product_slug: productData.slug || item.product_slug || '',
+          product_image: item.image?.src || productData.image || item.product_image || '',
+          image:
+            item.image?.src
+              ? item.image
+              : productData.image
+              ? { src: productData.image }
+              : item.image,
+        };
+      }),
+    }));
+  };
 
   const orderStatuses = [
   { label: 'All orders', value: 'all' },
@@ -155,7 +209,8 @@ const fetchOrders = async () => {
       params,
     });
 
-    setOrders(response.data || []);
+    const enrichedOrders = await enrichOrdersWithProductData(response.data || []);
+    setOrders(enrichedOrders);
   } catch (err) {
     const message = err.response?.data?.message || err.message || 'Unknown error';
     setError(`Failed to load orders: ${message}`);
@@ -187,7 +242,8 @@ const fetchOrders = async () => {
         alert('Order not found or access denied.');
         setOrders([]);
       } else {
-        setOrders([response.data]);
+        const enrichedOrders = await enrichOrdersWithProductData([response.data]);
+        setOrders(enrichedOrders);
       }
     } catch (err) {
       const message = err.response?.data?.message || err.message;
@@ -235,7 +291,26 @@ const fetchOrders = async () => {
   const slugify = text =>
     text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-  const handleProductClick = slug => {
+  const normalizeOrderProductSlug = (itemOrSlug) => {
+    if (!itemOrSlug) return '';
+
+    if (typeof itemOrSlug === 'string') {
+      return itemOrSlug
+        .replace(/-+buy-\d+$/i, '')
+        .replace(/-+$/, '');
+    }
+
+    return (
+      itemOrSlug.product_slug ||
+      slugify(itemOrSlug.name || '')
+        .replace(/-+buy-\d+$/i, '')
+        .replace(/-+$/, '')
+    );
+  };
+
+  const handleProductClick = itemOrSlug => {
+    const slug = normalizeOrderProductSlug(itemOrSlug);
+    if (!slug) return;
     navigate(`/product/${slug}`);
   };
 

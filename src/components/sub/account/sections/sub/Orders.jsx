@@ -440,12 +440,8 @@ const canReturn = (order) => {
               <div
                 key={item.id}
                 className="order-product-simple"
-                onClick={() => handleProductClick(slugify(item.name))}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleProductClick(slugify(item.name)); }}
               >
-                <img src={item.image?.src || 'https://via.placeholder.com/100'} alt={item.name} />
+                <img src={item.image?.src || item.product_image || 'https://via.placeholder.com/100'} alt={item.name} />
                 <div className="product-price">{order.currency} {order.total}</div>
               </div>
             ))}

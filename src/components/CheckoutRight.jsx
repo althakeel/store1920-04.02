@@ -8,6 +8,7 @@ import OrderConfirmedPopup from './checkout/OrderConfirmedPopup';
 import PaymentMethodSelector from './checkout/PaymentMethodSelector';
 import Tabby from '../assets/images/Footer icons/3.webp'
 import Tamara from '../assets/images/Footer icons/6.webp'
+import { cartHasDynamicProducts } from '../utils/staticProductCart';
 
 const DELIVERY_FEE = 13;
 
@@ -93,7 +94,8 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
   // Cap total discount to itemsTotal to prevent negative totals
   const totalDiscount = Math.min(discount + coinDiscount, itemsTotal);
   const subtotal = Math.max(0, itemsTotal - totalDiscount);
-  const deliveryFee = subtotal > 0 && subtotal < 100 ? DELIVERY_FEE : 0;
+  const hasDynamicProducts = cartHasDynamicProducts(cartItems);
+  const deliveryFee = subtotal > 0 && subtotal < 100 && hasDynamicProducts ? DELIVERY_FEE : 0;
   const totalWithDelivery = Math.max(0, subtotal + deliveryFee); // Ensure total never goes below zero
   const amountToSend = Number(totalWithDelivery.toFixed(2));
   const hasCartItems = cartItems.some((item) => (parseInt(item.quantity, 10) || 0) > 0);
