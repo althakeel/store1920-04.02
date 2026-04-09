@@ -87,7 +87,7 @@ const OrderDetails = ({ order, onClose }) => {
         {order.line_items.map((item) => (
           <div key={item.id} style={styles.lineItem}>
             <img
-              src={item.image?.src || 'https://via.placeholder.com/80x80.png?text=Image'}
+              src={item.image?.src || item.product_image || 'https://via.placeholder.com/80x80.png?text=Image'}
               alt={item.name}
               style={styles.lineItemImage}
             />

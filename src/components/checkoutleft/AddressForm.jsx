@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import CustomMap from '../../components/checkoutleft/CustomMap';
 
 const LOCAL_STORAGE_KEY = 'checkoutAddressData';
 
@@ -80,20 +79,28 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
   const [citySuggestions, setCitySuggestions] = useState([]);
   const [cityLoading, setCityLoading] = useState(false);
 
-  // Fetch Google Places predictions for city/area
+  const syncCityValue = (value) => {
+    setCityInput(value);
+    onChange({ target: { name: 'city', value } }, 'shipping');
+  };
+
+  const allUaeCities = Array.from(
+    new Set(
+      Object.values(UAE_CITIES)
+        .flat()
+        .filter(Boolean)
+    )
+  );
+
+  // Fetch local UAE city/area predictions
   const fetchCitySuggestions = (input) => {
-    if (!window.google || !window.google.maps || !window.google.maps.places) return;
     setCityLoading(true);
-    const service = new window.google.maps.places.AutocompleteService();
-    // Changed from ['(regions)'] to ['geocode'] to get ALL locations (cities, areas, neighborhoods, districts, etc.)
-    service.getPlacePredictions({ 
-      input, 
-      types: ['geocode'], 
-      componentRestrictions: { country: 'ae' } 
-    }, (predictions) => {
-      setCitySuggestions(predictions ? predictions.map(p => p.description) : []);
-      setCityLoading(false);
-    });
+    const normalizedInput = input.trim().toLowerCase();
+    const matches = allUaeCities
+      .filter((city) => city.toLowerCase().includes(normalizedInput))
+      .slice(0, 12);
+    setCitySuggestions(matches);
+    setCityLoading(false);
   };
 
   useEffect(() => {
@@ -259,15 +266,19 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
       console.log('💾 Saving address to localStorage...');
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
 
-      // Save to backend
-      console.log('📤 Sending address to backend...');
-      const response = await fetch('https://db.store1920.com/wp-json/abandoned-checkouts/v1/save', {
+      // Submit checkout immediately so the modal closes without waiting on the
+      // abandoned-cart endpoint, which is non-critical for the user flow.
+      console.log('✅ Address validated, submitting checkout form...');
+      await onSubmit(formData);
+
+      // Save abandoned checkout in the background.
+      fetch('https://db.store1920.com/wp-json/abandoned-checkouts/v1/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           shipping: {
             ...formData.shipping,
-            phone: fullPhone, // Send complete phone number
+            phone: fullPhone,
           },
           cart: cartItems.map((item) => ({
             id: item.id,
@@ -277,30 +288,24 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
             subtotal: item.price * item.quantity,
           })),
         }),
-      });
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const contentType = response.headers.get('content-type');
+            const errorData =
+              contentType && contentType.includes('application/json')
+                ? await response.json()
+                : await response.text();
+            console.warn('Abandoned checkout save failed:', errorData);
+            return;
+          }
 
-      if (!response.ok) {
-        let errorData;
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          errorData = await response.json();
-        } else {
-          errorData = await response.text();
-        }
-        console.error('❌ Backend error:', errorData);
-        throw new Error(
-          typeof errorData === 'object' && errorData?.message
-            ? errorData.message
-            : 'Failed to save address on backend: ' + errorData
-        );
-      }
-
-      const result = await response.json();
-      console.log('✅ Backend response:', result);
-
-      // Directly submit to checkout (no OTP verification)
-      console.log('✅ Address saved successfully, submitting form...');
-      onSubmit(formData);
+          const result = await response.json();
+          console.log('✅ Abandoned checkout saved:', result);
+        })
+        .catch((backgroundError) => {
+          console.warn('Abandoned checkout background save failed:', backgroundError);
+        });
     } catch (err) {
       console.error('❌ Error saving address:', err);
       alert(`Error: ${err.message || 'Something went wrong while saving your address.'}`);
@@ -340,14 +345,6 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
           boxShadow: '0 8px 40px #0003',
         }}
       >
-        {/* 🔑 Hidden map – REQUIRED for Google Places (DO NOT REMOVE) */}
-      <div style={{ display: 'none' }}>
-        <CustomMap
-          initialPosition={markerPosition}
-          onPlaceSelected={handlePlaceSelected}
-        />
-      </div>
-
         <button
           onClick={onClose}
           style={{
@@ -600,8 +597,7 @@ const AddressForm = ({ formData, onChange, onSubmit, onClose, saving, error, car
                   autoComplete="off"
                   value={cityInput}
                   onChange={e => {
-                    setCityInput(e.target.value);
-                    onChange({ target: { name: 'city', value: e.target.value } }, 'shipping');
+                    syncCityValue(e.target.value);
                   }}
                   placeholder="Search your city or area..."
                   style={{ padding: '10px', fontSize: '1rem', borderRadius: '6px', border: '1px solid #ccc', marginTop: 4 }}

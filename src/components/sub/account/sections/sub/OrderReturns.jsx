@@ -157,15 +157,8 @@ const OrderReturns = ({ orders, handleProductClick, slugify, isCancelable, cance
       <div
         key={item.id}
         className="order-product-simple"
-        onClick={() => handleProductClick(slugify(item.name))}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleProductClick(slugify(item.name));
-        }}
         style={{
           width: 120,
-          cursor: 'pointer',
           textAlign: 'center',
           border: '1px solid #eee',
           borderRadius: 6,
@@ -175,7 +168,7 @@ const OrderReturns = ({ orders, handleProductClick, slugify, isCancelable, cance
         }}
       >
         <img
-          src={item.image?.src || 'https://via.placeholder.com/100'}
+          src={item.image?.src || item.product_image || 'https://via.placeholder.com/100'}
           alt={item.name}
           style={{ width: '100%', height: 100, objectFit: 'contain', marginBottom: 6 }}
         />

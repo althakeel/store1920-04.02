@@ -120,22 +120,17 @@ const OrderDelivered = ({ orders, handleProductClick, slugify, viewOrderDetails 
               <div
                 key={item.id}
                 className="order-product-simple"
-                onClick={() => handleProductClick(slugify(item.name))}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleProductClick(slugify(item.name)); }}
                 style={{
                   width: 140,
                   padding: 8,
                   border: '1px solid #eee',
                   borderRadius: 6,
                   textAlign: 'center',
-                  cursor: 'pointer',
                   background: '#fafafa',
                 }}
               >
                 <img
-                  src={item.image?.src || 'https://via.placeholder.com/100'}
+                  src={item.image?.src || item.product_image || 'https://via.placeholder.com/100'}
                   alt="Product"
                   style={{ width: '100%', height: 100, objectFit: 'contain', marginBottom: 6 }}
                 />

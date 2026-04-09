@@ -100,14 +100,7 @@ const ProcessingOrders = ({
                 <div
                   key={item.id}
                   className="order-product-simple"
-                  onClick={() => handleProductClick(slugify(item.name))}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleProductClick(slugify(item.name));
-                  }}
                   style={{
-                    cursor: 'pointer',
                     width: 100,
                     textAlign: 'center',
                     border: '1px solid #eee',
@@ -124,7 +117,7 @@ const ProcessingOrders = ({
                   }}
                 >
                   <img
-                    src={item.image?.src || 'https://via.placeholder.com/100'}
+                    src={item.image?.src || item.product_image || 'https://via.placeholder.com/100'}
                     alt={item.name}
                     style={{ width: '100%', height: 80, objectFit: 'contain', marginBottom: 6 }}
                   />

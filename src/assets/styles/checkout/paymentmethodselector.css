@@ -169,6 +169,10 @@
   margin-bottom: 28px;
 }
 
+.payment-methods-grid.single-option-grid {
+  grid-template-columns: 1fr;
+}
+
 .payment-method-card {
   display: flex;
   flex-direction: column;
@@ -181,6 +185,24 @@
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+}
+
+.payment-method-card.single-option-card {
+  width: 100%;
+  padding: 24px 20px;
+}
+
+.payment-method-card.single-option-card .method-icon-container {
+  gap: 12px;
+}
+
+.payment-method-card.single-option-card .payment-method-icon {
+  width: 44px;
+  height: 44px;
+}
+
+.payment-method-card.single-option-card .method-description {
+  max-width: 320px;
 }
 
 .payment-method-card:hover {
@@ -391,6 +413,10 @@
     gap: 14px;
   }
 
+  .payment-method-card.single-option-card {
+    padding: 20px 18px;
+  }
+
   .payment-method-card {
     padding: 18px;
   }
@@ -472,6 +498,10 @@
     align-items: center;
   }
 
+  .payment-method-card.single-option-card {
+    padding: 14px 12px;
+  }
+
   .payment-method-card h3 {
     font-size: 12px;
     margin: 0;
@@ -493,6 +523,12 @@
     padding: 0;
   }
 
+  .payment-method-card.single-option-card .method-icon-container {
+    min-height: 28px;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
   .method-checkbox {
     display: none;
   }
@@ -504,6 +540,11 @@
   .payment-method-icon {
     width: 28px;
     height: 28px;
+  }
+
+  .payment-method-card.single-option-card .payment-method-icon {
+    width: 32px;
+    height: 32px;
   }
 
   .payment-method-icon-large {

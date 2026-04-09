@@ -53,6 +53,7 @@ const CustomProductDetails = () => {
       cartItem = {
         productId: product.id,
         wooId: product.wooId,
+        isStaticProduct: true,
         name: product.name,
         price: bundleWithVariants.price,
         originalPrice: bundleWithVariants.originalPrice,
@@ -64,6 +65,7 @@ const CustomProductDetails = () => {
       cartItem = {
         productId: product.id,
         wooId: product.wooId,
+        isStaticProduct: true,
         name: product.name,
         price: product.price,
         originalPrice: product.originalPrice || product.price,

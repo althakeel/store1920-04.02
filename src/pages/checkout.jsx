@@ -16,6 +16,7 @@ import {
   mapAccountAddressToCheckoutForm,
   readAddressBook,
 } from '../utils/checkoutAddress';
+import { cartHasDynamicProducts } from '../utils/staticProductCart';
 
 const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
 const CK = 'ck_e09e8cedfae42e5d0a37728ad6c3a6ce636695dd';
@@ -79,7 +80,9 @@ export default function CheckoutPage() {
     0
   );
   const discountedSubtotal = Math.max(0, subtotal - discount - coinDiscount);
-  const deliveryFee = discountedSubtotal > 0 && discountedSubtotal < 100 ? DELIVERY_FEE : 0;
+  const hasDynamicProducts = cartHasDynamicProducts(cartItems);
+  const deliveryFee =
+    discountedSubtotal > 0 && discountedSubtotal < 100 && hasDynamicProducts ? DELIVERY_FEE : 0;
 
   useEffect(() => {
     const savedData = localStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
