@@ -4417,7 +4417,7 @@ reviews: [
   slug: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
   price: 329.0,
   salePrice: 329.0,
-  regularPrice: 369.0,
+  regularPrice: 700.0,
 
   description:
     "Converts from newborn bassinet to toddler seat (0-6 yrs). Lightweight, foldable, shock-absorbing and designed for busy UAE families who refuse to compromise.",
@@ -4450,7 +4450,7 @@ reviews: [
       discount: 5,
       slug: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
       price: 329.0,
-      originalPrice: 369.0,
+      originalPrice: 700.0,
       image: Product258,
     },
     {
@@ -4460,7 +4460,7 @@ reviews: [
       label: "Buy 2 and save more",
       discount: 8,
       price: 595.0,
-      originalPrice: 738.0,
+      originalPrice: 1400.0,
       note: "Ideal for twins, gifting, or keeping one at home and one in the car.",
       mostPopular: true,
       image: Product259,
@@ -4473,7 +4473,7 @@ reviews: [
       label: "Buy 3 for the biggest bundle value",
       discount: 10,
       price: 810.0,
-      originalPrice: 1107.0,
+      originalPrice: 2100.0,
       note: "Best for family gifting, nursery setups, or reseller-style bulk buying.",
       mostPopular: false,
       image: Product260,

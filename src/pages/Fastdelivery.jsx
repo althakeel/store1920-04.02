@@ -279,7 +279,7 @@ const staticProducts = [
     id: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
     name: "Nexso 2-in-1 Baby Stroller",
     price: "329.00",
-    regular_price: "369.00",
+    regular_price: "700.00",
     sale_price: "329.00",
     images: [{ src: Product22 }],
     path: "/products/nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
