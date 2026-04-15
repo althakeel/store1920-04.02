@@ -7,9 +7,11 @@ import Hassle from '../../assets/images/staticproducts/common/hasslefree.webp'
 
 const Section4 = ({ product: propProduct }) => {
   const product = propProduct || staticProducts[0];
+  const featureTitles = Array.isArray(product?.section2contentPoints)
+    ? product.section2contentPoints.slice(0, 4)
+    : [];
 
   const featureImages = [Worldwide, Support, Quality, Hassle];
-  const featureTitles = product.section2contentPoints.slice(0, 4);
 
   const features = featureImages.map((img, index) => ({
     icon: img,
