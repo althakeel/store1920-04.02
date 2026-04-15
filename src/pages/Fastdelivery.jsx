@@ -22,6 +22,7 @@ import Product18 from '../assets/images/staticproducts/quran/9.webp';
 import Product19 from '../assets/images/staticproducts/quran speaker/1.webp';
 import Product20 from '../assets/images/staticproducts/portable bottle warmer/4.webp';
 import Product21 from '../assets/images/staticproducts/scalp_messager/4.webp';
+import Product22 from '../assets/images/staticproducts/baby_stroller/10.webp';
 
 const DESKTOP_COLUMNS = 5;
 const MOBILE_COLUMNS = 2;
@@ -273,6 +274,18 @@ const staticProducts = [
     rating: 5,
     reviews: 165,
     sold: 195,
+  },
+  {
+    id: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
+    name: "Nexso 2-in-1 Baby Stroller",
+    price: "329.00",
+    regular_price: "369.00",
+    sale_price: "329.00",
+    images: [{ src: Product22 }],
+    path: "/products/nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
+    rating: 5,
+    reviews: 96,
+    sold: 148,
   },
 ];
 const SkeletonCard = ({ isMobile }) => {

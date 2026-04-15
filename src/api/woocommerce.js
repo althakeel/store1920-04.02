@@ -52,27 +52,51 @@ const CATEGORY_SLUG_MAP = {
   // Beauty & Personal Care
   'beauty-personal-care': 6526,
   'dental-care-supplies': 6617,
+  'foot-care': 41498,
+  'grooming-devices': 41495,
+  'hair-removal': 29743,
+  'hair-removal-devices': 41494,
+  'hair-styling-tools': 41493,
   'hair-extensions-wigs': 6614,
   'hair-tools-accessories': 6615,
   'makeup-cosmetics': 6612,
   'massage-relaxation': 6616,
+  'skincare-devices': 41496,
   'skincare-haircare': 6613,
   'tattoo-body-art': 6618,
   
   // Electronics & Smart Devices
   'electronics-smart-devices': 498,
   'cameras-photography': 6541,
+  'cameras-photography-electronics': 39534,
+  'car-electronics': 36338,
+  'camera-accessories': 41487,
+  'audio-devices': 37163,
+  'computer-accessories-electronics': 37164,
   'computer-components-desktops': 6543,
   'games-gaming-accessories': 6542,
   'home-audio-video': 6539,
   'laptops-tablets': 6544,
   'mobile-phones': 6535,
+  'mobile-phones-electronics': 36339,
+  'mobile-accessories-electronics': 41486,
+  'networking-devices': 37176,
   'networking-communication': 6545,
   'phone-accessories': 6536,
   'phone-parts-repair': 6537,
   'portable-audio-video': 6540,
+  'smart-home': 38201,
   'smart-electronics-smart-home': 6538,
+  'tablets': 36340,
+  'tablet-accessories': 36341,
+  'tv-media-accessories': 36342,
+  'tv-home-entertainment': 41492,
+  'lighting-electronics': 41488,
+  'drones-rc-devices': 41490,
+  'projectors-presentation': 41491,
+  'kids-electronics': 38200,
   'wearable-tech': 6546,
+  'wearables': 36041,
   
   // Furniture & Home Living
   'furniture-home-living': 6521,
@@ -323,6 +347,9 @@ const CATEGORY_SLUG_MAP = {
 // Audio & Sound
 'audio-sound': 29721,
 
+// Verified live subcategory slugs
+'educational-toys': 37162,
+
 // Home & Living Electronics
 'home-living-electronics': 29708,
 
@@ -425,25 +452,46 @@ export async function getVariationGalleries(productId) {
 export const getCategoryById = (id) => fetchAPI(`/products/categories/${id}`);
 export const getCategoryBySlug = async (slug) => {
   console.log('🔍 getCategoryBySlug called with slug:', slug);
-  const url = `/products/categories?slug=${slug}&hide_empty=false`;
-  console.log('🌐 API URL:', `${API_BASE}${url}`);
-  const result = await fetchAPI(url);
-  console.log('📦 getCategoryBySlug raw result:', result);
-  console.log('📦 Result is array?:', Array.isArray(result), 'Length:', result?.length);
-  if (result && Array.isArray(result) && result.length > 0) {
-    console.log('✅ Found category:', result[0].name, 'ID:', result[0].id, 'Slug:', result[0].slug);
+  const normalizedSlug = String(slug || "").toLowerCase().trim();
+  if (!normalizedSlug) return [];
+
+  const allCategories = await getCategories();
+  const matches = (Array.isArray(allCategories) ? allCategories : []).filter(
+    (category) => String(category?.slug || "").toLowerCase().trim() === normalizedSlug
+  );
+
+  console.log('📦 getCategoryBySlug filtered matches:', matches);
+  console.log('📦 Result is array?:', Array.isArray(matches), 'Length:', matches?.length);
+  if (matches.length > 0) {
+    console.log('✅ Found category:', matches[0].name, 'ID:', matches[0].id, 'Slug:', matches[0].slug);
   }
-  return result;
+  return matches;
 };
 export const getChildCategories = (parentId) => fetchAPI(`/products/categories?parent=${parentId}`);
 export const getCategories = async () => {
   console.log('🔍 Fetching all categories...');
-  const result = await fetchAPI(`/products/categories?per_page=100&hide_empty=false`);
-  console.log('📦 All categories count:', result?.length);
-  if (result && result.length > 0) {
-    console.log('📋 First 10 category slugs:', result.slice(0, 10).map(c => `"${c.slug}" (${c.name})`).join(', '));
+  const allCategories = [];
+  let page = 1;
+
+  while (true) {
+    const result = await fetchAPI(`/products/categories?per_page=100&page=${page}&hide_empty=false`);
+    const categories = Array.isArray(result) ? result : [];
+
+    allCategories.push(...categories);
+
+    if (categories.length < 100) {
+      break;
+    }
+
+    page += 1;
   }
-  return result;
+
+  console.log('📦 All categories count:', allCategories.length);
+  if (allCategories.length > 0) {
+    console.log('📋 First 10 category slugs:', allCategories.slice(0, 10).map(c => `"${c.slug}" (${c.name})`).join(', '));
+  }
+
+  return allCategories;
 };
 
 
@@ -470,59 +518,23 @@ export const getCategoryBySlugAdvanced = async (slug) => {
     } else {
       console.log('⚠️ No static mapping for slug:', slug);
     }
-    
-    // PRIORITY 2: Fetch ALL categories and search locally
-    console.log('Step 2: Fetching all categories for local search...');
+
+    // PRIORITY 2: Direct exact slug lookup via WooCommerce API
+    console.log('Step 2: Trying exact slug lookup...');
     try {
-      const allCategories = await getCategories();
-      console.log('Total categories fetched:', allCategories?.length);
-      
-      if (allCategories && Array.isArray(allCategories) && allCategories.length > 0) {
-        console.log('Sample slugs:', allCategories.slice(0, 5).map(c => c.slug).join(', '));
-        
-        // Try exact slug match
-        let matchedCategory = allCategories.find(c => c.slug === slug);
-        
-        if (matchedCategory) {
-          console.log('SUCCESS - Exact match found!');
-          console.log('Category:', matchedCategory.name);
-          console.log('ID:', matchedCategory.id);
-          console.log('Slug:', matchedCategory.slug);
-          return matchedCategory;
+      const directMatches = await getCategoryBySlug(slug);
+      if (Array.isArray(directMatches) && directMatches.length > 0) {
+        const exactMatch = directMatches.find((category) => category?.slug === slug);
+        if (exactMatch) {
+          console.log('✅ Direct slug lookup found category:', exactMatch.name, 'ID:', exactMatch.id);
+          return exactMatch;
         }
-        
-        console.log('No exact match for "' + slug + '", trying partial match...');
-        
-        // Try partial slug match
-        matchedCategory = allCategories.find(c => 
-          c.slug.includes(slug) || slug.includes(c.slug)
-        );
-        
-        if (matchedCategory) {
-          console.log('SUCCESS - Partial match found:', matchedCategory.name, 'ID:', matchedCategory.id);
-          return matchedCategory;
-        }
-        
-        console.log('No partial match, trying name match...');
-        
-        // Try name match
-        const searchName = slug.replace(/-/g, ' ').toLowerCase();
-        matchedCategory = allCategories.find(c => 
-          c.name.toLowerCase().includes(searchName) ||
-          searchName.includes(c.name.toLowerCase())
-        );
-        
-        if (matchedCategory) {
-          console.log('SUCCESS - Name match found:', matchedCategory.name, 'ID:', matchedCategory.id);
-          return matchedCategory;
-        }
-        
-        console.log('ERROR: No category found for slug:', slug);
-        console.log('Available slugs include:', allCategories.slice(0, 20).map(c => c.slug).join(', '));
       }
-    } catch (searchError) {
-      console.error('Error in local category search:', searchError.message);
+    } catch (directLookupError) {
+      console.error('Error in direct slug lookup:', directLookupError.message);
     }
+    
+    console.log('ERROR: No exact category found for slug:', slug);
     
     console.log('=== No category found ===');
     return null;
