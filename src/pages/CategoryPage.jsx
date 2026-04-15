@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../contexts/CartContext";
-import { getProductsByCategorySlugAdvanced } from "../api/woocommerce";
+import { getFirstVariation, getProductsByCategorySlugAdvanced } from "../api/woocommerce";
 import MiniCart from "../components/MiniCart";
 import AddCartIcon from "../assets/images/addtocart.png";
 import AddedToCartIcon from "../assets/images/added-cart.png";
@@ -24,6 +24,40 @@ const decodeHTML = (html) => {
   const txt = document.createElement("textarea");
   txt.innerHTML = html;
   return txt.value;
+};
+
+const enrichProductsForCategoryGrid = async (items = []) => {
+  const enrichedItems = await Promise.all(
+    (Array.isArray(items) ? items : []).map(async (product) => {
+      const hasBasePrice = parseFloat(product?.price || product?.regular_price || 0) > 0;
+
+      if (product?.type !== "variable" || hasBasePrice) {
+        return product;
+      }
+
+      try {
+        const variation = await getFirstVariation(product.id);
+        if (!variation) return product;
+
+        return {
+          ...product,
+          price: variation.price || product.price,
+          regular_price: variation.regular_price || product.regular_price,
+          sale_price: variation.sale_price || product.sale_price,
+          images: product.images?.length
+            ? product.images
+            : variation.image?.src
+              ? [{ src: variation.image.src }]
+              : product.images,
+        };
+      } catch (error) {
+        console.error(`Failed to enrich category product ${product?.id}:`, error);
+        return product;
+      }
+    })
+  );
+
+  return enrichedItems.filter((product) => product?.id && product?.name);
 };
 
 // --- Fetch category info and products by slug ---
@@ -59,15 +93,9 @@ const Category = () => {
       console.log('✅ Category found:', result.category.name, 'ID:', result.category.id);
       console.log('📦 Products count:', result.products.length);
       
-      // Filter out products without images or with zero price
-      const validProducts = result.products.filter(p => {
-        const hasImage = Array.isArray(p.images) && p.images.length > 0 && p.images[0]?.src;
-        const price = parseFloat(p.price || p.regular_price || 0);
-        const hasValidPrice = price > 0;
-        return hasImage && hasValidPrice;
-      });
+      const validProducts = await enrichProductsForCategoryGrid(result.products);
       
-      console.log('✅ Valid products after filtering:', validProducts.length);
+      console.log('✅ Products ready for display:', validProducts.length);
       
       setCategory(result.category);
       setProducts((prevProducts) => {

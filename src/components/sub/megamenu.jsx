@@ -254,7 +254,7 @@ import Speakers from '../../assets/images/megamenu/Sub catogory Webp/speakers.we
 
 
 // MANUAL DATA
-export const megaMenuCategories = [
+const baseMegaMenuCategories = [
 
   // {
   //   id: 1,
@@ -780,6 +780,473 @@ export const megaMenuCategories = [
 
 ];
 
+const normalizeMenuName = (value = "") =>
+  value
+    .toLowerCase()
+    .replace(/&/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+const slugifyMenuName = (value = "") =>
+  value
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const categoryImageMap = {
+  electronics: Smart_Watches,
+  "personal care": PersonalCareAppliances,
+  "beauty personal care": MakeupAccessoriesImg,
+  "home kitchen": KitchenDining,
+  "home appliances": KitchenAppliances,
+  "home living": LightingImg,
+  automotive: Car_Accessories,
+  "sports outdoor": HikingCamping,
+  "sports fitness": FitnessImg,
+  "baby kids": BabyCareImg,
+  "baby maternity": FeedingNursing,
+  "travel luggage": TravelImg,
+  "travel accessories": TravelImg,
+  "computers accessories": ComputerAccessoriesImg,
+  gaming: PS5_Accessories,
+  audio: Speakers,
+  "mobile accessories": MobileAccessoriesImg,
+  "pet supplies": PetImg,
+  "home garden": GardeningTools,
+  "outdoor garden": GardeningTools,
+  "tools hardware": HandToolsImg,
+  "office furniture": OfficeFurniture,
+  "kids education": EducationalToys,
+  "health personal care": DentalCareSupplies,
+  "toys learning": EducationalToys,
+};
+
+const subCategoryImageMap = {
+  "smart watches": Smart_Watches,
+  wearables: WearableTech,
+  "wearable technology": WearableTech,
+  "car electronics": CarElectronics,
+  "mobile phones": MobilePhones,
+  tablets: LaptopsTablets,
+  "tablet accessories": LaptopsTablets,
+  "tv media accessories": HomeAudioVideo,
+  "audio devices": PortableAudioVideo,
+  "computer accessories": ComputerAccessoriesImg,
+  "networking devices": Networking,
+  "kids electronics": ElectronicToys,
+  "smart home": SmartHome,
+  "cameras photography": CamerasPhotography,
+  "camera accessories": CamerasPhotography,
+  "mobile accessories": MobileAccessoriesImg,
+  lighting: LightingImg,
+  "drones rc devices": RemoteControlToys,
+  "projectors presentation": HomeAudioVideo,
+  "tv home entertainment": HomeAudioVideo,
+  audio: Speakers,
+  "laptop accessories": ComputerAccessoriesImg,
+  "audio accessories": Earbuds,
+  "power accessories": Charger,
+  "power solutions": Power_Bank,
+  "small appliances": HouseholdAppliances,
+  "cleaning appliances": CleaningAppliances,
+  "printers accessories": ComputerAccessoriesImg,
+  "smart gadgets": Smart_Watches,
+  "smart gadgets for kids": ElectronicToys,
+  "projectors accessories": HomeAudioVideo,
+  "power charging": Charger,
+  "hair styling tools": HairToolsAccessories,
+  "hair removal": PersonalCareAppliances,
+  "hair removal devices": PersonalCareAppliances,
+  "grooming devices": PersonalCareAppliances,
+  "skincare devices": SkincareHaircare,
+  "foot care": PersonalCareAppliances,
+  "makeup tools": MakeupAccessoriesImg,
+  "dental care": DentalCareSupplies,
+  "bath body care": MakeupAccessoriesImg,
+  "massage relaxation": MassageRelaxation,
+  "makeup accessories": MakeupAccessoriesImg,
+  "skincare beauty appliances": SkincareHaircare,
+  "personal grooming": PersonalCareAppliances,
+  "cleaning tools": CleaningAppliances,
+  "kitchen tools": KitchenTools,
+  drinkware: Drinkware,
+  "home electronics": LightingImg,
+  "home organization storage": StorageOrgImg,
+  "kitchen appliances": KitchenAppliances,
+  "home fragrance": BagsBackpacksImg,
+  "fragrance aromatherapy": BagsBackpacksImg,
+  "home office furniture": HomeOfficeEssentials,
+  "pest control": HomeSafes,
+  furniture: LivingRoomFurniture,
+  "car accessories": Car_Accessories,
+  "car safety": WorkplaceSafety,
+  "car care tools": CarToolsImg,
+  "camping hiking": HikingCamping,
+  "scooters ride ons": SportsOutdoorToys,
+  "exercise strength training": StrengthTraining,
+  "baby feeding": FeedingNursing,
+  "outdoor play": SportsOutdoorToys,
+  "feeding nursing": FeedingNursing,
+  "travel accessories": TravelImg,
+  "travel comfort accessories": TravelImg,
+  "safety gadgets": HomeSafes,
+  "travel hygiene": TravelImg,
+  "keyboards mice": Keyboards,
+  "cleaning maintenance": ComputerAccessoriesImg,
+  monitors: ComputerAccessoriesImg,
+  "desk accessories": HomeOfficeEssentials,
+  "gaming consoles": GamesGaming,
+  "console accessories": PS5_Accessories,
+  "gaming accessories": GamesGaming,
+  "playstation accessories": PS5_Accessories,
+  microphones: Earphone,
+  speakers: Speakers,
+  "smart wearables": Smart_Watches,
+  "chargers adapters": Charger,
+  "phone cases protection": PhoneAccessories,
+  "watch accessories": WatchImg,
+  "screen protection": PhoneAccessories,
+  "phone protection": PhoneAccessories,
+  "pet feeding watering": PetImg,
+  "outdoor bbq": OutdoorFurniture,
+  "outdoor utility": OutdoorFurniture,
+  "garden tools": GardeningTools,
+  "power tools": PowerToolsImg,
+  "desks workstations": OfficeFurniture,
+  "learning activity toys": EducationalToys,
+  "oral care": DentalCareSupplies,
+  "educational toys": EducationalToys,
+};
+
+const additionalCategoryPairs = [
+  ["Electronics", "Smart Watches"],
+  ["Electronics", "Wearables"],
+  ["Electronics", "Car Electronics"],
+  ["Electronics", "Mobile Phones"],
+  ["Electronics", "Tablets"],
+  ["Electronics", "Tablet Accessories"],
+  ["Electronics", "TV & Media Accessories"],
+  ["Electronics", "Audio Devices"],
+  ["Electronics", "Computer Accessories"],
+  ["Electronics", "Networking Devices"],
+  ["Electronics", "Kids Electronics"],
+  ["Electronics", "Smart Home"],
+  ["Electronics", "Cameras & Photography"],
+  ["Electronics", "Camera Accessories"],
+  ["Electronics", "Mobile Accessories"],
+  ["Electronics", "Lighting"],
+  ["Electronics", "Drones & RC Devices"],
+  ["Electronics", "Projectors & Presentation"],
+  ["Electronics", "TV & Home Entertainment"],
+  ["Electronics", "Audio"],
+  ["Electronics", "Laptop Accessories"],
+  ["Electronics", "Audio Accessories"],
+  ["Electronics", "Power Accessories"],
+  ["Electronics", "Power Solutions"],
+  ["Electronics", "Small Appliances"],
+  ["Electronics", "Cleaning Appliances"],
+  ["Electronics", "Printers & Accessories"],
+  ["Electronics", "Smart Gadgets"],
+  ["Electronics", "Smart Gadgets for Kids"],
+  ["Electronics", "Wearable Technology"],
+  ["Electronics", "Projectors & Accessories"],
+  ["Electronics", "Power & Charging"],
+  ["Personal Care", "Hair Styling Tools"],
+  ["Personal Care", "Hair Removal"],
+  ["Personal Care", "Hair Removal Devices"],
+  ["Personal Care", "Grooming Devices"],
+  ["Personal Care", "Skincare Devices"],
+  ["Personal Care", "Foot Care"],
+  ["Personal Care", "Makeup Tools"],
+  ["Personal Care", "Dental Care"],
+  ["Personal Care", "Bath & Body Care"],
+  ["Personal Care", "Massage & Relaxation"],
+  ["Beauty & Personal Care", "Makeup & Accessories"],
+  ["Beauty & Personal Care", "Skincare & Beauty Appliances"],
+  ["Beauty & Personal Care", "Personal Grooming"],
+  ["Beauty & Personal Care", "Massage & Relaxation"],
+  ["Beauty & Personal Care", "Hair Styling Tools"],
+  ["Beauty & Personal Care", "Hair Removal"],
+  ["Beauty & Personal Care", "Hair Removal Devices"],
+  ["Beauty & Personal Care", "Grooming Devices"],
+  ["Beauty & Personal Care", "Skincare Devices"],
+  ["Beauty & Personal Care", "Foot Care"],
+  ["Home & Kitchen", "Cleaning Tools"],
+  ["Home & Kitchen", "Kitchen Tools"],
+  ["Home & Kitchen", "Drinkware"],
+  ["Home & Kitchen", "Home Electronics"],
+  ["Home & Kitchen", "Home Organization & Storage"],
+  ["Home Appliances", "Kitchen Appliances"],
+  ["Home & Living", "Home Fragrance"],
+  ["Home & Living", "Fragrance & Aromatherapy"],
+  ["Home & Living", "Home Office Furniture"],
+  ["Home & Living", "Pest Control"],
+  ["Home & Living", "Furniture"],
+  ["Automotive", "Car Accessories"],
+  ["Automotive", "Car Electronics"],
+  ["Automotive", "Car Safety"],
+  ["Automotive", "Car Care Tools"],
+  ["Sports & Outdoor", "Camping & Hiking"],
+  ["Sports & Outdoor", "Scooters & Ride-Ons"],
+  ["Sports & Fitness", "Exercise & Strength Training"],
+  ["Baby & Kids", "Baby Feeding"],
+  ["Baby & Kids", "Outdoor Play"],
+  ["Baby & Maternity", "Feeding & Nursing"],
+  ["Travel & Luggage", "Travel Accessories"],
+  ["Travel & Luggage", "Travel Comfort & Accessories"],
+  ["Travel Accessories", "Safety Gadgets"],
+  ["Travel Accessories", "Travel Hygiene"],
+  ["Computers & Accessories", "Keyboards & Mice"],
+  ["Computers & Accessories", "Cleaning & Maintenance"],
+  ["Computers & Accessories", "Monitors"],
+  ["Computers & Accessories", "Laptop Accessories"],
+  ["Computers & Accessories", "Desk Accessories"],
+  ["Computers & Accessories", "Power & Charging"],
+  ["Computers & Accessories", "Computer Accessories"],
+  ["Gaming", "Gaming Consoles"],
+  ["Gaming", "Console Accessories"],
+  ["Gaming", "Gaming Accessories"],
+  ["Gaming", "PlayStation Accessories"],
+  ["Audio", "Microphones"],
+  ["Audio", "Speakers"],
+  ["Mobile Accessories", "Audio Accessories"],
+  ["Mobile Accessories", "Power Accessories"],
+  ["Mobile Accessories", "Smart Wearables"],
+  ["Mobile Accessories", "Chargers & Adapters"],
+  ["Mobile Accessories", "Phone Cases & Protection"],
+  ["Mobile Accessories", "Watch Accessories"],
+  ["Mobile Accessories", "Screen Protection"],
+  ["Mobile Accessories", "Phone Protection"],
+  ["Pet Supplies", "Pet Feeding & Watering"],
+  ["Home & Garden", "Outdoor & BBQ"],
+  ["Home & Garden", "Outdoor Utility"],
+  ["Outdoor & Garden", "Garden Tools"],
+  ["Tools & Hardware", "Power Tools"],
+  ["Office Furniture", "Desks & Workstations"],
+  ["Kids & Education", "Learning & Activity Toys"],
+  ["Health & Personal Care", "Oral Care"],
+  ["Toys & Learning", "Educational Toys"],
+];
+
+const exactSubcategoryPathOverrides = {
+  "Electronics|Smart Watches": "/category/smart-watches",
+  "Electronics|Wearables": "/category/wearables",
+  "Electronics|Car Electronics": "/category/car-electronics",
+  "Electronics|Mobile Phones": "/category/mobile-phones-electronics",
+  "Electronics|Tablets": "/category/tablets",
+  "Electronics|Tablet Accessories": "/category/tablet-accessories",
+  "Electronics|TV & Media Accessories": "/category/tv-media-accessories",
+  "Electronics|Audio Devices": "/category/audio-devices",
+  "Electronics|Computer Accessories": "/category/computer-accessories-electronics",
+  "Electronics|Networking Devices": "/category/networking-devices",
+  "Electronics|Kids Electronics": "/category/kids-electronics",
+  "Electronics|Smart Home": "/category/smart-home",
+  "Electronics|Cameras & Photography": "/category/cameras-photography-electronics",
+  "Electronics|Camera Accessories": "/category/camera-accessories",
+  "Electronics|Mobile Accessories": "/category/mobile-accessories-electronics",
+  "Electronics|Lighting": "/category/lighting-electronics",
+  "Electronics|Drones & RC Devices": "/category/drones-rc-devices",
+  "Electronics|Projectors & Presentation": "/category/projectors-presentation",
+  "Electronics|TV & Home Entertainment": "/category/tv-home-entertainment",
+  "Personal Care|Hair Styling Tools": "/category/hair-styling-tools",
+  "Personal Care|Hair Removal": "/category/hair-removal",
+  "Personal Care|Hair Removal Devices": "/category/hair-removal-devices",
+  "Personal Care|Grooming Devices": "/category/grooming-devices",
+  "Personal Care|Skincare Devices": "/category/skincare-devices",
+  "Personal Care|Foot Care": "/category/foot-care",
+  "Beauty & Personal Care|Hair Styling Tools": "/category/hair-styling-tools",
+  "Beauty & Personal Care|Hair Removal": "/category/hair-removal",
+  "Beauty & Personal Care|Hair Removal Devices": "/category/hair-removal-devices",
+  "Beauty & Personal Care|Grooming Devices": "/category/grooming-devices",
+  "Beauty & Personal Care|Skincare Devices": "/category/skincare-devices",
+  "Beauty & Personal Care|Foot Care": "/category/foot-care",
+  "Home & Kitchen|Kitchen Tools": "/category/kitchen-tools",
+  "Home Appliances|Kitchen Appliances": "/category/kitchen-appliances",
+  "Automotive|Car Care Tools": "/category/car-care-tools",
+  "Baby & Maternity|Feeding & Nursing": "/category/feeding-nursing",
+  "Travel & Luggage|Travel Accessories": "/category/travel-accessories",
+  "Gaming|Gaming Accessories": "/category/gaming-accessories",
+  "Audio|Speakers": "/category/speakers",
+  "Toys & Learning|Educational Toys": "/category/educational-toys",
+};
+
+const distinctImagePool = [
+  Smart_Watches,
+  WearableTech,
+  CarElectronics,
+  MobilePhones,
+  LaptopsTablets,
+  HomeAudioVideo,
+  PortableAudioVideo,
+  ComputerAccessoriesImg,
+  Networking,
+  ElectronicToys,
+  SmartHome,
+  CamerasPhotography,
+  MobileAccessoriesImg,
+  LightingImg,
+  RemoteControlToys,
+  Speakers,
+  Earbuds,
+  Charger,
+  Power_Bank,
+  HouseholdAppliances,
+  CleaningAppliances,
+  HairToolsAccessories,
+  SkincareHaircare,
+  MakeupAccessoriesImg,
+  DentalCareSupplies,
+  MassageRelaxation,
+  KitchenTools,
+  Drinkware,
+  StorageOrgImg,
+  KitchenAppliances,
+  HomeOfficeEssentials,
+  HomeSafes,
+  LivingRoomFurniture,
+  Car_Accessories,
+  WorkplaceSafety,
+  CarToolsImg,
+  HikingCamping,
+  SportsOutdoorToys,
+  StrengthTraining,
+  FeedingNursing,
+  TravelImg,
+  Keyboards,
+  GamesGaming,
+  PS5_Accessories,
+  WatchImg,
+  PetImg,
+  OutdoorFurniture,
+  GardeningTools,
+  PowerToolsImg,
+  OfficeFurniture,
+  EducationalToys,
+].filter(Boolean);
+
+const getCategoryFallbackImage = (categoryName) =>
+  categoryImageMap[normalizeMenuName(categoryName)] || KitchenDining;
+
+const getSubCategoryFallbackImage = (categoryName, subCategoryName) =>
+  subCategoryImageMap[normalizeMenuName(subCategoryName)] ||
+  getCategoryFallbackImage(categoryName);
+
+const mergeMegaMenuCategories = (categories, additions) => {
+  const nextIdState = {
+    category: categories.reduce((max, category) => {
+      const numericId = Number(category.id);
+      return Number.isFinite(numericId) ? Math.max(max, numericId) : max;
+    }, 0) + 1,
+    subCategory:
+      categories.reduce((max, category) => {
+        const subMax = (category.subCategories || []).reduce((subAcc, subCategory) => {
+          const numericId = Number(subCategory.id);
+          return Number.isFinite(numericId) ? Math.max(subAcc, numericId) : subAcc;
+        }, max);
+        return Math.max(max, subMax);
+      }, 0) + 1,
+  };
+
+  const mergedCategories = [];
+  const categoryMap = new Map();
+
+  const ensureCategory = (category) => {
+    const normalizedCategoryName = normalizeMenuName(category.name);
+    let existingCategory = categoryMap.get(normalizedCategoryName);
+
+    if (!existingCategory) {
+      existingCategory = {
+        ...category,
+        id: category.id ?? nextIdState.category++,
+        image: category.image || getCategoryFallbackImage(category.name),
+        subCategories: [],
+      };
+      existingCategory._subCategoryNames = new Set();
+      categoryMap.set(normalizedCategoryName, existingCategory);
+      mergedCategories.push(existingCategory);
+    }
+
+    return existingCategory;
+  };
+
+  const ensureSubCategory = (category, subCategory) => {
+    const normalizedSubCategoryName = normalizeMenuName(subCategory.name);
+    if (category._subCategoryNames.has(normalizedSubCategoryName)) {
+      return;
+    }
+
+    category._subCategoryNames.add(normalizedSubCategoryName);
+    category.subCategories.push({
+      ...subCategory,
+      id: subCategory.id ?? nextIdState.subCategory++,
+      image: subCategory.image || getSubCategoryFallbackImage(category.name, subCategory.name),
+      path: subCategory.path || `/category/${slugifyMenuName(subCategory.name)}`,
+    });
+  };
+
+  categories.forEach((category) => {
+    const mergedCategory = ensureCategory(category);
+    (category.subCategories || []).forEach((subCategory) => ensureSubCategory(mergedCategory, subCategory));
+  });
+
+  additions.forEach(([categoryName, subCategoryName]) => {
+    const mergedCategory = ensureCategory({
+      name: categoryName,
+      path: `/category/${slugifyMenuName(categoryName)}`,
+      image: getCategoryFallbackImage(categoryName),
+    });
+
+    ensureSubCategory(mergedCategory, {
+      name: subCategoryName,
+      path:
+        exactSubcategoryPathOverrides[`${categoryName}|${subCategoryName}`] ||
+        `/category/${slugifyMenuName(subCategoryName)}`,
+      image: getSubCategoryFallbackImage(categoryName, subCategoryName),
+    });
+  });
+
+  return mergedCategories.map(({ _subCategoryNames, ...category }) => category);
+};
+
+const ensureDistinctCategoryImages = (categories) =>
+  categories.map((category) => {
+    const usedImages = new Set();
+    const subCategories = (category.subCategories || []).map((subCategory) => {
+      let nextImage = subCategory.image;
+
+      if (nextImage && usedImages.has(nextImage)) {
+        const replacement = distinctImagePool.find(
+          (candidate) => candidate && !usedImages.has(candidate)
+        );
+        if (replacement) {
+          nextImage = replacement;
+        }
+      }
+
+      if (nextImage) {
+        usedImages.add(nextImage);
+      }
+
+      return {
+        ...subCategory,
+        image: nextImage,
+      };
+    });
+
+    return {
+      ...category,
+      subCategories,
+    };
+  });
+
+const mergedMegaMenuCategories = mergeMegaMenuCategories(
+  baseMegaMenuCategories,
+  additionalCategoryPairs
+);
+
+export const megaMenuCategories = ensureDistinctCategoryImages(mergedMegaMenuCategories);
+
 const defaultRightCategories = [
   // { id: 6535, name: "Mobile Phones", image: MobilePhones, path: "/category/mobile-phones", metaTitle: "Buy Electronics & Smart Devices Online | Store1920", metaDescription: "Shop the latest smartphones, laptops, cameras, and smart home devices at Store1920. Great prices, fast delivery, and trusted quality." },
   
@@ -926,7 +1393,7 @@ const MegaMenuManual = ({ onClose }) => {
               <h2
                 style={styles.title}
                 onClick={() => {
-                  navigate(`/category/${activeCategory.id}`);
+                  navigate(activeCategory.path || `/category/${activeCategory.id}`);
                   if (onClose) onClose();
                 }}
               >
