@@ -3641,7 +3641,7 @@ reviews: [
 
 
 {
-  id: 529508, 
+  id: 543934, 
   name: "Quran Magnet Speaker with Built-In Quran",
   slug: "quran-magnet-speaker-built-in-surah-player", 
   price: 69.90,
@@ -3676,7 +3676,7 @@ reviews: [
     
       {
       type: "Buy 1",
-      id: 529508,
+      id: 543936,
       name: "Quran Magnet Speaker with Built-In Quran",
       label: "Buy 1 for only 69.90 AED",
       discount: 0,
@@ -3688,7 +3688,7 @@ reviews: [
     },
     {
       type: "Bundle of 2",
-      id: 529509,
+      id: 543937,
       name: "Quran Magnet Speaker with Built-In Quran",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
@@ -3701,7 +3701,7 @@ reviews: [
     },
     {
       type: "Bundle of 3",
-      id: 532756,
+      id: 543938,
       name: "Quran Magnet Speaker with Built-In Quran",
       label: "Buy 3 & Get 20% Off",
       discount: 20,
