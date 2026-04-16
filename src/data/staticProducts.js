@@ -3404,7 +3404,7 @@ Price AED 79.99
 /// new rohith 22
 
  {
-  id: 528708, // isko listing wali id se sync rakhna acha hai
+  id: 544223, // isko listing wali id se sync rakhna acha hai
   name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
   slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger", // URL: /products/boxing-machine
   price: 149.00,
@@ -3437,7 +3437,7 @@ Price AED 79.99
   bundles: [
     {
       type: "Buy 1",
-      id: 528708,
+      id: 544224,
       name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
       label: "Buy 1 for only 149.00 AED",
       discount: 0,
@@ -3448,7 +3448,7 @@ Price AED 79.99
     },
     {
       type: "Bundle of 2",
-      id: 528709,
+      id: 544225,
       name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
       label: "Buy 2 & Get 15% Off",
       discount: 15,
@@ -3461,7 +3461,7 @@ Price AED 79.99
     },
     {
       type: "Bundle of 3",
-      id: 528710,
+      id: 544226,
       name: "Green Lion Power Trio – 3-in-1 Magnetic Wireless Charger",
       label: "Buy 3 & Get 15% Off",
       discount: 20,
