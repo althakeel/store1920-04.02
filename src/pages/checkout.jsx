@@ -16,7 +16,7 @@ import {
   mapAccountAddressToCheckoutForm,
   readAddressBook,
 } from '../utils/checkoutAddress';
-import { cartHasDynamicProducts } from '../utils/staticProductCart';
+import { cartHasDynamicProducts, isStaticCartItem } from '../utils/staticProductCart';
 
 const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
 const CK = 'ck_e09e8cedfae42e5d0a37728ad6c3a6ce636695dd';
@@ -223,12 +223,16 @@ useEffect(() => {
       try {
        const details = await Promise.all(
   contextCartItems.map(async (item) => {
-    const prod = await fetchWithAuth(`products/${item.id}`);
+    const productLookupId = item.wooId || item.productId || item.id;
+    const prod = await fetchWithAuth(`products/${productLookupId}`);
     console.log('🛒 Product fetched for cart:', prod.id, 'COD Available:', prod.cod_available);
     // Use the cart item's price if available (from bundle selection), otherwise use WooCommerce price
     const finalPrice = item.price ? parseFloat(item.price) : parseFloat(prod.price) || 0;
     return {
       ...item,
+      id: item.id || item.productId || item.wooId || prod.id,
+      productId: item.productId || item.wooId || item.id || prod.id,
+      wooId: item.wooId || null,
       price: finalPrice,
       inStock: prod.stock_quantity > 0,
       name: prod.name,
@@ -308,7 +312,29 @@ useEffect(() => {
       const number = data.phone_number || '';
       return `+971${number}`;
     };
-    const line_items = cartItems.map(i => ({ product_id: i.id, quantity: i.quantity }));
+    const line_items = cartItems
+      .map((item) => {
+        const quantity = Number.parseInt(item.quantity, 10) || 1;
+        const productId =
+          Number.parseInt(item.wooId || item.productId || item.id, 10) || 0;
+
+        if (!productId) return null;
+
+        if (isStaticCartItem(item)) {
+          const unitPrice = Number.parseFloat(item.price) || 0;
+          const lineTotal = (unitPrice * quantity).toFixed(2);
+
+          return {
+            product_id: productId,
+            quantity,
+            subtotal: lineTotal,
+            total: lineTotal,
+          };
+        }
+
+        return { product_id: productId, quantity };
+      })
+      .filter(Boolean);
     const userId = user?.id;
 
     // City code mapping
