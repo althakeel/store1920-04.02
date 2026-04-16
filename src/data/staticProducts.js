@@ -247,6 +247,11 @@ import Product264 from "../assets/images/staticproducts/baby_stroller/7.jpg";
 import Product265 from "../assets/images/staticproducts/baby_stroller/8.webp";
 import Product267 from "../assets/images/staticproducts/baby_stroller/9.webp";
 import Product268 from "../assets/images/staticproducts/baby_stroller/10.webp";
+import Product269 from "../assets/images/staticproducts/mansoory-scooty/1.webp";
+import Product270 from "../assets/images/staticproducts/mansoory-scooty/2.webp";
+import Product271 from "../assets/images/staticproducts/mansoory-scooty/3.webp";
+import Product272 from "../assets/images/staticproducts/mansoory-scooty/4.webp";
+import Product273 from "../assets/images/staticproducts/mansoory-scooty/5.webp";
 
 
 
@@ -1566,19 +1571,19 @@ const staticProducts = [
     ],
     BundleTitle: "CHOOSE YOUR BATTERY QUANTITY!",
 
-    section2contentTitle: " Lightweight, Portable & Ergonomic Design",
+    section2contentTitle: "Lightweight, Portable & Ready for Everyday Cleaning",
     section2contentDesc:
-      "At just 1.6kg, the Turbo Blower is designed for comfort.",
+      "At just 1.6kg, the Turbo Blower is easy to carry, simple to handle with one hand, and powerful enough for patios, cars, balconies, and garden cleanups.",
     section2list: [
       "One-hand operation",
       "Non-slip ergonomic grip",
       "Easy storage and transport",
     ],
     section2contentPoints: [
-      "Free UAE Shipping",
-      "24/7 Support",
-      "1-Year Warranty",
-      " Easy to Store & Carry",
+      "Fast delivery across the UAE",
+      "Cash on Delivery available",
+      "1-year warranty coverage",
+      "Great for car drying, patios, balconies, and gardens",
     ],
     section2image: Products114,
 
@@ -1602,7 +1607,7 @@ const staticProducts = [
 
     comparisonData: {
       title: "Why Choose Turbo Cordless Blower?",
-      description: "",
+      description: "Get strong airflow, lighter handling, and battery flexibility in one compact blower designed for daily home and outdoor cleaning.",
       headers: ["Feature", "Turbo Cordless Blower™", "Others"],
       rows: [
         { feature: "21V High-Capacity Battery", lumineux: true, others: false },
@@ -1627,12 +1632,12 @@ const staticProducts = [
     section5image: Products116,
 
     Guaranteetitle: "1 Year Guarantee",
-    Guranteedesc: "How long does one battery last?",
-    Faq1Q: " Does the camera work at night?",
+    Guranteedesc: "Try the Turbo Cordless Leaf Blower at home with confidence. If it is not the right fit for your cleaning routine, return it within 30 days for a refund.",
+    Faq1Q: "How long does one battery last?",
     fAQ1A: "Each 21V battery provides up to 30–40 minutes of continuous use.",
-    Faq2Q: " Is it suitable for indoor cleaning?",
+    Faq2Q: "Is it suitable for indoor cleaning?",
     fAQ2A: "Yes! Perfect for blowing dust, pet hair, or small debris.",
-    Faq3Q: "an it dry cars?",
+    Faq3Q: "Can it dry cars?",
     fAQ3A:
       " Absolutely. It’s powerful enough to dry vehicles safely and quickly.",
 
@@ -2249,21 +2254,21 @@ const staticProducts = [
     "Includes Gloves — Protect your hands during intense sessions",
   ],
   section2contentPoints: [
-    "Cash on Delivery Available",
-    "Fast Delivery Across UAE",
-    "Gloves Included in the Box",
-    "Wall-Mounted, Space-Saving Design",
+    "Cash on Delivery available",
+    "Fast delivery across the UAE",
+    "Rechargeable cordless convenience",
+    "Designed for neck, shoulders, back, and legs",
   ],
   section2image: Product180,
 
   // 🔹 Section 3 – Use cases / lifestyle
-  section3title: "From Stress Relief to Full-Body Training – Fitness Just Became Fun",
+  section3title: "Everyday Relief for Long Workdays, Travel, and Recovery",
   section3image: Product181,
   section3points: [
-    "Home Fitness Mode – burn calories & tone your body",
-    "Kids’ Energy Burner – safe, fun alternative to screen time",
-    "Office Stress Relief – 5-minute punch break to reset your mind",
-    "Pro Training – reaction time & speed improvement for boxers",
+    "Use it after long desk hours to loosen neck and shoulder tension",
+    "Keep it nearby for quick heat and kneading relief before bed",
+    "Take it in the car or office for portable comfort on busy days",
+    "Great after workouts to relax tight back and leg muscles",
   ],
 
   // 🔹 Progress / stats bar
@@ -2287,7 +2292,7 @@ const staticProducts = [
     },
     {
       title: "Kids Move More, Screen Time Less",
-      desc: "Parents use it as a fun exercise tool at home.",
+      desc: "Recharge quickly and enjoy multiple massage sessions anywhere.",
       percent: 94,
     },
   ],
@@ -2314,7 +2319,7 @@ const staticProducts = [
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+    "We are confident this heated shiatsu massager will become part of your daily comfort routine. If it does not suit your needs, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
   Faq1Q: "Is it suitable for beginners?",
@@ -2334,7 +2339,7 @@ const staticProducts = [
     "No — nano-foam absorbs sound, making it quiet enough for apartments.",
 
   // 🔹 Reviews
-  reviewsTitle: "See Why Users Love It",
+  reviewsTitle: "What Customers Are Saying",
   reviewsRating: 4.9,
   reviews: [
     {
@@ -3256,7 +3261,7 @@ Price AED 79.99
       discount: 15,
       price: 225.00, // example: 89.9 * 2 * 0.85
       originalPrice: 299,
-      note: "Deep Tissue, Cordless & Rechargeable",
+      note: "Great for couples or keeping one at home and one at work.",
       mostPopular: true,
       image: Product222,
       slug: "heated-shiatsu-massager-human-like-neck-back-relief-anywhere",
@@ -3269,7 +3274,7 @@ Price AED 79.99
       discount: 15,
       price: 341.0, // example: 89.9 * 2 * 0.85
       originalPrice: 399,
-      note: "Deep Tissue, Cordless & Rechargeable",
+      note: "Best value for families or gifting extra units.",
       mostPopular: false,
       image: Product225,
       slug: "heated-shiatsu-massager-human-like-neck-back-relief-anywhere",
@@ -3291,19 +3296,19 @@ Price AED 79.99
   section2contentPoints: [
     "Cash on Delivery Available",
     "Fast Delivery Across UAE",
-    "Gloves Included in the Box",
-    "Wall-Mounted, Space-Saving Design",
+    "Rechargeable cordless design",
+    "Suitable for neck, shoulders, back, and legs",
   ],
   section2image: Product225,
 
   // 🔹 Section 3 – Use cases / lifestyle
-  section3title: "From Stress Relief to Full-Body Training – Fitness Just Became Fun",
+  section3title: "Everyday Relief for Long Workdays, Travel, and Recovery",
   section3image: Product223,
   section3points: [
-    "Home Fitness Mode – burn calories & tone your body",
-    "Kids’ Energy Burner – safe, fun alternative to screen time",
-    "Office Stress Relief – 5-minute punch break to reset your mind",
-    "Pro Training – reaction time & speed improvement for boxers",
+    "Use it after long desk hours to loosen neck and shoulder tension",
+    "Keep it nearby for quick heat and kneading relief before bed",
+    "Take it in the car or office for portable comfort on busy days",
+    "Great after workouts to relax tight back and leg muscles",
   ],
 
   // 🔹 Progress / stats bar
@@ -3327,7 +3332,7 @@ Price AED 79.99
     },
     {
       title: " Fast USB Charging",
-      desc: "Parents use it as a fun exercise tool at home.",
+      desc: "Recharge quickly and enjoy multiple massage sessions anywhere.",
       percent: 94,
     },
   ],
@@ -3353,7 +3358,7 @@ Price AED 79.99
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+    "We are confident this heated shiatsu massager will become part of your daily comfort routine. If it does not suit your needs, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
   Faq1Q: "How long does the battery last?",
@@ -3369,7 +3374,7 @@ Price AED 79.99
     "Yes – it's cordless, under 1KG, and fits in your bag.",
  
   // 🔹 Reviews
-  reviewsTitle: "See Why Users Love It",
+  reviewsTitle: "What Customers Are Saying",
   reviewsRating: 4.9,
   reviews: [
   {
@@ -3437,7 +3442,7 @@ Price AED 79.99
       label: "Buy 1 for only 149.00 AED",
       discount: 0,
       slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger",
-      price: 139.00,
+      price: 149.00,
       originalPrice: 199,
       image: Product229,
     },
@@ -3449,7 +3454,7 @@ Price AED 79.99
       discount: 15,
       price: 267.90, // example: 89.9 * 2 * 0.85
       originalPrice: 315,
-      note: "Deep Tissue, Cordless & Rechargeable",
+      note: "A practical setup for your desk and bedside table.",
       mostPopular: true,
       image: Product230,
       slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger",
@@ -3462,7 +3467,7 @@ Price AED 79.99
       discount: 20,
       price: 366.90, // example: 89.9 * 2 * 0.85
       originalPrice: 429,
-      note: "Deep Tissue, Cordless & Rechargeable",
+      note: "Best value for home, office, and travel charging.",
       mostPopular: false,
       image: Product230,
       slug: "green-lion-power-trio-3-in-1-magnetic-wireless-charger",
@@ -3475,9 +3480,9 @@ Price AED 79.99
   section2contentDesc:
     "Say goodbye to cluttered cables, slow charging speeds, and weak stands. The Green Lion Power Trio Wireless Charger was built to simplify your digital lifestyle. Its 3-in-1 capability ensures seamless power delivery across all your everyday devices — no need for separate chargers.",
   section2list: [
-    " Magnetic phone pad",
-    "Watch dock",
-    "Earbuds base",
+    "Magnetic phone charging pad",
+    "Dedicated watch dock",
+    "Wireless earbuds charging base",
  
 
   ],
@@ -3485,17 +3490,17 @@ Price AED 79.99
   section2image: Product230,
 
   // 🔹 Section 3 – Use cases / lifestyle
-  section3title: "From Stress Relief to Full-Body Training – Fitness Just Became Fun",
+  section3title: "Built for Cleaner Desks, Nightstands, and Travel Setups",
   section3image: Product232,
   section3points: [
-    "Home Fitness Mode – burn calories & tone your body",
-    "Kids’ Energy Burner – safe, fun alternative to screen time",
-    "Office Stress Relief – 5-minute punch break to reset your mind",
-    "Pro Training – reaction time & speed improvement for boxers",
+    "Charge your daily devices from one compact station",
+    "Keep your nightstand tidy with fewer cables and adapters",
+    "Use the pop-up stand for video calls while charging",
+    "Pack one charger for travel instead of carrying three",
   ],
 
   // 🔹 Progress / stats bar
-  sectionProgressTitle: "🏆 Why Customers Love It",
+  sectionProgressTitle: "Why Customers Love It",
   sectionProgressSubtitle: "",
   sectionProgress: [
     {
@@ -3524,8 +3529,6 @@ Price AED 79.99
   comparisonData: {
     title: "Why Choose Green Lion Power Trio?",
     description:
-      "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
-    description:
       "Charge your phone, watch, and earbuds from one tidy station with strong magnetic alignment, a foldable stand, and reliable wireless power for your everyday setup.",
     headers: ["Feature", "Green Lion Power Trio", "Basic Chargers "],
     rows: [
@@ -3543,7 +3546,7 @@ Price AED 79.99
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+    "We are confident the Green Lion Power Trio will simplify your charging routine. If it does not fit your setup, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
   Faq1Q: "Can I use my case while charging?",
@@ -3559,7 +3562,7 @@ Price AED 79.99
     "A USB-C cable is included; adapter sold separately.",
  
   // 🔹 Reviews
-  reviewsTitle: "See Why Users Love It",
+  reviewsTitle: "What Customers Are Saying",
   reviewsRating: 4.9,
 reviews: [
   {
@@ -3639,16 +3642,16 @@ reviews: [
 
 {
   id: 529508, 
-  name: "Quran Magnet Speaker with Built-In  Quran",
+  name: "Quran Magnet Speaker with Built-In Quran",
   slug: "quran-magnet-speaker-built-in-surah-player", 
   price: 69.90,
   salePrice: 69.90,
   regularPrice: 150.99,
 
   description:
-    " Screen-Free Daily Quran Recitation for Your Home",
+    "Screen-Free Daily Quran Recitation for Your Home",
   shortdesc:
-    " Screen-Free Daily Quran Recitation for Your Home",
+    "Screen-Free Daily Quran Recitation for Your Home",
 
   subdesc: "",
   subdesc1: "One-Tap Playback (No Phone, No App Required)",
@@ -3716,7 +3719,7 @@ reviews: [
   // 🔹 Section 2 – Problem + Solution + Features
   section2contentTitle: "Listen to the Entire Quran — Anytime, Without Distractions",
   section2contentDesc:
-    "Staying connected to the Quran shouldn’t require apps, Wi-Fi, or screen time. This Quran Magnet Speaker comes preloaded with the Surahs, allowing you to listen anytime with a single tap.Placed where you see it every day, it naturally encourages consistent remembrance and brings peace into your home.",
+    "Staying connected to the Quran should not require apps, Wi-Fi, or extra screen time. This Quran Magnet Speaker comes preloaded and ready to play with one tap, making daily recitation simple at home, in the kitchen, or in your prayer space.",
   section2list: [
     "Quran recitation available anytime",
     "Encourages daily listening without effort",
@@ -3768,9 +3771,6 @@ reviews: [
 
   // 🔹 Comparison table – smart boxing vs punching bag
   comparisonData: {
-    title: "Why Choose Green Lion Power Trio?",
-    description:
-      "Relieves muscle pain fast. Loosens stiffness, reduces stress, and promotes better relaxation and sleep—perfect after gym or long work hours.",
     title: "Why Choose Quran Magnet Speaker?",
     description:
       "Enjoy Quran recitation in a simple, distraction-free format with one-tap playback, clear sound, and an easy setup that suits homes, prayer areas, and meaningful gifting.",
@@ -3789,15 +3789,15 @@ reviews: [
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this warmer will make feeding on the go easier. If it does not suit your routine, return it within 30 days for a full refund.",
+    "We are confident this Quran speaker will become a meaningful part of your daily routine. If it is not the right fit for your home, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
-  Faq1Q: "Does it include the  Quran or only selected Surahs?",
+  Faq1Q: "Does it include the Quran or only selected Surahs?",
   fAQ1A:"Yes, the entire Quran is preloaded.",
   Faq2Q: "Can I use it without internet or Bluetooth?",
   fAQ2A:
     " Yes, it works completely offline.",
-  Faq3Q: " Is it easy for elders and children?",
+  Faq3Q: "Is it easy for elders and children?",
   fAQ3A:
     " Absolutely — one button controls playback.",
  
@@ -3811,7 +3811,7 @@ reviews: [
     stars: 5,
   },
   {
-    text: "My parents love it because they can play any Surah without a phone.”",
+    text: "My parents love it because they can play any Surah without using a phone.",
     author: "Omar R.",
     stars: 5,
   },
@@ -3867,11 +3867,11 @@ reviews: [
       name: "Holy Wall Quran Speaker",
       label: "Buy 1 for only 79.90 AED",
       discount: 0,
-      slug: "quran-magnet-speaker-built-in-surah-player",
+      slug: "holy-wall-speaker-bluetooth-quran-light-speaker",
       price: 79.90,
         note: "Ideal for personal daily listening.",
       originalPrice: 150.99,
-      image: Product241,
+      image: Product246,
     },
     {
       type: "Bundle of 2",
@@ -3883,8 +3883,8 @@ reviews: [
       originalPrice: 180,
       mostPopular: true,
       note: "Great for couples or gifting.",
-      image: Product245,
-      slug: "quran-magnet-speaker-built-in-surah-player",
+      image: Product247,
+      slug: "holy-wall-speaker-bluetooth-quran-light-speaker",
     },
     {
       type: "Bundle of 3",
@@ -3897,7 +3897,7 @@ reviews: [
     note: "Best value for families or gifts.",
       mostPopular: false,
       image: Product247,
-      slug: "quran-magnet-speaker-built-in-surah-player",
+      slug: "holy-wall-speaker-bluetooth-quran-light-speaker",
     },
   ],
 
@@ -3906,11 +3906,12 @@ reviews: [
   // 🔹 Section 2 – Problem + Solution + Features
   section2contentTitle: "Bring Daily Quran Listening Back Into the Home",
   section2contentDesc:
-    "The Quran Should Be Heard Daily — Not Lost in Notifications.",
+    "The Quran should be heard daily, not lost in notifications. This wall speaker keeps recitation present in your home with built-in audio, Bluetooth playback, ambient light, and simple remote control.",
   section2list: [
-    "Between work, phones, and constant distractions, staying connected to the Quran becomes harder than it should be.",
-    "This Holy Wall Speaker is designed to gently bring remembrance back into your space — playing Quran recitations clearly while serving as an elegant part of your home",
-    "Mounted on your wall. Visible every day. Heard effortlessly",
+    "Built-in Quran recitation for daily listening",
+    "Bluetooth playback for additional audio use",
+    "Soft ambient light for a calm room setting",
+    "Remote control for easy everyday operation",
 
   ],
   section2image: Product247,
@@ -3937,13 +3938,13 @@ reviews: [
       percent: 96,
     },
     {
-      title: " Ramadan nights",
-      desc: "One-tap access to all Surahs, no setup required",
+      title: "Easy Room Setup",
+      desc: "Wall-mounted placement keeps recitation available without cluttering shelves or tables.",
       percent: 94,
     },
     {
-      title: "Family gatherings",
-      desc: " Highly rated as a meaningful Islamic gift.",
+      title: "Meaningful Gifting",
+      desc: "A thoughtful Islamic home gift for Ramadan, Eid, and family occasions.",
       percent: 91,
     },
     // {
@@ -3985,24 +3986,24 @@ reviews: [
   Faq4Q: "Is it loud enough for a living room?",
   fAQ4A:"Yes, the 10W speaker provides strong clear sound",
   Faq5Q: "Does it come with a remote?",
-  fAQ6A:"Yes, remote control is included.",
+  fAQ5A:"Yes, remote control is included.",
  
   // 🔹 Reviews
   reviewsTitle: "Trusted by Hundreds of Families",
   reviewsRating: 5,
 reviews: [
   {
-    text: "Really important for every home, for listening to Quran daily",
+    text: "A beautiful addition to our home. We use it daily for Quran listening and the sound is clear.",
     author: "Ahmed A.",
     stars: 5,
   },
   {
-    text: "Recommended”",
+    text: "Easy to mount, easy to use, and the remote makes it very convenient.",
     author: "Hashim K.",
     stars: 5,
   },
   {
-    text: "“Good quality and clear sound.",
+    text: "Good quality, calm lighting, and clear audio in the living room.",
     author: "Bushra R.",
     stars: 5,
   },
@@ -4165,7 +4166,7 @@ reviews: [
   // 🔹 Guarantee
   Guaranteetitle: "Try It Risk-Free for 30 Days",
   Guranteedesc:
-    "We’re confident this smart trainer will completely upgrade your fitness routine. If you don’t love it, send it back — full refund, no questions asked.",
+    "We are confident this portable bottle warmer will make feeding on the go easier. If it is not the right fit for your routine, return it within 30 days for a full refund.",
 
   // 🔹 FAQs
   Faq1Q: "Can it heat breast milk safely?",
@@ -4174,10 +4175,10 @@ reviews: [
   fAQ2A:"The built-in 6000mAh battery means no cords needed. Simply charge it before heading out and it's ready to go.",
   
   Faq3Q: "Is it compatible with all bottle brands?",
-  fAQ3A:"No, it is designed for simple wall mounting",
+  fAQ3A:"It fits bottles up to 6.5cm in diameter, covering many popular bottle styles used by parents in the UAE.",
   
-  Faq4Q: "Is it loud enough for a living room?",
-  fAQ4A:"The Velcro adjustable sleeve fits bottles up to 6.5cm in diameter, covering most major brands including Tommee Tippee, Philips Avent, and Dr. Brown's",
+  Faq4Q: "How long does it stay warm?",
+  fAQ4A:"With the built-in battery and keep-warm mode, it is designed to maintain feeding temperature during travel, errands, and overnight use.",
   
   Faq5Q: "How long does the battery last?",
   fAQ5A:"On a full charge, the warmer can maintain temperature for up to 48 hours in keep-warm mode, or complete multiple heating cycles.",
@@ -4412,6 +4413,170 @@ reviews: [
 }
 ,
 {
+  id: 543889,
+  name: "Mansory Special Edition Scooter SM10",
+  slug: "mansory-special-edition-scooter-sm10",
+  price: 3899.0,
+  salePrice: 3899.0,
+  regularPrice: 6000.0,
+
+  description:
+    "MANSORY SM10 3-Wheels Electric Scooter with luxury styling, stable 3-wheel control, and premium lightweight magnesium alloy construction.",
+  shortdesc:
+    "A premium 3-wheel electric scooter with 25 km/h top speed, 400W rear-drive motor, LED dashboard, and lightweight magnesium alloy frame.",
+
+  subdesc: "Body color: Infinity Black",
+  subdesc1: "Lightweight magnesium alloy construction",
+  subdesc2: "Dimensions & Material Used: Lightweight magnesium alloy | 121*54.5*37.5 CM",
+  subdesc3: "Top speed: 25 km/h with 3 riding modes",
+  subdesc4: "Range: approximately 25-35 km per charge",
+
+  image: Product269,
+  thumb1: Product270,
+  thumb2: Product271,
+  thumb3: Product272,
+  thumb4: Product273,
+  thumb5: Product269,
+  thumb6: Product270,
+  thumb7: Product271,
+  thumb8: Product272,
+  thumb9: Product273,
+
+  bundles: [
+    {
+      type: "Standard Edition",
+        id: 543889,
+      name: "Mansory Special Edition Scooter SM10",
+      label: "Standard Edition",
+      discount: 0,
+      slug: "mansory-special-edition-scooter-sm10",
+      price: 3899.0,
+      originalPrice: 6000.0,
+      image: Product269,
+    },
+  ],
+
+  BundleTitle: "CHOOSE YOUR OPTION",
+
+  section2contentTitle: "Dimensions & Material Used",
+  section2contentDesc:
+    "Crafted for performance and premium visual impact, the SM10 uses lightweight magnesium alloy and a stable 3-wheel layout to deliver a refined urban riding experience.",
+  section2list: [
+    "Lightweight magnesium alloy frame for enhanced shock absorption",
+    "Dimensions: 121 x 54.5 x 37.5 cm",
+    "Body color: Infinity Black",
+    "Maximum load: 100 kg",
+    "Rider height compatibility: 150-190 cm",
+    "Applicable age range: 16-60 years",
+  ],
+  section2contentPoints: [
+    "Lightweight magnesium alloy",
+    "121*54.5*37.5 CM",
+    "Secure checkout options",
+    "Support available after purchase",
+  ],
+  section2image: Product272,
+
+  section3title: "Power Meets Precision",
+  section3contentDesc:
+    "Engineered for stability, styled for luxury, and designed to make every ride feel bold, controlled, and unmistakably premium.",
+  section3image: Product273,
+  section3points: [
+    "Top speed up to 25 km/h",
+    "400W rear-drive motor",
+    "Front EABS brake and rear hydraulic brake",
+    "LED dashboard with mobile phone interface",
+  ],
+
+  sectionProgressTitle: "Why Riders Choose SM10",
+  sectionProgressSubtitle: "Performance",
+  sectionProgress: [
+    {
+      title: "Love the Stable 3-Wheel Design",
+      desc: "Riders appreciate the extra confidence and balance in everyday use.",
+      percent: 97,
+    },
+    {
+      title: "Premium Design Appeal",
+      desc: "The carbon-inspired luxury styling stands out on every ride.",
+      percent: 95,
+    },
+    {
+      title: "Smooth Urban Performance",
+      desc: "Three speed modes and responsive braking make city riding more controlled.",
+      percent: 93,
+    },
+    {
+      title: "Would Recommend It",
+      desc: "Buyers value the blend of prestige design and practical riding comfort.",
+      percent: 96,
+    },
+  ],
+
+  comparisonData: {
+    title: "Why Choose the Mansory SM10",
+    description:
+      "Not every electric scooter delivers the same level of stability, finish, and premium presence. The SM10 is built for riders who want more than basic transport.",
+    headers: ["Feature", "Mansory SM10", "Basic Scooter"],
+    rows: [
+      { feature: "3-wheel stability design", lumineux: true, others: false },
+      { feature: "400W rear-drive motor", lumineux: true, others: false },
+      { feature: "Front EABS plus rear hydraulic brake", lumineux: true, others: false },
+      { feature: "Magnesium alloy frame", lumineux: true, others: false },
+      { feature: "LED dashboard with mobile interface", lumineux: true, others: false },
+      { feature: "Three speed riding modes", lumineux: true, others: false },
+      { feature: "10-inch front plus dual 8-inch rear wheels", lumineux: true, others: false },
+      { feature: "Luxury performance styling", lumineux: true, others: false },
+    ],
+  },
+
+  section5image: Product269,
+
+  Guaranteetitle: "Premium Ride, Risk-Free Confidence",
+  Guranteedesc:
+    "We want you to feel confident choosing the Mansory SM10. If it is not the right fit for your needs, you can return it within 30 days according to our return policy.",
+
+  Faq1Q: "What is the top speed of the Mansory SM10?",
+  fAQ1A:
+    "The scooter reaches a top speed of 25 km/h and includes three riding modes at 15 km/h, 20 km/h, and 25 km/h.",
+  Faq2Q: "How far can it travel on one charge?",
+  fAQ2A:
+    "Depending on battery option and riding conditions, the expected range is approximately 25-35 km per charge.",
+  Faq3Q: "How long does charging take?",
+  fAQ3A:
+    "Charging typically takes around 4 to 6 hours.",
+  Faq4Q: "What battery options are available?",
+  fAQ4A:
+    "The SM10 is listed with 36V battery options in 7.5Ah or 10.4Ah capacity.",
+  Faq5Q: "Is the scooter suitable for daily urban riding?",
+  fAQ5A:
+    "Yes. Its 3-wheel layout, magnesium alloy frame, multiple speed modes, and dual braking setup make it well suited for stable city commuting and leisure riding.",
+  Faq6Q: "What makes this scooter different from a basic model?",
+  fAQ6A:
+    "The Mansory SM10 combines premium styling, a stable 3-wheel design, advanced braking, and a luxury-focused finish that stands apart from standard electric scooters.",
+
+  reviewsTitle: "What Riders Are Saying",
+  reviewsRating: 4.9,
+  reviews: [
+    {
+      text: "The design looks incredible in person and the 3-wheel setup feels much more stable than a regular scooter.",
+      author: "Omar A., Dubai",
+      stars: 5,
+    },
+    {
+      text: "Love the premium finish and the smooth braking. It feels more like a luxury ride than a basic commuter scooter.",
+      author: "Saeed M., Abu Dhabi",
+      stars: 5,
+    },
+    {
+      text: "Very comfortable, easy to control, and definitely gets attention everywhere I ride it.",
+      author: "Rayan K., Sharjah",
+      stars: 5,
+    },
+  ],
+}
+,
+{
   id: 543443,
   name: "Nexso 2-in-1 Baby Stroller - The Last Stroller You'll Ever Need",
   slug: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
@@ -4627,3 +4792,4 @@ Most parents buy multiple strollers as their child grows. The Nexso 2-in-1 adapt
 
 
 export default staticProducts;
+

@@ -23,6 +23,8 @@ import Product19 from '../assets/images/staticproducts/quran speaker/1.webp';
 import Product20 from '../assets/images/staticproducts/portable bottle warmer/4.webp';
 import Product21 from '../assets/images/staticproducts/scalp_messager/4.webp';
 import Product22 from '../assets/images/staticproducts/baby_stroller/10.webp';
+import Product23 from '../assets/images/staticproducts/mansoory-scooty/1.webp';
+import NoItemImage from '../assets/images/noitem.png';
 
 const DESKTOP_COLUMNS = 5;
 const MOBILE_COLUMNS = 2;
@@ -276,6 +278,18 @@ const staticProducts = [
     sold: 195,
   },
   {
+    id: "mansory-special-edition-scooter-sm10",
+    name: "Mansory Special Edition Scooter SM10",
+    price: "3899.00",
+    regular_price: "6000.00",
+    sale_price: "3899.00",
+    images: [{ src: Product23 }],
+    path: "/products/mansory-special-edition-scooter-sm10",
+    rating: 5,
+    reviews: 36,
+    sold: 62,
+  },
+  {
     id: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
     name: "Nexso 2-in-1 Baby Stroller",
     price: "329.00",
@@ -501,7 +515,7 @@ const displayedProducts = mergedProducts.slice(0, displayableCount);
 
           {/* 🔸 IMAGE */}
           <img
-            src={product.images?.[0]?.src || "/placeholder.png"}
+            src={product.images?.[0]?.src || NoItemImage}
             alt={product.name || "Product"}
             style={{
               width: '100%',

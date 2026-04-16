@@ -165,6 +165,7 @@ const CustomProductDetails = () => {
 
             {/* Bundle Selector */}
             <Bundle
+              product={product}
               bundles={product.bundles}
               selected={selectedBundleIndex}
               setSelected={setSelectedBundleIndex}
