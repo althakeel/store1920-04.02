@@ -12,19 +12,19 @@ import Logo8 from "../assets/images/theme/theme6/logo012.png";
 // import banner4 from '../assets/images/theme/banner/Banners-purple-2.webp';
 // import banner5 from '../assets/images/theme/banner/Banners Halloween 2.webp';
 // import banner6 from '../assets/images/theme/banner/Nexso_Banner.webp';
-import Banner10 from "../assets/images/theme/theme6/Main-after-eid.webp";
+import Banner10 from "../assets/images/theme/theme6/Main-mansoory.webp";
 // import Banner11 from "../assets/images/theme/banner/main23rd.webp";
 
 
 export const themes = {
   1: {
     logo: Logo8,
-    navbarBg: "#F46B1D",
+    navbarBg: "#E5E5E5",
     bannerKey: Banner10,
-    bannerBg: "#F46B1D",
+    bannerBg: "#E5E5E5",
     lightningBanner: {
-      backgroundColor: "#F46B1D",
-      textColor: "#F46B1D",
+      backgroundColor: "#E5E5E5",
+      textColor: "#E5E5E5",
     },
   }
   // 2: {
