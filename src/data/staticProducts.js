@@ -1371,7 +1371,7 @@ const staticProducts = [
   // product 7///////////////////////
 
   {
-    id: 523106,
+    id: 523418,
     name: "Cordless Leaf Blower",
     slug: "cordless-2-in-1-leaf-blower-vacuum",
     price: 59.90,
@@ -1822,7 +1822,7 @@ const staticProducts = [
   },
 
   {
-    id: 523794,
+    id: 523986,
     name: "Electric Grape & Garlic Peeling Machine",
     slug: "electric-grape-garlic-peeling-machine",
     price: 89.90,
