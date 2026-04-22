@@ -25,6 +25,7 @@ const slugify = (text) =>
 const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
   const navigate = useNavigate();
   const { removeFromCart, updateQuantity } = useCart();
+  const totalItemCount = items.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
 
   if (!items.length) return <p style={{ textAlign: 'center', marginTop: 20 }}>Your cart is empty.</p>;
 
@@ -111,7 +112,7 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
 
   return (
     <div style={{ padding:"16px 5px" }}>
-      <h3 style={{ marginBottom: 16 }}>Items in Cart ({items.length})</h3>
+      <h3 style={{ marginBottom: 16 }}>Items in Cart ({totalItemCount})</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
         {items.map((item, index) => {
           const key = `${item.id ?? item.product_id ?? 'item'}-${index}`;
@@ -233,20 +234,26 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      defaultValue={currentQuantity}
+                      value={currentQuantity}
                       aria-label={`Enter quantity for ${item.name}`}
                       style={qtyInputStyle}
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => {
-                        e.target.value = e.target.value.replace(/[^\d]/g, '');
+                        const digitsOnly = e.target.value.replace(/[^\d]/g, '');
+                        if (!digitsOnly) return;
+                        const parsedValue = Number.parseInt(digitsOnly, 10);
+                        if (!Number.isFinite(parsedValue)) return;
+
+                        const nextQuantity = Math.min(Math.max(parsedValue, 1), maxItemQuantity);
+                        if (nextQuantity !== currentQuantity) {
+                          handleUpdateQuantity(item, nextQuantity);
+                        }
                       }}
                       onBlur={(e) => {
                         const parsedValue = Number.parseInt(e.target.value, 10);
                         const nextQuantity = Number.isFinite(parsedValue)
                           ? Math.min(Math.max(parsedValue, 1), maxItemQuantity)
                           : currentQuantity;
-
-                        e.target.value = String(nextQuantity);
                         if (nextQuantity !== currentQuantity) {
                           handleUpdateQuantity(item, nextQuantity);
                         }
