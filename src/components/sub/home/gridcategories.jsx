@@ -249,7 +249,7 @@ const GridCategories = () => {
         {isMobile ? (
           <div
             className="gcx-banner"
-            onClick={() => navigate('/fast-delivery')}
+            onClick={() => navigate('/products/mansory-special-edition-scooter-sm10')}
             style={{ cursor: "pointer" }}
           >
             <img
@@ -263,7 +263,7 @@ const GridCategories = () => {
             <div
               key={ban.id}
               className="gcx-banner"
-              onClick={() => navigate('/fast-delivery')}
+              onClick={() => navigate('/products/mansory-special-edition-scooter-sm10')}
               style={{ cursor: "pointer" }}
             >
               <img src={ban.image} alt={`Banner ${ban.id}`} />

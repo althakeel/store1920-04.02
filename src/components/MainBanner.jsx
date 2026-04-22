@@ -101,7 +101,7 @@ const MainBanner = ({ banners = [], themeLink }) => {
   }, [isTransitioning]);
 
   const handleClick = () => {
-    navigate('/fast-delivery');
+    navigate('/products/mansory-special-edition-scooter-sm10');
   };
 
   if (!currentBanner) {
