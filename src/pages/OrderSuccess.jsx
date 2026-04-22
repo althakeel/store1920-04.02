@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
-import { trackPurchase } from "../utils/gtmTracking";
 import { getOrderById } from "../api/woocommerce";
 import "../assets/styles/OrderSuccess.css";
 
@@ -40,7 +39,6 @@ export default function OrderSuccess() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
-  const hasTrackedRef = useRef(false);
 
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("order_id");
@@ -88,42 +86,6 @@ export default function OrderSuccess() {
     }
     fetchOrder();
   }, [orderId, isCancelled, navigate]);
-
-  useEffect(() => {
-    if (!order || hasTrackedRef.current) return;
-
-    const trackKey = `fbq_purchase_tracked_${order.id}`;
-    if (localStorage.getItem(trackKey) === '1') {
-      hasTrackedRef.current = true;
-      return;
-    }
-
-    const firePurchase = () => {
-      const value = Math.max(0, Number.parseFloat(order.total) || 0);
-      const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
-
-      // Track with Google Tag Manager (GTM)
-      trackPurchase({
-        id: order.id,
-        total: value,
-        tax: order.tax_total || 0,
-        shipping: order.shipping_total || 0,
-        coupon_code: order.coupon_lines?.[0]?.code || '',
-        items: lineItems.map(item => ({
-          id: item.product_id,
-          product_name: item.name,
-          product_price: Number.parseFloat(item.price || item.total) || 0,
-          quantity: Number(item.quantity) || 0,
-          category: item.categories?.join(', ') || 'Uncategorized',
-        })),
-      });
-
-      localStorage.setItem(trackKey, '1');
-      hasTrackedRef.current = true;
-    };
-
-    firePurchase();
-  }, [order]);
 
   useEffect(() => {
     if (!orderId) {

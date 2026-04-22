@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getOrderById } from "../api/woocommerce";
-import { trackPurchase } from "../hooks/useTikTokTracking";
 
 /**
  * PaymentCallback Component
@@ -24,8 +23,6 @@ export default function PaymentCallback() {
   const [order, setOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const hasTrackedRef = useRef(false);
-  const retryCountRef = useRef(0);
 
   useEffect(() => {
     const checkOrderStatus = async () => {
@@ -97,54 +94,6 @@ export default function PaymentCallback() {
 
     checkOrderStatus();
   }, [location]);
-
-  useEffect(() => {
-    if (status !== 'success' || !order || hasTrackedRef.current) return;
-
-    const trackKey = `fbq_purchase_tracked_${order.id}`;
-    if (localStorage.getItem(trackKey) === '1') {
-      hasTrackedRef.current = true;
-      return;
-    }
-
-    const firePurchase = () => {
-      if (typeof window === 'undefined' || typeof window.fbq !== 'function') {
-        if (retryCountRef.current < 5) {
-          retryCountRef.current += 1;
-          setTimeout(firePurchase, 500);
-        }
-        return;
-      }
-
-      const value = Number.parseFloat(order.total) || 0;
-      const currency = order.currency || 'AED';
-      const lineItems = Array.isArray(order.line_items) ? order.line_items : [];
-      const numItems = lineItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
-      const contents = lineItems.map((item) => ({
-        id: item.product_id,
-        quantity: Number(item.quantity) || 0,
-        item_price: Number.parseFloat(item.price || item.total) || 0,
-      }));
-
-      window.fbq('track', 'Purchase', {
-        value,
-        currency,
-        content_type: 'product',
-        contents,
-        num_items: numItems,
-        order_id: order.id,
-      });
-
-      // Track TikTok Purchase Event
-      trackPurchase(order.id, value, numItems);
-      console.log('✅ TikTok Purchase event fired for order:', order.id);
-
-      localStorage.setItem(trackKey, '1');
-      hasTrackedRef.current = true;
-    };
-
-    firePurchase();
-  }, [status, order]);
 
   // Loading State
   if (status === 'loading') {
