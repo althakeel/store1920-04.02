@@ -14,6 +14,7 @@ const routeNameMap = {
   compare: 'Compare',
   categories: 'Categories',
   category: 'Category',
+  brand: 'Brand',
   recommended: 'Recommended',
   // Add more routes as needed
 };

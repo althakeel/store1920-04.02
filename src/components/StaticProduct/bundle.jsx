@@ -31,6 +31,9 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
     const bundleImage =
       bundle.image || bundle.images?.[0] || bundle.productImage || null;
 
+    const selectedBundleId = bundle?.wooId || bundle?.id || product?.wooId || product?.id || 0;
+    const selectedBundleName = bundle?.name || bundle?.productName || `${product?.name || bundle?.type} - ${bundle?.type || "Default"}`;
+
     // Fallback for projector bundle 1 price
     let fixedPrice = bundle.price;
     if ((bundle.id === 526258 || bundle.name === "Mini Portable Smart Projector") && (!fixedPrice || fixedPrice === 0)) {
@@ -43,11 +46,13 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
     }
 
     const bundleToCart = {
-      id: product?.wooId || product?.id || bundle.wooId || bundle.id || 0,
-      productId: product?.id || product?.wooId || bundle.wooId || bundle.id || 0,
-      wooId: product?.wooId || bundle.wooId || null,
+      id: selectedBundleId,
+      productId: selectedBundleId,
+      wooId: selectedBundleId,
       isStaticProduct: true,
-      name: bundle.type,
+      parentProductId: product?.wooId || product?.id || null,
+      name: selectedBundleName,
+      bundleType: bundle?.type || "",
       price: fixedPrice,
       originalPrice: bundle.originalPrice,
       quantity: 1,

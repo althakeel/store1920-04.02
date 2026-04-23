@@ -47,6 +47,7 @@ import LostPassword from './pages/lost-password';
 import MyCoins from './pages/my-coins';
 import TopSellingitems from './pages/topselling';
 import CategoryPageid from './pages/CategoryPage';
+import BrandPage from './pages/BrandPage';
 import Contact from './pages/contact';
 import Careers from './pages/careers';
 import Search from './pages/search';
@@ -374,6 +375,7 @@ const AppContent = () => {
                     <Route path="/category" element={<Categories />} />
                     {/* <Route path="/category/:id" element={<CategoryPageid />} /> */}
                     <Route path="/category/:slug" element={<CategoryPageid />} />
+                    <Route path="/brand/:slug" element={<BrandPage />} />
 
                     
                      <Route path="/products/:slug" element={<StaticProductDetails />} />

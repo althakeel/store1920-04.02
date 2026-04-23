@@ -29,7 +29,7 @@ const preloadImage = (src) =>
     }
   });
 
-const MainBanner = ({ banners = [], themeLink }) => {
+const MainBanner = ({ banners = [], themeLink, onBannerClick }) => {
   const navigate = useNavigate();
   const [currentBanner, setCurrentBanner] = useState(null);
   const [previousBanner, setPreviousBanner] = useState(null);
@@ -101,6 +101,11 @@ const MainBanner = ({ banners = [], themeLink }) => {
   }, [isTransitioning]);
 
   const handleClick = () => {
+    if (typeof onBannerClick === 'function') {
+      onBannerClick(currentBanner);
+      return;
+    }
+
     navigate('/products/mansory-special-edition-scooter-sm10');
   };
 
@@ -115,7 +120,7 @@ const MainBanner = ({ banners = [], themeLink }) => {
       aria-label="Homepage Banner"
       style={{
         backgroundColor: currentBanner.bgColor || 'transparent',
-        cursor: 'pointer',
+        cursor: typeof onBannerClick === 'function' ? 'default' : 'pointer',
       }}
       onClick={handleClick}
     >

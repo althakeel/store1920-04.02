@@ -448,6 +448,31 @@ export async function getVariationGalleries(productId) {
   }
 }
 
+export async function getBrandBySlug(slug) {
+  if (!slug) return null;
+
+  try {
+    const response = await axios.get(
+      `https://db.store1920.com/wp-json/custom/v1/brand/${encodeURIComponent(slug)}`
+    );
+
+    return response?.data || null;
+  } catch (error) {
+    console.error("getBrandBySlug error:", error);
+    return null;
+  }
+}
+
+export async function getCourierBanner() {
+  try {
+    const response = await axios.get("https://db.store1920.com/wp-json/store1920/v1/banner");
+    return response?.data?.banner_url || "";
+  } catch (error) {
+    console.error("getCourierBanner error:", error);
+    return "";
+  }
+}
+
 // ===================== Categories =====================
 export const getCategoryById = (id) => fetchAPI(`/products/categories/${id}`);
 export const getCategoryBySlug = async (slug) => {
