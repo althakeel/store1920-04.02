@@ -32,7 +32,20 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
       bundle.image || bundle.images?.[0] || bundle.productImage || null;
 
     const selectedBundleId = bundle?.wooId || bundle?.id || product?.wooId || product?.id || 0;
-    const selectedBundleName = bundle?.name || bundle?.productName || `${product?.name || bundle?.type} - ${bundle?.type || "Default"}`;
+    const rawBundleName = typeof bundle?.name === "string" ? bundle.name.trim() : "";
+    const bundleNameLooksLikeSlug = rawBundleName && /^[a-z0-9-]+$/i.test(rawBundleName);
+    const baseProductName = (
+      product?.name ||
+      bundle?.productName ||
+      (bundleNameLooksLikeSlug ? "" : rawBundleName) ||
+      bundle?.type ||
+      "Product"
+    ).trim();
+    const bundleType = String(bundle?.type || "").trim();
+    const selectedBundleName = baseProductName;
+    const selectedBundleDisplayName = bundleType && !baseProductName.toLowerCase().includes(bundleType.toLowerCase())
+      ? `${baseProductName} - ${bundleType}`
+      : baseProductName;
 
     // Fallback for projector bundle 1 price
     let fixedPrice = bundle.price;
@@ -52,7 +65,8 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
       isStaticProduct: true,
       parentProductId: product?.wooId || product?.id || null,
       name: selectedBundleName,
-      bundleType: bundle?.type || "",
+      displayName: selectedBundleDisplayName,
+      bundleType,
       price: fixedPrice,
       originalPrice: bundle.originalPrice,
       quantity: 1,
@@ -63,7 +77,7 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
     addToCart(bundleToCart, false);
 
     const query = new URLSearchParams({
-      type: bundleToCart.name,
+      type: bundleToCart.displayName || bundleToCart.name,
       price: bundleToCart.price,
       quantity: bundleToCart.quantity,
       image: bundleImage,

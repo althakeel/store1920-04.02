@@ -16,7 +16,11 @@ import {
   mapAccountAddressToCheckoutForm,
   readAddressBook,
 } from '../utils/checkoutAddress';
-import { cartHasDynamicProducts, isStaticCartItem } from '../utils/staticProductCart';
+import {
+  cartHasDynamicProducts,
+  getCartItemDisplayName,
+  isStaticCartItem,
+} from '../utils/staticProductCart';
 
 const API_BASE = 'https://db.store1920.com/wp-json/wc/v3';
 const CK = 'ck_e09e8cedfae42e5d0a37728ad6c3a6ce636695dd';
@@ -323,12 +327,22 @@ useEffect(() => {
         if (isStaticCartItem(item)) {
           const unitPrice = Number.parseFloat(item.price) || 0;
           const lineTotal = (unitPrice * quantity).toFixed(2);
+          const displayName = getCartItemDisplayName(item);
+          const bundleType = String(item.bundleType || '').trim();
 
           return {
             product_id: productId,
             quantity,
             subtotal: lineTotal,
             total: lineTotal,
+            meta_data: [
+              displayName
+                ? { key: '_store1920_display_name', value: displayName }
+                : null,
+              bundleType
+                ? { key: '_store1920_bundle_type', value: bundleType }
+                : null,
+            ].filter(Boolean),
           };
         }
 
@@ -415,9 +429,10 @@ useEffect(() => {
         { 
           key: '_react_order_products', 
           value: JSON.stringify(cartItems.map(i => ({
-            name: i.name,
+            name: getCartItemDisplayName(i),
             price: i.price,
-            quantity: i.quantity
+            quantity: i.quantity,
+            bundleType: i.bundleType || '',
           })))
         },
         {

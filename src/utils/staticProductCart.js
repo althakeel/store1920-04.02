@@ -33,3 +33,24 @@ export const isStaticCartItem = (item) => {
 
 export const cartHasDynamicProducts = (cartItems = []) =>
   cartItems.some((item) => !isStaticCartItem(item));
+
+export const getCartItemDisplayName = (item) => {
+  if (!item) return '';
+
+  const rawName = String(item.displayName || item.name || item.title || '').trim();
+  const rawBundleType = String(item.bundleType || '').trim();
+
+  if (!rawBundleType) {
+    return rawName;
+  }
+
+  if (!rawName) {
+    return rawBundleType;
+  }
+
+  if (rawName.toLowerCase().includes(rawBundleType.toLowerCase())) {
+    return rawName;
+  }
+
+  return `${rawName} - ${rawBundleType}`;
+};

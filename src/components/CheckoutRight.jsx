@@ -8,7 +8,7 @@ import OrderConfirmedPopup from './checkout/OrderConfirmedPopup';
 import PaymentMethodSelector from './checkout/PaymentMethodSelector';
 import Tabby from '../assets/images/Footer icons/3.webp'
 import Tamara from '../assets/images/Footer icons/6.webp'
-import { cartHasDynamicProducts } from '../utils/staticProductCart';
+import { cartHasDynamicProducts, getCartItemDisplayName } from '../utils/staticProductCart';
 
 const DELIVERY_FEE = 13;
 
@@ -115,12 +115,18 @@ export default function CheckoutRight({ cartItems, formData, createOrder, clearC
 
   // Capture order items
   const captureOrderItems = async (orderId, cartItems, customer) => {
-    const items = cartItems.map((item) => ({
-      id: item.wooId || item.id || 0,
-      name: item.name || item.title,
-      price: parseFloat(item.prices?.price ?? item.price ?? 0),
-      quantity: parseInt(item.quantity, 10) || 1,
-    }));
+    const items = cartItems.map((item) => {
+      const displayName = getCartItemDisplayName(item);
+
+      return {
+        id: item.wooId || item.id || 0,
+        name: displayName,
+        display_name: displayName,
+        bundle_type: item.bundleType || '',
+        price: parseFloat(item.prices?.price ?? item.price ?? 0),
+        quantity: parseInt(item.quantity, 10) || 1,
+      };
+    });
 
     await fetch('https://db.store1920.com/wp-json/custom/v1/capture-order-items', {
       method: 'POST',
