@@ -25,6 +25,8 @@ add_action('rest_api_init', function() {
         
         if (in_array($origin, $allowed_origins)) {
             header('Access-Control-Allow-Origin: ' . $origin);
+            header('Vary: Origin');
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
             header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With, X-WP-Nonce');
@@ -54,6 +56,8 @@ add_filter('woocommerce_rest_check_permissions', function($permission, $context,
     
     if (in_array($origin, $allowed_origins)) {
         header('Access-Control-Allow-Origin: ' . $origin);
+        header('Vary: Origin');
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
         header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With, X-WP-Nonce');
@@ -76,6 +80,8 @@ add_action('init', function() {
         
         if (in_array($origin, $allowed_origins)) {
             header('Access-Control-Allow-Origin: ' . $origin);
+            header('Vary: Origin');
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
             header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With, X-WP-Nonce');
