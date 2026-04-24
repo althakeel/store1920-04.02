@@ -48,8 +48,12 @@ function store1920_get_category_by_slug($data) {
     // Log successful response for debugging
     error_log("Store1920 API: Found category for slug " . $slug . " with ID " . $term->term_id);
 
-    // Return properly as WP_REST_Response
-    return rest_ensure_response($category_data);
+    // Return properly as WP_REST_Response with cache headers
+    $response = rest_ensure_response($category_data);
+    // Cache for 5 minutes on CDN, 1 hour in browser
+    $response->header('Cache-Control', 'public, max-age=3600, s-maxage=300');
+    $response->header('Vary', 'Accept-Encoding');
+    return $response;
 }
 
 // Add debug endpoint to check all categories
@@ -79,5 +83,9 @@ function store1920_debug_categories() {
         ];
     }
 
-    return rest_ensure_response($debug_data);
+    $response = rest_ensure_response($debug_data);
+    // Cache debug endpoint for 10 minutes
+    $response->header('Cache-Control', 'public, max-age=600, s-maxage=600');
+    $response->header('Vary', 'Accept-Encoding');
+    return $response;
 }

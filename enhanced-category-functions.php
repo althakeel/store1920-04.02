@@ -96,7 +96,11 @@ function store1920_get_category_by_slug_enhanced($data) {
     ];
     
     error_log("Category found: " . json_encode($result));
-    return $result;
+    $response = rest_ensure_response($result);
+    // Cache for 5 minutes on CDN, 1 hour in browser
+    $response->header('Cache-Control', 'public, max-age=3600, s-maxage=300');
+    $response->header('Vary', 'Accept-Encoding');
+    return $response;
 }
 
 // Add debug endpoint to list all categories

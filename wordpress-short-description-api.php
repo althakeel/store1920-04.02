@@ -122,7 +122,11 @@ function store1920_get_product_with_short_description($request) {
         'total_sales' => $product->get_total_sales(),
     );
     
-    return rest_ensure_response($response);
+    $wp_response = rest_ensure_response($response);
+    // Cache product details for 1 hour on CDN, 4 hours in browser
+    $wp_response->header('Cache-Control', 'public, max-age=14400, s-maxage=3600');
+    $wp_response->header('Vary', 'Accept-Encoding');
+    return $wp_response;
 }
 
 // ===== LOG SHORT DESCRIPTION UPDATES FOR DEBUGGING =====
