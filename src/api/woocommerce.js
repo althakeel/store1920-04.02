@@ -455,7 +455,7 @@ export async function getBrandBySlug(slug) {
     const response = await axios.get(
       `https://db.store1920.com/wp-json/custom/v1/brand/${encodeURIComponent(slug)}`
     );
-
+     console.log("API RESPONSE:", response.data); // 👈 ADD THIS
     return response?.data || null;
   } catch (error) {
     console.error("getBrandBySlug error:", error);
