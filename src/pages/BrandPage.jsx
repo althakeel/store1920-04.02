@@ -47,10 +47,15 @@ const BrandPage = () => {
         const data = await getBrandBySlug(slug);
         if (!isMounted) return;
 
-        setBrandData(data?.success ? data : null);
+        if (data && data.products) {
+        setBrandData(data);
+      } else {
+        setBrandData(null);
+      }
 
-        if (data?.success && data?.name) {
+       if (data?.name) {
           document.title = `${data.name} | Store1920`;
+          console.log("API DATA:", data);
         } else {
           document.title = "Brand | Store1920";
         }

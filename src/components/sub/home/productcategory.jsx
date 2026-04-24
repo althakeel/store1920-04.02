@@ -171,14 +171,14 @@ const staticProducts = [
     categories: [29688, 498, 29705], // Recommended, Electronics & Smart Devices, Smart Gadgets & Electronics
   },
   {
-    id: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual",
-    name: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual",
+    id: "48V Cordless Portable Car Wash Pressure Washer Gun with Dual",
+    name: "48V Cordless Portable Car Wash Pressure Washer Gun with Dual",
     price: "69.90",
     regular_price: "149.90",
     sale_price: "69.90",
     images: [{ src: Product1 }],
-    slug: "68v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
-    path: "/products/68v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
+    slug: "48v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
+    path: "/products/48v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
     rating: 4,
     reviews: 18,
     sold: 120,

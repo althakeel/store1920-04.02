@@ -258,14 +258,14 @@ import Product273 from "../assets/images/staticproducts/mansoory-scooty/5.webp";
 const staticProducts = [
   {
     id: 494574,
-    name: "68V Cordless Portable Car Wash Pressure Washer Gun with Dual Battery – High Power Cleaning Machine for Cars, Bikes & Home",
-    slug: "68v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
+    name: "48V Cordless Portable Car Wash Pressure Washer Gun with Dual Battery – High Power Cleaning Machine for Cars, Bikes & Home",
+    slug: "48v-cordless-portable-car-wash-pressure-washer-gun-with-dual",
     price: 69.90,
     description:
-      "Make Every Wash Easy – 68V Cordless Car & Home Pressure Washer",
+      "Make Every Wash Easy – 48V Cordless Car & Home Pressure Washer",
     shortdesc:
-      "Make Every Wash Easy – 68V Cordless Car & Home Pressure Washer.",
-    subdesc: "68V High-Power Cordless Motor",
+      "Make Every Wash Easy – 48V Cordless Car & Home Pressure Washer.",
+    subdesc: "48V High-Power Cordless Motor",
     subdesc1: "Dual Battery Pack for Longer Use",
     subdesc2: "0° & 40° Nozzles for Any Cleaning Angle",
     subdesc3: "Portable & Lightweight Design",
@@ -288,7 +288,7 @@ const staticProducts = [
       {
         type: "Buy 1",
         id: 494574,
-        productName: "68V Cordless Portable Car Wash Pressur",
+        productName: "48V Cordless Portable Car Wash Pressur",
         discount: 0,
         price: 69.90,
         originalPrice: 89.9,
@@ -297,7 +297,7 @@ const staticProducts = [
       {
         type: "Bundle of 2",
         id: 523374,
-        productName: "68V Cordless Portable Car Wash Pressur",
+        productName: "48V Cordless Portable Car Wash Pressur",
         discount: 10,
         price: 125.00,
         originalPrice: 189.8,
@@ -308,7 +308,7 @@ const staticProducts = [
       {
         type: "Bundle of 3",
         id: 523376,
-        productName: "68V Cordless Portable Car Wash Pressur",
+        productName: "48V Cordless Portable Car Wash Pressur",
         discount: 18,
         price: 171.90,
         originalPrice: 209.7,
@@ -320,7 +320,7 @@ const staticProducts = [
 
     section2contentTitle: "Reveal the Power of Clean, Anytime, Anywhere",
     section2contentDesc:
-      "Transform the way you wash your car, bike, and home surfaces with the 68V Portable Car Wash Gun. Say goodbye to stubborn dirt, messy hoses, and expensive car wash visits — enjoy professional-level cleaning right at home.",
+      "Transform the way you wash your car, bike, and home surfaces with the 48V Portable Car Wash Gun. Say goodbye to stubborn dirt, messy hoses, and expensive car wash visits — enjoy professional-level cleaning right at home.",
     section2list: [
       "Blast away dirt, mud, and grime effortlessly",
       "Clean patios, bikes, and garden tools without dragging a hose",
@@ -349,7 +349,7 @@ const staticProducts = [
     sectionProgress: [
       {
         title: "Boosted Cleaning Power",
-        desc: "Felt a noticeable lift in cleaning strength with the 68V high-pressure spray.",
+        desc: "Felt a noticeable lift in cleaning strength with the 48V high-pressure spray.",
         percent: 96,
       },
       {
@@ -368,7 +368,7 @@ const staticProducts = [
       title: "What Makes Us Different” Comparison Table",
       description:
         "Elevate your car wash routine with the 68V Portable Pressure Washer. Unlike traditional washers, it’s cordless, portable, and designed for maximum performance at home or on the go.",
-      headers: ["Feature", "Our 68V Cordless Washer", "Others"],
+      headers: ["Feature", "Our 48V Cordless Washer", "Others"],
       rows: [
         { feature: "Dual Battery", lumineux: true, others: false },
         {
