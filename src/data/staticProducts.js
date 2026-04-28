@@ -1519,7 +1519,7 @@ const staticProducts = [
     id: 523759,
     name: "Turbo Cordless Leaf Blower – 21V Power for Every Task",
     slug: "turbo-cordless-leaf-blower-21v-power-for-every-task",
-    price: 49.90,
+    price: 59.90,
     description:
       "Lightweight | Powerful Turbine Motor | Dual Battery Option ",
     shortdesc:
@@ -1551,7 +1551,7 @@ const staticProducts = [
         name: "Turbo Cordless Leaf Blower – 21V Power for Every Task - Single Battery",
         label: "Ideal for quick cleanups & small areas.",
         discount: 47,
-        price: 49.90,
+        price: 59.90,
         originalPrice: 99.98,
         image: Products118,
       },
