@@ -350,7 +350,7 @@ export const trackTimeOnPage = (pageName, timeInSeconds) => {
   console.log('⏱️ GTM Time on Page Tracked:', pageName, timeInSeconds + 's');
 };
 
-export default {
+const gtmTrackingModule = {
   initializeDataLayer,
   trackPageView,
   trackProductView,
@@ -374,3 +374,5 @@ export default {
   trackPageScroll,
   trackTimeOnPage,
 };
+
+export default gtmTrackingModule;

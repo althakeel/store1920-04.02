@@ -448,6 +448,22 @@ export async function getVariationGalleries(productId) {
   }
 }
 
+export async function getAllBrands() {
+  try {
+    const response = await axios.get(
+      `https://db.store1920.com/wp-json/store1920/v1/brands`,
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("getAllBrands response:", response.data);
+    return response?.data || [];
+  } catch (error) {
+    console.error("getAllBrands error:", error);
+    return [];
+  }
+}
+
 export async function getBrandBySlug(slug) {
   if (!slug) return null;
 

@@ -12,6 +12,7 @@ import PlaceholderImage from "../../../assets/images/common/Placeholder.png";
 import { throttle } from "lodash";
 import { API_BASE, CONSUMER_KEY, CONSUMER_SECRET } from "../../../api/woocommerce";
 import ProductCardReviews from "../../temp/productcardreviews";
+import BrandsCarousel from "../../BrandsCarousel";
 import Product1 from '../../../assets/images/staticproducts//pressurewasher/1.webp';
 import Product2 from '../../../assets/images/staticproducts/airbed/1.webp'
 import Product3 from '../../../assets/images/staticproducts/paintspray/14.webp'
@@ -129,32 +130,32 @@ const staticProducts = [
 
   {
     id: "600012",
-    name: "21V Cordless Electric Drill Driver Kit",
+    name: "Drill Kit with 2 Battery – Ultimate Cordless Power Tool Set",
     price: "124.00",
     regular_price: "150.00",
     sale_price: "124.00",
     images: [{ src: Product15 }],
-    slug: "drill-machine",
-    path: "/products/drill-machine",
+    slug: "drill-kit-with-2-battery–ultimate-cordless-power-tool-set",
+    path: "/products/drill-kit-with-2-battery–ultimate-cordless-power-tool-set",
     rating: 4,
     reviews: 18,
     sold: 120,
     categories: [29688, 6520, 6561], // Recommended, Home Improvement & Tools, Tools & Hardware
   },
-   {
-    id: "600011",
-    name: "1080p Smart Wi-Fi CCTV Security Camera",
-    price: "124.00",
-    regular_price: "150.00",
-    sale_price: "124.00",
-    images: [{ src: Product14 }],
-    slug: "cctv-camera",
-    path: "/products/cctv-camera",
-    rating: 4,
-    reviews: 18,
-    sold: 120,
-    categories: [29688, 498, 29705], // Recommended, Electronics & Smart Devices, Smart Gadgets & Electronics
-  },
+  //  {
+  //   id: "600011",
+  //   name: "1080p Smart Wi-Fi CCTV Security Camera",
+  //   price: "124.00",
+  //   regular_price: "150.00",
+  //   sale_price: "124.00",
+  //   images: [{ src: Product14 }],
+  //   slug: "cctv-camera",
+  //   path: "/products/cctv-camera",
+  //   rating: 4,
+  //   reviews: 18,
+  //   sold: 120,
+  //   categories: [29688, 498, 29705], // Recommended, Electronics & Smart Devices, Smart Gadgets & Electronics
+  // },
   
    {
     id: "600010",
@@ -982,6 +983,9 @@ useEffect(() => {
         {/* <div style={{ display: "flex", justifyContent: "center" }}>
           <img src='https://db.store1920.com/wp-content/uploads/2025/11/Mini-Sub-Banner-2.webp' className="schoolimage" style={{ maxWidth: "400px", width: "100%", height: "auto" }} alt="Category banner" />
         </div> */}
+
+        {/* Brands Carousel */}
+        <BrandsCarousel />
 
         {/* Categories */}
         <div className="pcus-categories-wrapper1 pcus-categories-wrapper3">
