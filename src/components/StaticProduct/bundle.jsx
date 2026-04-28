@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useCart } from "../../contexts/CartContext";
+import TamaraIcon from "../../assets/images/Footer icons/6.webp";
 
 const Bundle = ({ product, bundles, selected, setSelected }) => {
   const [variants, setVariants] = useState({});
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [showTamaraModal, setShowTamaraModal] = useState(false);
   const { addToCart } = useCart();
+  const selectedBundlePrice = Number(bundles?.[selected]?.price || 0);
+  const tamaraMinAmount = 99;
+  const tamaraMaxAmount = 3000;
+  const isTamaraEligible = selectedBundlePrice >= tamaraMinAmount && selectedBundlePrice <= tamaraMaxAmount;
+  const getInstallmentAmounts = (amount) => {
+    const normalizedAmount = Number(amount) || 0;
+    const baseInstallment = Math.floor((normalizedAmount / 4) * 100) / 100;
+    const installments = Array.from({ length: 4 }, () => baseInstallment);
+    const assignedTotal = baseInstallment * 4;
+    installments[3] = Number((normalizedAmount - assignedTotal + baseInstallment).toFixed(2));
+    return installments;
+  };
+  const tamaraInstallments = getInstallmentAmounts(selectedBundlePrice);
+  const tamaraInstallmentAmount = tamaraInstallments[0] || 0;
+  const paymentScheduleLabels = ["Today", "In 1 month", "In 2 months", "In 3 months"];
 
   // Handle window resize
   useEffect(() => {
@@ -12,6 +29,68 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (!showTamaraModal) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setShowTamaraModal(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleEsc);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [showTamaraModal]);
+
+  // Native Tabby promo widget (includes Learn more popup from Tabby)
+  useEffect(() => {
+    let script = document.querySelector('script[src="https://checkout.tabby.ai/tabby-promo.js"]');
+
+    const initTabbyPromo = () => {
+      if (!window.TabbyPromo) return;
+
+      const target = document.querySelector("#TabbyPromoBundle");
+      if (target) target.innerHTML = "";
+
+      new window.TabbyPromo({
+        selector: "#TabbyPromoBundle",
+        currency: "AED",
+        price: String(selectedBundlePrice.toFixed(2)),
+        lang: "en",
+        source: "product",
+        shouldInheritBg: false,
+        publicKey: "your_pk",
+        merchantCode: "your_merchant_code",
+      });
+    };
+
+    if (window.TabbyPromo) {
+      initTabbyPromo();
+      return undefined;
+    }
+
+    if (!script) {
+      script = document.createElement("script");
+      script.src = "https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload = initTabbyPromo;
+      document.body.appendChild(script);
+    } else {
+      script.addEventListener("load", initTabbyPromo, { once: true });
+    }
+
+    return () => {
+      const target = document.querySelector("#TabbyPromoBundle");
+      if (target) target.innerHTML = "";
+    };
+  }, [selectedBundlePrice]);
 
   // Handle variant selection
   const handleVariantChange = (bundleIndex, productIndex, color) => {
@@ -85,34 +164,6 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
 
     window.location.href = `/checkout?${query.toString()}`;
   };
-
-  // -------------------------------------------------
-  // ⭐ TABBY PROMO WIDGET FOR BUNDLE PRICE (React Safe)
-  // -------------------------------------------------
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.tabby.ai/tabby-promo.js";
-    script.onload = () => {
-      if (window.TabbyPromo) {
-        new window.TabbyPromo({
-          selector: "#TabbyPromoBundle",
-          currency: "AED",
-          price: String(bundles[selected]?.price || "0.00"),
-          lang: "en",
-          source: "product",
-          shouldInheritBg: false,
-          publicKey: "your_pk",
-          merchantCode: "your_merchant_code",
-        });
-      }
-    };
-    document.body.appendChild(script);
-
-    return () => {
-      const target = document.querySelector("#TabbyPromoBundle");
-      if (target) target.innerHTML = "";
-    };
-  }, [selected]);
 
   return (
     <div style={{ padding: "16px", fontFamily: "Arial, sans-serif" }}>
@@ -308,8 +359,238 @@ const Bundle = ({ product, bundles, selected, setSelected }) => {
           Buy Now – AED {bundles[selected]?.price.toFixed(2)}
         </button>
 
-        {/* ⭐⭐⭐ TABBY WIDGET (BELOW BUTTON) ⭐⭐⭐ */}
         <div id="TabbyPromoBundle" style={{ marginTop: "12px" }}></div>
+
+        {isTamaraEligible && (
+          <button
+            type="button"
+            onClick={() => setShowTamaraModal(true)}
+            style={{
+              marginTop: "12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "10px",
+              width: "100%",
+              padding: "9px 12px",
+              border: "1px solid #d9d9d9",
+              borderRadius: "7px",
+              background: "#fff",
+              color: "#111827",
+              cursor: "pointer",
+              boxSizing: "border-box",
+              minHeight: isMobile ? "50px" : "58px",
+            }}
+            aria-label="Open Tamara installment details"
+          >
+            <span
+              style={{
+                fontSize: isMobile ? "11px" : "12px",
+                lineHeight: 1.3,
+                textAlign: "left",
+                flex: 1,
+              }}
+            >
+              As low as <strong>{formatAED(tamaraInstallmentAmount)}/month</strong> or 4 interest-free payments. <strong>Learn more</strong>
+            </span>
+            <img
+              src={TamaraIcon}
+              alt="Tamara"
+              style={{
+                width: isMobile ? "64px" : "74px",
+                height: "auto",
+                objectFit: "contain",
+                flexShrink: 0,
+              }}
+            />
+          </button>
+        )}
+
+        {showTamaraModal && (
+          <div
+            onClick={() => setShowTamaraModal(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(15, 23, 42, 0.58)",
+              zIndex: 25000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: isMobile ? "12px" : "20px",
+            }}
+          >
+            <div
+              onClick={(event) => event.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Tamara payment information"
+              style={{
+                width: "100%",
+                maxWidth: "380px",
+                maxHeight: "92vh",
+                overflowY: "auto",
+                borderRadius: "28px",
+                background: "#f8fafc",
+                boxShadow: "0 24px 80px rgba(15, 23, 42, 0.32)",
+                padding: "18px",
+                textAlign: "left",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "16px",
+                }}
+              >
+                <img
+                  src={TamaraIcon}
+                  alt="Tamara"
+                  style={{ width: "92px", height: "34px", objectFit: "contain" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowTamaraModal(false)}
+                  aria-label="Close Tamara information"
+                  style={{
+                    border: "none",
+                    background: "transparent",
+                    color: "#0f172a",
+                    fontSize: "28px",
+                    lineHeight: 1,
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div
+                style={{
+                  borderRadius: "24px",
+                  padding: "22px 18px",
+                  background: "linear-gradient(135deg, #f6c68b 0%, #f8dec8 32%, #dbc8ff 100%)",
+                  color: "#111827",
+                  marginBottom: "16px",
+                }}
+              >
+                <div style={{ fontSize: "34px", fontWeight: 800, lineHeight: 1, marginBottom: "10px" }}>
+                  Pay your way
+                </div>
+                <div style={{ fontSize: "15px", lineHeight: 1.45, maxWidth: "240px" }}>
+                  Split this purchase into 4 interest-free payments with Tamara.
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gap: "12px", marginBottom: "16px" }}>
+                <div
+                  style={{
+                    background: "#ffffff",
+                    borderRadius: "18px",
+                    padding: "16px",
+                    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.06)",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", marginBottom: "4px" }}>
+                    <strong style={{ fontSize: "18px", color: "#111827" }}>4 payments</strong>
+                    <strong style={{ fontSize: "18px", color: "#111827" }}>{formatAED(tamaraInstallmentAmount)}/mo</strong>
+                  </div>
+                  <div style={{ color: "#059669", fontSize: "14px", fontWeight: 600 }}>No interest. No fees.</div>
+                </div>
+
+                <div
+                  style={{
+                    background: "#ffffff",
+                    borderRadius: "18px",
+                    padding: "16px",
+                    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.06)",
+                  }}
+                >
+                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827", marginBottom: "12px" }}>Payment schedule</div>
+                  <div style={{ display: "grid", gap: "10px" }}>
+                    {tamaraInstallments.map((installment, index) => (
+                      <div
+                        key={`${paymentScheduleLabels[index]}-${installment}`}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          fontSize: "14px",
+                          color: "#334155",
+                          borderBottom: index === tamaraInstallments.length - 1 ? "none" : "1px solid #e2e8f0",
+                          paddingBottom: index === tamaraInstallments.length - 1 ? 0 : "10px",
+                        }}
+                      >
+                        <span>{paymentScheduleLabels[index]}</span>
+                        <strong style={{ color: "#111827" }}>{formatAED(installment)}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: "#ffffff",
+                    borderRadius: "18px",
+                    padding: "16px",
+                    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.06)",
+                  }}
+                >
+                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827", marginBottom: "12px" }}>How it works</div>
+                  <div style={{ display: "grid", gap: "10px" }}>
+                    {[
+                      "Choose Tamara at checkout to split your order.",
+                      "Complete your purchase with a quick approval flow.",
+                      "Pay the remaining installments over the next 3 months.",
+                    ].map((step, index) => (
+                      <div key={step} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                        <div
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            borderRadius: "999px",
+                            background: "#ede9fe",
+                            color: "#6d28d9",
+                            fontWeight: 700,
+                            fontSize: "13px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {index + 1}
+                        </div>
+                        <div style={{ fontSize: "14px", lineHeight: 1.45, color: "#334155" }}>{step}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowTamaraModal(false)}
+                style={{
+                  width: "100%",
+                  border: "none",
+                  borderRadius: "18px",
+                  background: "#1e293b",
+                  color: "#ffffff",
+                  padding: "16px 18px",
+                  fontSize: "16px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Continue shopping
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
