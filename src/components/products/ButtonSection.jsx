@@ -8,6 +8,7 @@ export default function ButtonSection({ product, selectedVariation, quantity, is
   const { addToCart, setIsCartOpen } = useCart();
 
   const variation = selectedVariation || product;
+  const selectedQuantity = Math.max(1, Number.parseInt(quantity, 10) || 1);
 
   const addCurrentItemToCart = () => {
     const itemId = variation.id;
@@ -48,6 +49,8 @@ export default function ButtonSection({ product, selectedVariation, quantity, is
     return Number.isFinite(parsed) ? parsed : 0;
   };
 
+  const tabbyPromoPrice = (parsePrice(variation?.price ?? product?.price) * selectedQuantity).toFixed(2);
+
   const regularPrice = parsePrice(variation?.regular_price ?? product?.regular_price);
   const fallbackPrice = parsePrice(variation?.price ?? product?.price);
   const salePrice = parsePrice(variation?.sale_price ?? product?.sale_price) || fallbackPrice;
@@ -82,7 +85,7 @@ export default function ButtonSection({ product, selectedVariation, quantity, is
         new window.TabbyPromo({
           selector: '#TabbyPromo',
           currency: 'AED',
-          price: String(variation?.price || product?.price || "0.00"),
+          price: tabbyPromoPrice,
           lang: 'en',
           source: 'product',
           shouldInheritBg: false,
@@ -99,7 +102,7 @@ export default function ButtonSection({ product, selectedVariation, quantity, is
         document.body.removeChild(script);
       }
     };
-  }, [variation]);
+  }, [tabbyPromoPrice, variation]);
 
   return (
     <>

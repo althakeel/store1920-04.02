@@ -134,17 +134,6 @@ export default function ProductInfo({ product, variations, selectedVariation, on
     );
   }, [variations]);
 
-  const installmentAmount = useMemo(() => {
-    const variation = selectedVariation || product;
-    const regular = Number.parseFloat(variation?.regular_price ?? product?.regular_price ?? 0);
-    const sale = Number.parseFloat(variation?.sale_price ?? product?.sale_price ?? 0);
-    const base = Number.parseFloat(variation?.price ?? product?.price ?? 0);
-    const finalPrice = sale > 0 && regular > 0 && sale !== regular ? sale : base;
-
-    if (!Number.isFinite(finalPrice) || finalPrice <= 0) return 0;
-    return finalPrice / 4;
-  }, [product, selectedVariation]);
-
   const selectedPrice = useMemo(() => {
     const variation = selectedVariation || product;
     const regular = Number.parseFloat(variation?.regular_price ?? product?.regular_price ?? 0);
@@ -156,17 +145,29 @@ export default function ProductInfo({ product, variations, selectedVariation, on
     return finalPrice;
   }, [product, selectedVariation]);
 
+  const selectedQuantity = useMemo(() => {
+    const parsedQty = Number.parseInt(quantity, 10);
+    return Number.isFinite(parsedQty) && parsedQty > 0 ? parsedQty : 1;
+  }, [quantity]);
+
+  const totalPrice = useMemo(() => selectedPrice * selectedQuantity, [selectedPrice, selectedQuantity]);
+
+  const installmentAmount = useMemo(() => {
+    if (!Number.isFinite(totalPrice) || totalPrice <= 0) return 0;
+    return totalPrice / 4;
+  }, [totalPrice]);
+
   const tamaraInstallments = useMemo(() => {
-    const baseInstallment = Math.floor((selectedPrice / 4) * 100) / 100;
+    const baseInstallment = Math.floor((totalPrice / 4) * 100) / 100;
     const installments = Array.from({ length: 4 }, () => baseInstallment);
     const assignedTotal = baseInstallment * 4;
-    installments[3] = Number((selectedPrice - assignedTotal + baseInstallment).toFixed(2));
+    installments[3] = Number((totalPrice - assignedTotal + baseInstallment).toFixed(2));
     return installments;
-  }, [selectedPrice]);
+  }, [totalPrice]);
 
   const tamaraMinAmount = 99;
   const tamaraMaxAmount = 3000;
-  const isTamaraEligible = selectedPrice >= tamaraMinAmount && selectedPrice <= tamaraMaxAmount;
+  const isTamaraEligible = totalPrice >= tamaraMinAmount && totalPrice <= tamaraMaxAmount;
   const paymentScheduleLabels = ['Today', 'In 1 month', 'In 2 months', 'In 3 months'];
 
   if (!product) return null;
