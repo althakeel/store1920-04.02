@@ -266,7 +266,7 @@ const staticProducts = [
   {
     id: 548441,
     name: "Porodo TrackFit Screenless Fitness Band",
-    slug: "porodo-trackfit-fitness-band",
+    slug: "porodo-trackfit-smart-fitness-band-black-orange",
     price: 99.0,
     salePrice: 99.0,
     regularPrice: 699.0,

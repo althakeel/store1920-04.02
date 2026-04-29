@@ -32,13 +32,13 @@ const MOBILE_COLUMNS = 2;
 
 const staticProducts = [
   {
-    id: "porodo-trackfit-fitness-band",
+    id: "porodo-trackfit-smart-fitness-band-black-orange",
     name: "Porodo TrackFit Screenless Fitness Band",
     price: "99.00",
     regular_price: "699.00",
     sale_price: "99.00",
     images: [{ src: Product274 }],
-    path: "/products/porodo-trackfit-fitness-band",
+    path: "/products/porodo-trackfit-smart-fitness-band-black-orange",
     rating: 5,
     reviews: 12000,
     sold: 3500
