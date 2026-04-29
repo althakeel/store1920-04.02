@@ -24,13 +24,25 @@ import Product20 from '../assets/images/staticproducts/portable bottle warmer/4.
 import Product21 from '../assets/images/staticproducts/scalp_messager/4.webp';
 import Product22 from '../assets/images/staticproducts/baby_stroller/10.webp';
 import Product23 from '../assets/images/staticproducts/mansoory-scooty/1.webp';
+import Product274 from '../assets/images/staticproducts/PorodoTrackFit/1.webp';
 import NoItemImage from '../assets/images/noitem.png';
 
 const DESKTOP_COLUMNS = 5;
 const MOBILE_COLUMNS = 2;
 
 const staticProducts = [
-   
+  {
+    id: "porodo-trackfit-fitness-band",
+    name: "Porodo TrackFit Screenless Fitness Band",
+    price: "99.00",
+    regular_price: "699.00",
+    sale_price: "99.00",
+    images: [{ src: Product274 }],
+    path: "/products/porodo-trackfit-fitness-band",
+    rating: 5,
+    reviews: 12000,
+    sold: 3500
+  },
 
      {
     id: "neck-face-massager",

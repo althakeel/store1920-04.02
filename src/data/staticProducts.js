@@ -255,7 +255,189 @@ import Product273 from "../assets/images/staticproducts/mansoory-scooty/5.webp";
 
 
 
+import Product274 from "../assets/images/staticproducts/PorodoTrackFit/1.webp";
+import Product275 from "../assets/images/staticproducts/PorodoTrackFit/2.webp";
+import Product276 from "../assets/images/staticproducts/PorodoTrackFit/3.webp";
+import Product277 from "../assets/images/staticproducts/PorodoTrackFit/4.webp";
+
+
+
 const staticProducts = [
+  {
+    id: 548441,
+    name: "Porodo TrackFit Screenless Fitness Band",
+    slug: "porodo-trackfit-fitness-band",
+    price: 99.0,
+    salePrice: 99.0,
+    regularPrice: 699.0,
+    description:
+      "UAE Launch Offer - Limited Stock. The Porodo TrackFit gives you WHOOP-level health tracking with zero monthly subscription.",
+    shortdesc:
+      "AED 99 one-time payment, no hidden fees. 120+ sport modes, 30-day battery, sleep and stress analysis, and full iPhone + Android support.",
+    subdesc: "Heart Rate + SpO2 monitoring",
+    subdesc1: "Sleep and stress tracking",
+    subdesc2: "IP68 waterproof",
+    subdesc3: "30-day battery life",
+    subdesc4: "120+ sport modes",
+
+    image: Product274,
+    thumb1: Product275,
+    thumb2: Product276,
+    thumb3: Product277,
+    thumb4: Product274,
+
+    bundles: [
+      {
+        type: "1 Band",
+        id: 548444,
+        name: "Porodo TrackFit Screenless Fitness Band",
+        label: "Best for yourself",
+        discount: 0,
+        price: 99.0,
+        originalPrice: 699.0,
+        image: Product274,
+      },
+      {
+        type: "2 Bands",
+        id: 548443,
+        name: "Porodo TrackFit Screenless Fitness Band",
+        label: "Save AED 29",
+        discount: 15,
+        price: 169.0,
+        originalPrice: 198.0,
+        note: "Perfect for couples",
+        mostPopular: true,
+        image: Product275,
+      },
+      {
+        type: "3 Bands",
+        id: 548442,
+        name: "Porodo TrackFit Screenless Fitness Band",
+        label: "Save AED 48",
+        discount: 25,
+        price: 249.0,
+        originalPrice: 297.0,
+        note: "Family deal - 25% OFF",
+        image: Product276,
+      },
+    ],
+    BundleTitle: "BUNDLE & SAVE",
+
+    section2contentTitle: "Stop Renting Your Health Data",
+    section2contentDesc:
+      "After paying AED 699+ for premium wearables, many users still pay monthly just to view their own health data. Porodo TrackFit changes that with a one-time AED 99 payment and lifetime access to your metrics.",
+    section2list: [
+      "24/7 heart rate and blood oxygen tracking",
+      "Automatic sleep tracking and daily stress insights",
+      "IP68 waterproof for swimming, showers, and rain",
+      "30-day battery life on a single charge",
+      "120+ sports modes with real-time performance tracking",
+      "Bluetooth 5.4 with iOS 12+ and Android 8.0+ support",
+    ],
+    section2contentPoints: [
+      "Free UAE Shipping",
+      "Cash on Delivery",
+      "2-Year Warranty",
+      "Tabby & Tamara",
+    ],
+    section2image: Product277,
+
+    section3title: "Everything Your Body Needs to Know",
+    section3image: Product275,
+    section3points: [
+      "Heart Rate + SpO2",
+      "Sleep & Stress Analysis",
+      "IP68 Waterproof",
+      "30-Day Battery",
+    ],
+
+    sectionProgressTitle: "Join Thousands of UAE Fitness Enthusiasts",
+    sectionProgressSubtitle: "4.8/5 - 12,000+ Reviews",
+    sectionProgress: [
+      {
+        title: "Switching from subscription wearables",
+        desc: "Users are replacing costly monthly plans with one-time ownership.",
+        percent: 96,
+      },
+      {
+        title: "Battery satisfaction",
+        desc: "30-day battery life dramatically reduces charging interruptions.",
+        percent: 94,
+      },
+      {
+        title: "Daily health visibility",
+        desc: "Sleep, stress, and activity insights help users build better routines.",
+        percent: 91,
+      },
+      {
+        title: "Value for money",
+        desc: "Customers report high value compared to AED 699+ alternatives.",
+        percent: 97,
+      },
+    ],
+
+    comparisonData: {
+      title: "Why Thousands Are Making the Switch",
+      description:
+        "Porodo TrackFit covers core fitness metrics without locking your data behind recurring subscription fees.",
+      headers: ["Feature", "Porodo TrackFit", "WHOOP / Apple Watch"],
+      rows: [
+        { feature: "Price", lumineux: true, others: false },
+        { feature: "No monthly subscription", lumineux: true, others: false },
+        { feature: "30-day battery life", lumineux: true, others: false },
+        { feature: "120+ sport modes", lumineux: true, others: false },
+        { feature: "Heart rate + SpO2", lumineux: true, others: true },
+        { feature: "Sleep tracking", lumineux: true, others: true },
+        { feature: "Cash on delivery", lumineux: true, others: false },
+        { feature: "Tabby / Tamara support", lumineux: true, others: false },
+      ],
+    },
+
+    section5image: Product276,
+
+    Guaranteetitle: "2-Year Warranty + 30-Day Returns",
+    Guranteedesc:
+      "Pay once and track forever. Includes free UAE shipping, cash on delivery, a 2-year warranty, and a 30-day money-back guarantee.",
+
+    Faq1Q: "Is there really no monthly subscription?",
+    fAQ1A:
+      "Yes. You pay once and keep full access to your data and features forever. No app subscription and no annual renewal.",
+    Faq2Q: "How does the screenless design work?",
+    fAQ2A:
+      "Just like WHOOP, all data syncs to the Porodo Fit mobile app. The screenless design improves battery life and tracking focus.",
+    Faq3Q: "Can I pay with Tabby or Tamara?",
+    fAQ3A:
+      "Yes. You can split your order into 4 installments at 0% interest through Tabby or Tamara.",
+    Faq4Q: "Is Cash on Delivery available?",
+    fAQ4A: "Yes, COD is available across all UAE emirates.",
+    Faq5Q: "How long does delivery take?",
+    fAQ5A:
+      "Delivery is typically within 2 business days across UAE, with tracking shared after dispatch.",
+    Faq6Q: "What is included in the box?",
+    fAQ6A:
+      "Porodo TrackFit band, orange nylon strap (bonus), pogo-pin USB charger, and user manual.",
+
+    reviewsTitle: "Real Customers. Real Results.",
+    reviewsRating: 4.8,
+    reviews: [
+      {
+        text: "Absolutely replaced my need for an Apple Watch. The battery life alone is worth it. Best AED 99 I have spent.",
+        author: "Ahmed Al Mansoori - Dubai, UAE",
+        stars: 5,
+      },
+      {
+        text: "I was skeptical about a screenless band but honestly love it. Tracks my sleep perfectly and Tabby made checkout easy.",
+        author: "Priya Nair - Sharjah, UAE",
+        stars: 5,
+      },
+      {
+        text: "Finally I can stop paying monthly for WHOOP. This does everything I need with no subscription.",
+        author: "Mohammed Ali - Abu Dhabi, UAE",
+        stars: 5,
+      },
+    ],
+  },
+
   {
     id: 494574,
     name: "48V Cordless Portable Car Wash Pressure Washer Gun with Dual Battery – High Power Cleaning Machine for Cars, Bikes & Home",
