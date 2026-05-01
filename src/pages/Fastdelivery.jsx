@@ -25,6 +25,7 @@ import Product21 from '../assets/images/staticproducts/scalp_messager/4.webp';
 import Product22 from '../assets/images/staticproducts/baby_stroller/10.webp';
 import Product23 from '../assets/images/staticproducts/mansoory-scooty/1.webp';
 import Product274 from '../assets/images/staticproducts/PorodoTrackFit/1.webp';
+import Product279 from '../assets/images/staticproducts/airtab-mini/1.webp';
 import NoItemImage from '../assets/images/noitem.png';
 
 const DESKTOP_COLUMNS = 5;
@@ -42,6 +43,19 @@ const staticProducts = [
     rating: 5,
     reviews: 12000,
     sold: 3500
+  },
+
+  {
+    id: "airtab-17-5g-smartphone",
+    name: "AirTab 17 5G Smartphone",
+    price: "199.90",
+    regular_price: "999.00",
+    sale_price: "199.90",
+    images: [{ src: Product279 }],
+    path: "/products/airtab-17-5g-smartphone",
+    rating: 5,
+    reviews: 128,
+    sold: 342
   },
 
      {

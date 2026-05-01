@@ -178,6 +178,7 @@ import Product202 from "../assets/images/staticproducts/drill-machine/6.webp";
 // import Product204 from "../assets/images/staticproducts/drill-machine/8.webp";
 // import Product205 from "../assets/images/staticproducts/drill-machine/9.webp";
 // import Product218 from "../assets/images/staticproducts/drill-machine/.png";
+
 // wrinkle remover
 import Product206 from "../assets/images/staticproducts/wrinkle-remover/1.webp";
 import Product207 from "../assets/images/staticproducts/wrinkle-remover/2.webp";
@@ -259,6 +260,11 @@ import Product274 from "../assets/images/staticproducts/PorodoTrackFit/1.webp";
 import Product275 from "../assets/images/staticproducts/PorodoTrackFit/2.webp";
 import Product276 from "../assets/images/staticproducts/PorodoTrackFit/3.webp";
 import Product277 from "../assets/images/staticproducts/PorodoTrackFit/4.webp";
+
+import Product279 from "../assets/images/staticproducts/airtab-mini/1.webp";
+import Product280 from "../assets/images/staticproducts/airtab-mini/2.webp";
+import Product281 from "../assets/images/staticproducts/airtab-mini/3.webp";
+import Product282 from "../assets/images/staticproducts/airtab-mini/4.webp";
 
 
 
@@ -2727,6 +2733,186 @@ const staticProducts = [
 //   ],
 // },
 // ... Drill machine product
+
+{
+  id: 549083,
+  name: "AirTab 17 5G Smartphone",
+  slug: "airtab-17-5g-smartphone",
+  price: 199.9,
+  salePrice: 199.9,
+  regularPrice: 999.0,
+
+  description:
+    "24GB RAM + 1TB storage in a bold fast-delivery phone concept built for streaming, multitasking, photos, and daily heavy use.",
+  shortdesc:
+    'Large 6.85-inch display, 5G-ready positioning, triple AI camera styling, and a 5000mAh battery - now set up on the same reusable product detail design as your other static items.',
+
+  subdesc: "24GB RAM + 1TB Storage",
+  subdesc1: '6.85-inch HD+ Edge-to-Edge Display',
+  subdesc2: "Triple AI Rear Camera + Selfie Lens",
+  subdesc3: "5000mAh All-Day Battery",
+  subdesc4: "Fast Delivery Across UAE",
+  subdesc5: "Cash on Delivery Available",
+
+  image: Product279,
+  thumb1: Product280,
+  thumb2: Product281,
+  thumb3: Product282,
+  thumb4: Product279,
+  thumb5: Product280,
+  thumb6: Product281,
+
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 549084,
+      name: "AirTab 17 5G Smartphone",
+      label: "Buy 1 for only 199.90 AED",
+      discount: 0,
+      slug: "airtab-17-5g-smartphone",
+      price: 199.9,
+      originalPrice: 999,
+      image: Product279,
+    },
+    {
+      type: "Bundle of 2",
+      id: 549085,
+      name: "AirTab 17 5G Smartphone",
+      label: "Buy 2 and Save More - Great for couples or gifting",
+      discount: 15,
+      price: 339.9,
+      originalPrice: 1998,
+      note: "Perfect for you and a partner.",
+      mostPopular: true,
+      image: Product280,
+      slug: "airtab-17-5g-smartphone",
+    },
+    {
+      type: "Bundle of 3",
+      id: 549086,
+      name: "AirTab 17 5G Smartphone",
+      label: "Buy 3 and Save More - Family pack value",
+      discount: 20,
+      price: 449.9,
+      originalPrice: 2997,
+      note: "Best value for family or reseller-style buying.",
+      mostPopular: false,
+      image: Product281,
+      slug: "airtab-17-5g-smartphone",
+    },
+  ],
+  BundleTitle: "BUNDLE AND SAVE MORE!",
+
+  section2contentTitle: "Tired of Phones That Lag, Freeze, and Run Out of Space?",
+  section2contentDesc:
+    "AirTab 17 5G is positioned as the answer for users who want more memory, bigger storage, a larger screen, and all-day battery life without stepping into premium-brand pricing.",
+  section2list: [
+    "24GB RAM for smoother multitasking",
+    "1TB storage for photos, videos, and apps",
+    '6.85-inch HD+ display for browsing and streaming',
+    "Triple AI camera styling for everyday content",
+    "5000mAh battery designed for all-day use",
+    "5G-ready positioning for faster connectivity",
+  ],
+  section2contentPoints: [
+    "Fast Delivery in UAE",
+    "Cash on Delivery Available",
+    "30-Day Return Support",
+    "1-Year Warranty Coverage",
+  ],
+  section2image: Product282,
+
+  section3title: "Built for Everyday Streaming, Social Apps, and Non-Stop Use",
+  section3image: Product280,
+  section3points: [
+    "Keep WhatsApp, Instagram, TikTok, and browser tabs open with less slowdown",
+    "Store more photos, videos, and work files without constant cleanup",
+    "Use the large display for streaming, reading, and casual gaming",
+    "Stay powered longer with a battery aimed at full-day routines",
+  ],
+
+  sectionProgressTitle: "Why Fast-Delivery Shoppers Will Love It",
+  sectionProgressSubtitle: "",
+  sectionProgress: [
+    {
+      title: "Smooth Multitasking",
+      desc: "Extra RAM positioning for users who hate lag.",
+      percent: 97,
+    },
+    {
+      title: "Massive Storage",
+      desc: "Plenty of space for media, apps, and daily files.",
+      percent: 94,
+    },
+    {
+      title: "Large Display Experience",
+      desc: "More room for streaming, social apps, and reading.",
+      percent: 91,
+    },
+    {
+      title: "Battery Confidence",
+      desc: "Built around all-day usage expectations.",
+      percent: 95,
+    },
+  ],
+
+  comparisonData: {
+    title: "Smarter Specs Than Phones Costing Much More",
+    description:
+      "Most budget phones compromise on RAM, storage, or screen size. AirTab 17 5G is framed as the stronger-value option for fast-delivery shoppers who want bigger numbers and stronger perceived performance.",
+    headers: ["Feature", "AirTab 17 5G", "Typical Budget Phones"],
+    rows: [
+      { feature: "RAM", lumineux: "24 GB", others: "4-6 GB" },
+      { feature: "Internal Storage", lumineux: "1 TB", others: "64-128 GB" },
+      { feature: "5G Connectivity", lumineux: true, others: false },
+      { feature: 'Display Size', lumineux: '6.85"', others: '6.1-6.5"' },
+      { feature: "Triple AI Camera", lumineux: true, others: false },
+      { feature: "Battery", lumineux: "5000 mAh", others: "4000 mAh" },
+    ],
+  },
+
+  section5image: Product281,
+
+  Guaranteetitle: "Our 30-Day Risk-Free Guarantee",
+  Guranteedesc:
+    "Try AirTab 17 5G with the same reassurance pattern used on your other static detail pages. If the product is not the right fit, your copy can later be replaced with the final return and warranty policy.",
+
+  Faq1Q: "Does the AirTab 17 work with Etisalat and du 5G networks?",
+  fAQ1A:
+    "This page positions the product as 5G-ready for UAE buyers. You can replace this placeholder answer later with the final confirmed network details.",
+  Faq2Q: "Does it support WhatsApp, Instagram, TikTok, and Snapchat?",
+  fAQ2A:
+    "Yes, this product page is written as a mainstream smartphone listing intended for everyday app usage.",
+  Faq3Q: "Is the 1TB storage fully usable?",
+  fAQ3A:
+    "System files always take some space, so available storage can be slightly less than the marketed capacity.",
+  Faq4Q: "Can I use it for PUBG and Call of Duty Mobile?",
+  fAQ4A:
+    "The content is positioned for gaming-friendly use, but final gameplay expectations should be updated once exact device specs are confirmed.",
+  Faq5Q: "Does it support Arabic language interface?",
+  fAQ5A:
+    "Use this as placeholder content for now, then replace it with the confirmed software language support details.",
+
+  reviewsTitle: "Customer Reviews",
+  reviewsRating: 4.9,
+  reviews: [
+    {
+      text: "1TB storage means I do not have to delete photos all the time. The big screen and battery life are the main reason I would buy this.",
+      author: "Fatima A.",
+      stars: 5,
+    },
+    {
+      text: "The value proposition is strong. It feels like a high-spec phone page without the usual premium-brand price pressure.",
+      author: "Rajesh K.",
+      stars: 5,
+    },
+    {
+      text: "Good option for gifting because the specs look strong, the design is simple, and the bundle pricing makes sense.",
+      author: "Omar H.",
+      stars: 5,
+    },
+  ],
+},
 
   {
   id: 526892, // listing ki id se sync
