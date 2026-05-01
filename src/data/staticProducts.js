@@ -2968,7 +2968,7 @@ const staticProducts = [
       name: "12V Cordless Drill Set",
       label: "Buy 2 & Save More – Perfect for home + workshop",
       discount: 10,
-      price: 197.90, // tum apne hisaab se change bhi kar sakte ho
+      price: 189.90, // tum apne hisaab se change bhi kar sakte ho
       originalPrice: 290,
       note: "Ideal for gifting or keeping one at home and one at work",
       mostPopular: true,
