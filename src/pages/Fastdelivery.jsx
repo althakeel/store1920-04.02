@@ -48,9 +48,9 @@ const staticProducts = [
   {
     id: "airtab-17-5g-smartphone",
     name: "AirTab 17 5G Smartphone",
-    price: "199.90",
+    price: "269",
     regular_price: "999.00",
-    sale_price: "199.90",
+    sale_price: "269",
     images: [{ src: Product279 }],
     path: "/products/airtab-17-5g-smartphone",
     rating: 5,
