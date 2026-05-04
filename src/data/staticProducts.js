@@ -261,7 +261,7 @@ import Product275 from "../assets/images/staticproducts/PorodoTrackFit/2.webp";
 import Product276 from "../assets/images/staticproducts/PorodoTrackFit/3.webp";
 import Product277 from "../assets/images/staticproducts/PorodoTrackFit/4.webp";
 
-import Product279 from "../assets/images/staticproducts/airtab-mini/1.webp";
+import Product279 from "../assets/images/staticproducts/airtab-mini/5.webp";
 import Product280 from "../assets/images/staticproducts/airtab-mini/2.webp";
 import Product281 from "../assets/images/staticproducts/airtab-mini/3.webp";
 import Product282 from "../assets/images/staticproducts/airtab-mini/4.webp";
@@ -2736,7 +2736,7 @@ const staticProducts = [
 
 {
   id: 549083,
-  name: "AirTab 17 5G Smartphone",
+  name: "AirTab 17 Pro Max 5G Smartphone",
   slug: "airtab-17-5g-smartphone",
   price: 269,
   salePrice: 269,
@@ -2766,7 +2766,7 @@ const staticProducts = [
     {
       type: "Buy 1",
       id: 549084,
-      name: "AirTab 17 5G Smartphone",
+      name: "AirTab 17 Pro Max 5G Smartphone",
       label: "Buy 1 for only 269 AED",
       discount: 0,
       slug: "airtab-17-5g-smartphone",
@@ -2777,7 +2777,7 @@ const staticProducts = [
     {
       type: "Bundle of 2",
       id: 549085,
-      name: "AirTab 17 5G Smartphone",
+      name: "AirTab 17 Pro Max 5G Smartphone",
       label: "Buy 2 and Save More - Great for couples or gifting",
       discount: 15,
       price: 456.90,
@@ -2790,7 +2790,7 @@ const staticProducts = [
     {
       type: "Bundle of 3",
       id: 549086,
-      name: "AirTab 17 5G Smartphone",
+      name: "AirTab 17 Pro Max 5G Smartphone",
       label: "Buy 3 and Save More - Family pack value",
       discount: 20,
       price: 604.90,
