@@ -248,9 +248,7 @@ export default function OrderSuccess() {
            experience slight delays. Rest assured, your order is safe and protected</strong>
            </p> */}
           <br /><br />
-          <button className="order-btn" onClick={() => navigate('/orders')}>
-            Order no.
-          </button>
+          <p className="order-number-display">Order no. <strong>#{order.id}</strong></p>
         </div>
 
           {/* <div

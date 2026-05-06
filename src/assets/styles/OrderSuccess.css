@@ -75,19 +75,15 @@
   margin: 0 0 25px 0;
 }
 
-.order-btn {
+.order-number-display {
   background: #666;
   color: white;
-  border: none;
   padding: 10px 20px;
   border-radius: 6px;
   font-size: 14px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.order-btn:hover {
-  background: #555;
+  display: inline-block;
+  cursor: default;
+  user-select: none;
 }
 
 /* Order Number Section */
