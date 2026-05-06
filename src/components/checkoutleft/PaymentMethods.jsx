@@ -206,19 +206,22 @@ console.log('Auth user ID:', user?.id);
     staticProductIds = [];
   }
 
+  const codRelevantItems = cartItems.filter(item => !item.isGift);
+  const getItemLookupId = (item) => Number(item.wooId || item.productId || item.id);
+
   const hasOnlyStaticProducts =
-    cartItems.length > 0 &&
+    codRelevantItems.length > 0 &&
     staticProductIds.length > 0 &&
-    cartItems.every(item => staticProductIds.includes(item.id));
+    codRelevantItems.every(item => staticProductIds.includes(getItemLookupId(item)));
 
   const hasNonStaticProducts =
     staticProductIds.length > 0 &&
-    cartItems.some(item => !staticProductIds.includes(item.id));
+    codRelevantItems.some(item => !staticProductIds.includes(getItemLookupId(item)));
 
-  // Check if all cart items have COD enabled (from WordPress backend setting)
-  const allItemsSupportCOD = 
-    cartItems.length > 0 &&
-    cartItems.every(item => item.cod_available === true);
+  // Check if all non-gift cart items have COD enabled (from WordPress backend setting)
+  const allItemsSupportCOD =
+    codRelevantItems.length > 0 &&
+    codRelevantItems.every(item => item.cod_available === true);
 
   // COD is available if EITHER:
   // 1. All items are in static products list (existing logic), OR
@@ -229,6 +232,7 @@ console.log('Auth user ID:', user?.id);
 
   console.log('💳 COD Availability Check:', {
     cartItemCount: cartItems.length,
+    codRelevantItemCount: codRelevantItems.length,
     cartItems: cartItems.map(i => ({ id: i.id, name: i.name, cod_available: i.cod_available })),
     allItemsSupportCOD,
     hasOnlyStaticProducts,
@@ -291,7 +295,7 @@ console.log('Wallet loading:', walletLoading);
     <div className="pm-wrapper">
       <h3>Payment methods</h3>
 
-      {cartItems.length > 0 && !isCodAvailableForCart && (
+      {codRelevantItems.length > 0 && !isCodAvailableForCart && (
         <div
           style={{
             backgroundColor: '#fff3cd',

@@ -11,6 +11,19 @@ const formatPrice = (value) => {
   return `AED ${safeAmount.toFixed(2)}`;
 };
 
+const getSafeAmount = (value) => {
+  const amount = Number.parseFloat(value);
+  return Number.isFinite(amount) ? amount : 0;
+};
+
+const isFreeGiftItem = (item) =>
+  Array.isArray(item?.meta_data) &&
+  item.meta_data.some(
+    (meta) =>
+      meta?.key === '_store1920_free_gift' &&
+      String(meta?.value).toLowerCase() === 'true'
+  );
+
 const popularSearchTerms = [
   "Mosquito killer machine",
   "Electric mosquito killer",
@@ -138,6 +151,13 @@ export default function OrderSuccess() {
     );
   }
 
+  const freeGiftCount = (order.line_items || []).filter(isFreeGiftItem).length;
+  const itemsSubtotal = (order.line_items || []).reduce((sum, item) => {
+    if (isFreeGiftItem(item)) return sum;
+    return sum + getSafeAmount(item.total);
+  }, 0);
+  const discountTotal = getSafeAmount(order.discount_total);
+
   // Show cancellation message if order is cancelled (but NOT if it's COD)
   const isCOD = order?.payment_method === 'cod' || order?.payment_method_title === 'Cash on Delivery';
   if (isCancelled && !isCOD) {
@@ -228,9 +248,7 @@ export default function OrderSuccess() {
            experience slight delays. Rest assured, your order is safe and protected</strong>
            </p> */}
           <br /><br />
-          <button className="order-btn" onClick={() => navigate('/orders')}>
-            Order no.
-          </button>
+          <p className="order-number-display">Order no. <strong>#{order.id}</strong></p>
         </div>
 
           {/* <div
@@ -301,7 +319,9 @@ export default function OrderSuccess() {
             <span className="total-header">Total</span>
           </div>
           
-          {order.line_items.map((item) => (
+          {order.line_items.map((item) => {
+            const isGift = isFreeGiftItem(item);
+            return (
             <div key={item.id} className="table-row">
               <div className="product-info">
                 <div className="product-image">
@@ -323,24 +343,36 @@ export default function OrderSuccess() {
                   )}
                 </div>
                 <div className="product-details">
-                  <div className="product-name">[{item.product_id}] {item.name}</div>
-                  <div className="product-quantity">× {item.quantity}</div>
+                  <div className="product-name">
+                    [{item.product_id}] {item.name}
+                    {isGift && <span className="gift-pill">FREE GIFT</span>}
+                  </div>
+                  <div className="product-quantity">× {item.quantity}{isGift ? ' (promotional item)' : ''}</div>
                 </div>
               </div>
-              <div className="product-total">{formatPrice(order.total)}</div>
+              <div className={`product-total ${isGift ? 'product-total-free' : ''}`}>
+                {isGift ? 'FREE' : formatPrice(item.total)}
+              </div>
             </div>
-          ))}
+          );})}
 
           {/* Summary Section */}
           <div className="order-summary-details">
             <div className="summary-row">
               <span className="summary-label">Items</span>
-              <span className="summary-value">{formatPrice(order.total)}</span>
+              <span className="summary-value">{formatPrice(itemsSubtotal)}</span>
             </div>
+
+            {freeGiftCount > 0 && (
+              <div className="summary-row">
+                <span className="summary-label">Free Gift{freeGiftCount > 1 ? 's' : ''} ({freeGiftCount})</span>
+                <span className="summary-value summary-free-value">FREE</span>
+              </div>
+            )}
             
             <div className="summary-row">
               <span className="summary-label">Discount</span>
-              <span className="summary-value"></span>
+              <span className="summary-value">{discountTotal > 0 ? `-AED ${discountTotal.toFixed(2)}` : 'AED 0.00'}</span>
             </div>
             
             {order.shipping_total && parseFloat(order.shipping_total) > 0 && (

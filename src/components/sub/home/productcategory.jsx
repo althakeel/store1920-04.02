@@ -62,8 +62,8 @@ const Price = ({ value, className }) => {
   const [int, dec] = price.split(".");
   return (
     <span className={className}>
-      <span style={{ fontSize: "18px", fontWeight: "bold" }}>{int}</span>
-      <span style={{ fontSize: "12px" }}>.{dec}</span>
+      <span style={{ fontSize: "var(--pc-price-int-size, 18px)", fontWeight: "bold" }}>{int}</span>
+      <span style={{ fontSize: "var(--pc-price-dec-size, 12px)" }}>.{dec}</span>
     </span>
   );
 };
@@ -107,6 +107,68 @@ const dedupeProductsByRoute = (products = []) => {
     seen.add(key);
     return true;
   });
+};
+
+const extractBrandName = (product) => {
+  if (!product) return "";
+
+  if (Array.isArray(product.brands) && product.brands.length > 0) {
+    const firstBrand = product.brands[0];
+    if (typeof firstBrand === "string") return firstBrand;
+    if (firstBrand && typeof firstBrand.name === "string") return firstBrand.name;
+  }
+
+  if (Array.isArray(product.attributes)) {
+    const brandAttr = product.attributes.find((attr) => {
+      const name = String(attr?.name || "").toLowerCase();
+      return name === "brand" || name.includes("brand");
+    });
+
+    if (brandAttr && Array.isArray(brandAttr.options) && brandAttr.options.length > 0) {
+      return String(brandAttr.options[0] || "");
+    }
+  }
+
+  return "";
+};
+
+const normalizeApiProduct = (product) => {
+  const rating = Number(product?.average_rating || product?.rating || 0);
+  const reviews = Number(product?.rating_count || product?.reviews || 0);
+  const sold = Number(product?.total_sales || product?.sold || 0);
+
+  return {
+    ...product,
+    rating: Number.isFinite(rating) ? Math.max(0, Math.min(5, rating)) : 0,
+    reviews: Number.isFinite(reviews) ? Math.max(0, reviews) : 0,
+    sold: Number.isFinite(sold) ? Math.max(0, sold) : 0,
+    brand: extractBrandName(product),
+  };
+};
+
+const fetchProductsWithFallback = async (primaryUrl, fallbackUrl) => {
+  const tryFetch = async (urlToFetch) => {
+    const res = await fetch(urlToFetch);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${data?.message || "Request failed"}`);
+    }
+
+    if (!Array.isArray(data)) {
+      throw new Error(data?.message || "Unexpected API response format");
+    }
+
+    return data;
+  };
+
+  try {
+    return await tryFetch(primaryUrl);
+  } catch (primaryError) {
+    console.warn("Primary product request failed, trying fallback:", primaryError);
+    if (!fallbackUrl) throw primaryError;
+    return tryFetch(fallbackUrl);
+  }
 };
 
 
@@ -432,7 +494,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
       
       // Move clicked products to top
       const clickedProducts = cached.filter(p => clickedProductIds.has(p.id));
-      const unclickedProducts = shuffleAPIProducts(cached.filter(p => !clickedProductIds.has(p.id)));
+      const unclickedProducts = cached.filter(p => !clickedProductIds.has(p.id));
       const reordered = dedupeProductsByRoute([...clickedProducts, ...unclickedProducts]);
       
       setAllProducts(reordered);
@@ -451,11 +513,11 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
     
     try {
       // Stage 1: Quick load first 10 products with minimal fields
-      const quickUrl = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${QUICK_LOAD_COUNT}&page=1&category=${categoryId}&status=publish&catalog_visibility=visible&_fields=id,name,price,regular_price,sale_price,images,slug`;
+      const quickUrl = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${QUICK_LOAD_COUNT}&page=1&category=${categoryId}&status=publish&catalog_visibility=visible&_fields=id,name,price,regular_price,sale_price,images,slug,average_rating,rating_count,total_sales,brands,attributes`;
+      const quickFallbackUrl = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${QUICK_LOAD_COUNT}&page=1&category=${categoryId}&status=publish&catalog_visibility=visible`;
       console.log(`⚡ Quick loading first ${QUICK_LOAD_COUNT} products...`);
       
-      const quickRes = await fetch(quickUrl);
-      const quickData = await quickRes.json();
+      const quickData = await fetchProductsWithFallback(quickUrl, quickFallbackUrl);
       
       if (Array.isArray(quickData) && quickData.length > 0) {
         console.log(`✅ Quick loaded ${quickData.length} products`);
@@ -466,10 +528,10 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
           const hasPrice = p.price && parseFloat(p.price) > 0;
           const hasSalePrice = !p.sale_price || parseFloat(p.sale_price) > 0;
           return hasImage && hasPrice && hasSalePrice;
-        });
+        }).map(normalizeApiProduct);
         
-        // Shuffle the quick loaded products for variety
-        const shuffledQuickData = dedupeProductsByRoute(shuffleAPIProducts(validQuickData));
+        // Keep stable order to prevent cards from reordering unexpectedly
+        const shuffledQuickData = dedupeProductsByRoute(validQuickData);
         setAllProducts(shuffledQuickData);
         setLoadingProducts(false);
         setShowingStaticOnly(false);
@@ -485,11 +547,11 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
               
               // Fetch pages and update UI every batch for progressive loading
               while (true) {
-                const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&status=publish&catalog_visibility=visible&_fields=id,name,price,regular_price,sale_price,images,categories,slug`;
+                const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&status=publish&catalog_visibility=visible&_fields=id,name,price,regular_price,sale_price,images,categories,slug,average_rating,rating_count,total_sales,brands,attributes`;
+                const fallbackUrl = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${PRODUCT_FETCH_LIMIT}&page=${page}&category=${categoryId}&status=publish&catalog_visibility=visible`;
                 console.log(`📡 Background fetching page ${page}...`);
-                
-                const res = await fetch(url);
-                const data = await res.json();
+
+                const data = await fetchProductsWithFallback(url, fallbackUrl);
                 
                 if (!Array.isArray(data) || !data.length) {
                   console.log('⚠️ No more products found');
@@ -504,7 +566,7 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
                   const hasPrice = p.price && parseFloat(p.price) > 0;
                   const hasSalePrice = !p.sale_price || parseFloat(p.sale_price) > 0;
                   return hasImage && hasPrice && hasSalePrice;
-                });
+                }).map(normalizeApiProduct);
                 
                 // Append to current products
                 currentProducts = dedupeProductsByRoute([...currentProducts, ...validPageProducts]);
@@ -540,12 +602,11 @@ const [categoryHasMore, setCategoryHasMore] = useState(true);
                 await new Promise(resolve => setTimeout(resolve, 200));
               }
               
-              // Final update after all products loaded with shuffle
+              // Final update after all products loaded (keep stable order)
               const finalLimited = dedupeProductsByRoute(currentProducts).slice(0, MAX_PRODUCTS);
-              const shuffledFinal = dedupeProductsByRoute(shuffleAPIProducts(finalLimited));
-              apiProductCache[categoryId] = shuffledFinal;
-              setAllProducts([...shuffledFinal]);
-              console.log('🎯 Background loading complete:', shuffledFinal.length);
+              apiProductCache[categoryId] = finalLimited;
+              setAllProducts([...finalLimited]);
+              console.log('🎯 Background loading complete:', finalLimited.length);
             } catch (bgErr) {
               console.error('❌ Background fetch error:', bgErr);
             } finally {
@@ -778,6 +839,14 @@ const renderProducts = (productsToShowParam) => {
     const hasSale = p.sale_price && p.sale_price !== p.regular_price;
     const hasSecondImage = p.images && p.images.length > 1 && typeof p.images[1]?.src === 'string' && p.images[1]?.src.trim() !== '';
     const hovered = hoveredCards[p.id] || false;
+    const roundedRating = Math.max(0, Math.min(5, Math.round(Number(p.rating) || 0)));
+    const reviewCount = Math.max(0, Number(p.reviews) || 0);
+    const idSeed = String(p.id || p.slug || "0")
+      .split("")
+      .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    const dummyReviewCount = (idSeed % 180) + 20;
+    const displayReviewCount = reviewCount > 0 ? reviewCount : dummyReviewCount;
+    const displayRating = roundedRating > 0 ? roundedRating : 4;
     // Static product card
     if (p.isStatic) {
       // Always allow hover, and switch to 2nd image when available
@@ -862,7 +931,7 @@ const renderProducts = (productsToShowParam) => {
   return (
       <div
         key={p.id}
-        className="pcus-prd-card"
+        className="pcus-prd-card pcus-api-card"
         onClick={() => handleProductClick(p)}
         style={{ 
           cursor: "pointer", 
@@ -892,23 +961,17 @@ const renderProducts = (productsToShowParam) => {
             style={{ transition: 'opacity 0.3s ease-in-out', display: 'block', width: '100%' }}
           />
         </div>
-        <div className="pcus-prd-info12">
-          <h2 className="pcus-prd-title1">{decodeHTML(p.name || p.slug)}</h2>
-          {(Number(p.rating) > 0 || Number(p.reviews) > 0 || Number(p.sold) > 0) && (
-            <div className="pcus-prd-dummy-reviews" style={{ display: "flex", alignItems: "center", margin: "0px 5px" }}>
-              {Number(p.rating) > 0 && Number(p.reviews) > 0 && (
-                <>
-                  <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(Number(p.rating))}{"☆".repeat(5 - Number(p.rating))}</div>
-                  <div style={{ fontSize: "12px", color: "#666", marginRight: "8px" }}>({p.reviews})</div>
-                </>
-              )}
-              {Number(p.sold) > 0 && <div style={{ fontSize: "12px", color: "#666" }}>{p.sold} sold</div>}
-            </div>
-          )}
-          <div style={{ height: "1px", width: "100%", backgroundColor: "lightgrey", margin: "0px 0 2px 0", borderRadius: "1px" }} />
-          <div className="prc-row-abc123" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px' }}>
-            <div className="prc-left-abc123" style={{ display: 'flex', alignItems: 'center', padding: '0 4px' }}>
-              <img src={IconAED} alt="AED" style={{ width: "auto", height: "12px", marginRight: "0px", verticalAlign: "middle" }} />
+        <div className="pcus-prd-info12 pcus-api-info">
+          <h2 className="pcus-prd-title1 pcus-api-title">{decodeHTML(p.name || p.slug)}</h2>
+          <div className="pcus-prd-dummy-reviews pcus-api-reviews">
+            <div style={{ color: "#FFD700", marginRight: "8px" }}>{"★".repeat(displayRating)}{"☆".repeat(5 - displayRating)}</div>
+            <div style={{ fontSize: "12px", color: "#666", marginRight: "8px" }}>({displayReviewCount})</div>
+            {Number(p.sold) > 0 && <div style={{ fontSize: "12px", color: "#666" }}>{p.sold} sold</div>}
+          </div>
+          <div className="pcus-api-divider" />
+          <div className="prc-row-abc123 pcus-api-price-row">
+            <div className="prc-left-abc123 pcus-api-price-left">
+              <img src={IconAED} alt="AED" className="pcus-api-aed-icon" style={{ width: "auto", height: "12px", marginRight: "0px", verticalAlign: "middle" }} />
               <Price value={p.sale_price || p.price} className="prc-sale-abc123" />
               <Price value={p.regular_price} className="prc-regular-abc123" />
               {p.sale_price && p.regular_price && p.sale_price < p.regular_price && (
@@ -916,21 +979,7 @@ const renderProducts = (productsToShowParam) => {
               )}
             </div>
             <button
-              className="prc-cart-btn-abc123"
-              style={{
-                background: '#fff',
-                border: '2px solid #eee',
-                borderRadius: '50%',
-                cursor: 'pointer',
-                padding: 0,
-                position: 'relative',
-                width: '38px',
-                height: '38px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-              }}
+              className="prc-cart-btn-abc123 pcus-api-cart-btn"
               title="Add to Cart"
               onClick={(e) => {
                     e.stopPropagation();
@@ -965,6 +1014,7 @@ const renderProducts = (productsToShowParam) => {
                   )}
                 </button>
               </div>
+          {p.brand && <div className="pcus-api-brand">Brand: {p.brand}</div>}
         </div>
       </div>
     );

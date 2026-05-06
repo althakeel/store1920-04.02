@@ -346,6 +346,13 @@
   display: none;
 }
 
+/* Fix: modal thumbnail buttons must not stretch to 100% of the wide container */
+.modal-thumbnail-list .thumbnail-btn {
+  width: auto;
+  min-width: 64px;
+  flex: 0 0 auto;
+}
+
 /* Modal thumbnail scroll arrows */
 .modal-thumb-scroll {
   position: absolute;

@@ -94,6 +94,184 @@
   color: #fff;
 }
 
+/* API cards: marketplace-like clean layout */
+.pcus-api-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e9e9e9;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.pcus-api-card:hover,
+.pcus-api-card:focus {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: none;
+}
+
+.pcus-api-card .pcus-image-wrapper1 {
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border-bottom: 1px solid #f1f1f1;
+  background: #f8f8f8;
+}
+
+.pcus-api-card .pcus-image-wrapper1 img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 108%;
+  height: 108%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  filter: none;
+  transition: none;
+}
+
+.pcus-api-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  padding: 6px 6px 6px;
+}
+
+.pcus-api-title {
+  margin: 0 0 1px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: normal;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 0;
+  color: #212121;
+}
+
+.pcus-api-reviews {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  min-height: 0;
+  font-size: 11px;
+  color: #8a8a8a;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.pcus-api-review-summary {
+  font-size: 10px;
+  color: #6e6e6e;
+  line-height: 1.2;
+}
+
+.pcus-api-brand {
+  font-size: 10px;
+  color: #1f2a44;
+  line-height: 1.2;
+  font-weight: 600;
+  background: #e8f1ff;
+  border: 1px solid #bfd8ff;
+  border-radius: 999px;
+  padding: 2px 8px;
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+}
+
+.pcus-api-divider {
+  display: none;
+}
+
+.pcus-api-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 3px;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.pcus-api-price-left {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: visible;
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
+
+.pcus-api-price-left .prc-sale-abc123,
+.pcus-api-price-left .prc-regular-abc123,
+.pcus-api-price-left .prc-off-abc123 {
+  line-height: 1;
+}
+
+.pcus-api-price-left .prc-sale-abc123 {
+  animation: none;
+  color: #ff6207;
+  font-weight: 700;
+  --pc-price-int-size: 26px;
+  --pc-price-dec-size: 13px;
+}
+
+.pcus-api-price-left .prc-regular-abc123 {
+  --pc-price-int-size: 12px;
+  --pc-price-dec-size: 9px;
+  color: #9b9b9b;
+  text-decoration: line-through;
+}
+
+.pcus-api-price-left .prc-off-abc123 {
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 1.1;
+}
+
+.pcus-api-aed-icon {
+  height: 10px !important;
+  margin-right: 2px !important;
+}
+
+.pcus-api-cart-btn {
+  background: #fff;
+  border: 1px solid #111;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  width: 31px;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+.pcus-api-cart-btn:hover {
+  border-color: #ff6207;
+  background: #fff;
+}
+
 /* Example animation for the badge */
 @keyframes slideIn {
   from {
@@ -507,24 +685,27 @@ img.flying-clone {
   flex-shrink: 0;
 }
 /* Image wrapper to position badges overlay */
-.pcus-image-wrapper1 {
+.pcus-image-wrapper1,
+.pcus-image-wrapper {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   position: relative;
   overflow: hidden;
   border-radius: 5px 5px 0 0;
-    display: inline-block;
-  /* Add: */
+  display: inline-block;
+  background: #f7f7f7;
   image-rendering: auto;
   transform: translateZ(0); /* triggers GPU acceleration */
 }
-.pcus-image-wrapper1 img {
+.pcus-image-wrapper1 img,
+.pcus-image-wrapper img {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: opacity 0.4s ease-in-out;
 }
 .pcus-image-wrapper1 .primary-img {
@@ -532,42 +713,19 @@ img.flying-clone {
   z-index: 1;
 }
 
-.pcus-image-wrapper1 .secondary-img {
-  opacity: 0;
-  z-index: 2;
-}
-
-.pcus-image-wrapper1:hover .primary-img {
-  opacity: 0;
-}
-
-.pcus-image-wrapper1:hover .secondary-img {
-  opacity: 1;
-}
-
 /* Product image */
 .pcus-prd-image1 {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* fills container, cropping if needed */
+  object-fit: contain;
+  object-position: center;
   display: block;
   user-select: none;
   -webkit-user-select: none;
 
 }
 
-.pcus-prd-image1.secondary-img {
-  opacity: 0;
-  z-index: 1;
-}
 
-.pcus-image-wrapper1:hover .primary-img {
-  opacity: 0;
-}
-
-.pcus-image-wrapper1:hover .secondary-img {
-  opacity: 1;
-}
 
 
 /* Badges overlay at bottom of image */
@@ -842,9 +1000,10 @@ img.flying-clone {
   }
 
   /* Image wrapper: fixed height for better consistency */
-  .pcus-image-wrapper1 {
-    height: 150px;
-    aspect-ratio: unset;
+  .pcus-image-wrapper1,
+  .pcus-image-wrapper {
+    height: auto;
+    aspect-ratio: 4 / 5;
   }
 
   /* Hide category slider on mobile */
@@ -921,6 +1080,53 @@ img.flying-clone {
   .schoolimage{
     max-width: 250px !important;
   }
+
+  .pcus-api-price-row {
+    gap: 5px;
+    padding: 0;
+    min-height: 32px;
+  }
+
+  .pcus-api-title {
+    font-size: 11px;
+  }
+
+  .pcus-api-price-left .prc-sale-abc123 {
+    --pc-price-int-size: 22px;
+    --pc-price-dec-size: 12px;
+  }
+
+  .pcus-api-price-left .prc-regular-abc123 {
+    --pc-price-int-size: 11px;
+    --pc-price-dec-size: 8px;
+  }
+
+  .pcus-api-reviews {
+    font-size: 10px;
+  }
+
+  .pcus-api-review-summary {
+    font-size: 9px;
+  }
+
+  .pcus-api-brand {
+    font-size: 9.5px;
+    padding: 1px 7px;
+  }
+
+  .pcus-api-price-left {
+    gap: 4px;
+  }
+
+  .pcus-api-cart-btn {
+    width: 29px;
+    height: 29px;
+  }
+
+  .pcus-api-card .pcus-image-wrapper1 {
+    aspect-ratio: 4 / 5;
+    padding: 0;
+  }
 }
 
 /* Responsive styles for screens below 480px */
@@ -937,8 +1143,9 @@ img.flying-clone {
   }
 
   /* Image wrapper: keep square ratio */
-  .pcus-image-wrapper1 {
-    aspect-ratio: 1 / 1;
+  .pcus-image-wrapper1,
+  .pcus-image-wrapper {
+    aspect-ratio: 4 / 5;
     height: auto;
   }
 
@@ -999,6 +1206,49 @@ img.flying-clone {
     height: 28px;
     margin: 0;
     flex-shrink: 0;
+  }
+
+  .pcus-api-price-row {
+    gap: 4px;
+    padding: 0;
+    min-height: 30px;
+  }
+
+  .pcus-api-title {
+    font-size: 10px;
+  }
+
+  .pcus-api-price-left .prc-sale-abc123 {
+    --pc-price-int-size: 20px;
+    --pc-price-dec-size: 11px;
+  }
+
+  .pcus-api-price-left .prc-regular-abc123 {
+    --pc-price-int-size: 10px;
+    --pc-price-dec-size: 8px;
+  }
+
+  .pcus-api-reviews {
+    font-size: 10px;
+  }
+
+  .pcus-api-brand {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+
+  .pcus-api-price-left {
+    gap: 3px;
+  }
+
+  .pcus-api-cart-btn {
+    width: 27px;
+    height: 27px;
+  }
+
+  .pcus-api-card .pcus-image-wrapper1 {
+    aspect-ratio: 4 / 5;
+    padding: 0;
   }
 }
 

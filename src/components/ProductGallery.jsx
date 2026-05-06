@@ -35,7 +35,7 @@ export default function ProductGallery({
   const zoomedImageRef = useRef(null);
   const containerRef = useRef(null);
   const lastDragPosition = useRef(null);
-  const [visibleImages, setVisibleImages] = useState(images?.length ? [images[0]] : []);
+  const [visibleImages, setVisibleImages] = useState(images?.length ? images : []);
 
   // Sync mainIndex when mainImageUrl changes from parent
   useEffect(() => {
@@ -54,16 +54,10 @@ export default function ProductGallery({
     }
   }, [mainImageUrl, images, mainIndex]);
 
-  // Initialize main image when images change
+  // Keep visibleImages in sync when images prop changes
   useEffect(() => {
-    if (!mainLoading && images.length > 1) {
-      // Delay adding other images slightly after main loads
-      const timer = setTimeout(() => {
-        setVisibleImages(images);
-      }, 200); // small delay to avoid blocking
-      return () => clearTimeout(timer);
-    }
-  }, [mainLoading, images]);
+    if (images?.length) setVisibleImages(images);
+  }, [images]);
 
   // Reset loading and zoom state when mainIndex changes
   useEffect(() => {

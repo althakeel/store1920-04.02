@@ -393,41 +393,19 @@ console.log("✅ Wallet Payment Response =>", data);
   // UI helpers
   // -----------------------------
   const getButtonStyle = () => {
-    let backgroundColor = '#ff9800'; // Default orange
-    let borderColor = '#f57c00';
-    let hoverBorderColor = '#ef6c00';
-    
-    // Use exact brand colors for specific payment methods
-    if (formData.paymentMethod === 'tabby') {
-      backgroundColor = '#50C878'; // Tabby's exact teal/mint color
-      borderColor = '#45B369';
-      hoverBorderColor = '#3A9E5A';
-    } else if (formData.paymentMethod === 'tamara') {
-      backgroundColor = '#39B54A'; // Tamara's exact green color
-      borderColor = '#2E9338';
-      hoverBorderColor = '#237A2C';
-    }
-    
-    const base = {
+    return {
       color: '#ffffff',
-      backgroundColor: backgroundColor,
-      border: `1px solid ${borderColor}`,
-      borderRadius: '25px',
-      fontWeight: 600,
-      padding: '14px 36px',
+      backgroundColor: '#f55c00',
+      borderRadius: '8px',
+      border: 'none',
+      fontWeight: 700,
+      fontSize: '15px',
+      letterSpacing: '0.2px',
+      padding: '15px 20px',
       cursor: isPlacingOrder ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
+      transition: 'background-color 0.2s ease',
+      boxShadow: '0 2px 8px rgba(245, 92, 0, 0.28)',
     };
-    
-    // Add hover effect styling
-    const hoverStyle = {
-      ':hover': {
-        borderColor: hoverBorderColor,
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      }
-    };
-
-    return base;
   };
 
   // Handle "Pay Now" from order confirmed popup
@@ -569,54 +547,7 @@ console.log("✅ Wallet Payment Response =>", data);
         ? `Place Order with ${label}`
         : 'Place Order';
 
-    const wrapperStyle = {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px',
-      flexWrap: 'wrap',
-      minHeight: '24px',
-      textAlign: 'center',
-    };
-
-    if (!logoUrl) {
-      return <span style={wrapperStyle}>{baseText}</span>;
-    }
-
-    const logoStyle = {
-      height: method === 'tabby' || method === 'tamara' ? '38px' : '32px',
-      width: method === 'tabby' || method === 'tamara' ? '60px' : 'auto',
-      objectFit: 'contain',
-      padding: '2px 4px',
-      borderRadius: '4px',
-      backgroundColor: '#f9fafb',
-      border: '1px solid #d1d5db',
-    };
-
-    if (method === 'tabby' || method === 'tamara') {
-      logoStyle.backgroundColor = 'transparent';
-      logoStyle.border = 'none';
-    } else if (method === 'cod') {
-      logoStyle.backgroundColor = '#fff7ed';
-      logoStyle.border = '1px solid #f97316';
-    } else if (method === 'card') {
-      logoStyle.backgroundColor = '#f0fdf4';
-      logoStyle.border = '1px solid #22c55e';
-    }
-
-    return (
-      <span style={wrapperStyle}>
-        <span>{baseText}</span>
-        <img
-          src={logoUrl}
-          alt={label}
-          style={{
-            ...logoStyle,
-            visibility: isPlacingOrder ? 'hidden' : 'visible',
-          }}
-        />
-      </span>
-    );
+    return <span>{baseText}</span>;
   };
 
   return (
@@ -727,9 +658,9 @@ console.log("✅ Wallet Payment Response =>", data);
       {/* Mobile: sticky button with total, only after address is complete and not editing address/form or order popup */}
       {isAddressComplete && !editingAddress && !isAddressFormOpen && !showOrderConfirmed && (
         <div className="mobileStickyButton">
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginRight: '12px' }}>
-            <span style={{ fontSize: '12px', color: '#666', fontWeight: 500, marginBottom: '2px', marginLeft: '2px' }}>Total:</span>
-            <span className="mobileSubtotal" style={{ fontSize: '18px', fontWeight: 700, color: '#111' }}> AED {totalWithDelivery.toFixed(2)}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '11px', color: '#888', fontWeight: 500, marginBottom: '2px' }}>Total</span>
+            <span className="mobileSubtotal">AED {totalWithDelivery.toFixed(2)}</span>
           </div>
           <button
             className="placeOrderBtnCR"

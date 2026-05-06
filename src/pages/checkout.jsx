@@ -58,6 +58,9 @@ const fetchWithAuth = async (endpoint, options = {}) => {
 
 const sanitizeField = (value) => (value && value.trim() ? value : 'NA');
 const DELIVERY_FEE = 13;
+const FREE_SHIPPING_THRESHOLD = 150;
+const FREE_GIFT_THRESHOLD = 150;
+const FREE_GIFT_SLUGS = ['nexso-curly-hair-brush', 'nexso-black-mouth-tape-30pcs-hypoallergenic-snore-strips'];
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -75,6 +78,10 @@ export default function CheckoutPage() {
 
   const [orderId, setOrderId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [giftProducts, setGiftProducts] = useState([]);
+  const [selectedGiftSlug, setSelectedGiftSlug] = useState(FREE_GIFT_SLUGS[0]);
+  const [animatedProgress, setAnimatedProgress] = useState(0);
+  const [showGiftGuide, setShowGiftGuide] = useState(false);
   // const [showSignInModal, setShowSignInModal] = useState(false);
   const [alert, setAlert] = useState({ message: '', type: 'info' });
   const [error, setError] = useState('');
@@ -85,8 +92,108 @@ export default function CheckoutPage() {
   );
   const discountedSubtotal = Math.max(0, subtotal - discount - coinDiscount);
   const hasDynamicProducts = cartHasDynamicProducts(cartItems);
+  // Free shipping and gift thresholds only count non-static, non-gift cart items
+  const dynamicSubtotal = cartItems
+    .filter(item => !isStaticCartItem(item) && !item.isGift)
+    .reduce((sum, item) => sum + (parseFloat(item.price) || 0) * item.quantity, 0);
+  const discountedDynamicSubtotal = Math.max(0, dynamicSubtotal - discount - coinDiscount);
   const deliveryFee =
-    discountedSubtotal > 0 && discountedSubtotal < 100 && hasDynamicProducts ? DELIVERY_FEE : 0;
+    discountedDynamicSubtotal > 0 && discountedDynamicSubtotal < 150 && hasDynamicProducts ? DELIVERY_FEE : 0;
+  const freeShippingUnlocked = discountedDynamicSubtotal >= FREE_SHIPPING_THRESHOLD;
+  const amountRemainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - discountedDynamicSubtotal);
+  const freeShippingProgress = Math.min(
+    100,
+    Math.max(0, (discountedDynamicSubtotal / FREE_SHIPPING_THRESHOLD) * 100)
+  );
+  const giftUnlocked = discountedDynamicSubtotal >= FREE_GIFT_THRESHOLD;
+  const amountRemainingForGift = Math.max(0, FREE_GIFT_THRESHOLD - discountedDynamicSubtotal);
+
+  // Animate progress bar value for smoother visual feedback
+  useEffect(() => {
+    const startValue = animatedProgress;
+    const endValue = freeShippingProgress;
+    const durationMs = 900;
+    let frameId;
+    const startTime = performance.now();
+
+    const animate = (now) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / durationMs, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setAnimatedProgress(startValue + (endValue - startValue) * eased);
+      if (t < 1) frameId = requestAnimationFrame(animate);
+    };
+
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [freeShippingProgress]);
+
+  useEffect(() => {
+    setShowGiftGuide(giftUnlocked);
+  }, [giftUnlocked]);
+
+  // Auto-hide gift guide after 5 seconds
+  useEffect(() => {
+    if (!showGiftGuide) return undefined;
+    const timer = setTimeout(() => setShowGiftGuide(false), 5000);
+    return () => clearTimeout(timer);
+  }, [showGiftGuide]);
+
+  // Fetch free-gift options when threshold is crossed
+  useEffect(() => {
+    if (!giftUnlocked) {
+      setCartItems(prev => {
+        const withoutGifts = prev.filter(i => !i.isGift);
+        return withoutGifts.length !== prev.length ? withoutGifts : prev;
+      });
+      setGiftProducts([]);
+      setSelectedGiftSlug(FREE_GIFT_SLUGS[0]);
+      return;
+    }
+
+    Promise.all(
+      FREE_GIFT_SLUGS.map(slug =>
+        fetchWithAuth(`products?slug=${slug}`).then(data => (Array.isArray(data) ? data[0] : data))
+      )
+    )
+      .then(products => {
+        const validProducts = products.filter(Boolean);
+        setGiftProducts(validProducts);
+        if (!validProducts.some(p => p.slug === selectedGiftSlug) && validProducts[0]?.slug) {
+          setSelectedGiftSlug(validProducts[0].slug);
+        }
+      })
+      .catch(err => console.warn('Free gift fetch failed:', err));
+  }, [giftUnlocked]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keep only one selected free gift in cart
+  useEffect(() => {
+    if (!giftUnlocked || giftProducts.length === 0) return;
+
+    const selectedGift =
+      giftProducts.find(p => p.slug === selectedGiftSlug) ||
+      giftProducts[0];
+
+    if (!selectedGift) return;
+
+    const giftItem = {
+      id: `gift-${selectedGift.id}`,
+      productId: selectedGift.id,
+      wooId: selectedGift.id,
+      name: selectedGift.name,
+      price: 0,
+      quantity: 1,
+      images: selectedGift.images || [],
+      isGift: true,
+      giftSlug: selectedGift.slug,
+      inStock: true,
+    };
+
+    setCartItems(prev => {
+      const withoutGifts = prev.filter(i => !i.isGift);
+      return [...withoutGifts, giftItem];
+    });
+  }, [giftUnlocked, giftProducts, selectedGiftSlug]);
 
   useEffect(() => {
     const savedData = localStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
@@ -323,6 +430,16 @@ useEffect(() => {
           Number.parseInt(item.wooId || item.productId || item.id, 10) || 0;
 
         if (!productId) return null;
+
+        if (item.isGift) {
+          return {
+            product_id: productId,
+            quantity: 1,
+            subtotal: '0.00',
+            total: '0.00',
+            meta_data: [{ key: '_store1920_free_gift', value: 'true' }],
+          };
+        }
 
         if (isStaticCartItem(item)) {
           const unitPrice = Number.parseFloat(item.price) || 0;
@@ -562,6 +679,73 @@ return (
   <>
     {/* Auto-fetch customer location on checkout page load */}
     <AutoFetchLocation />
+
+    {hasDynamicProducts && <div className="checkoutShippingProgressWrap">
+      <div className="checkoutShippingProgressHead">
+        <div className="checkoutShippingProgressTitleGroup">
+          <span className="checkoutShippingProgressTitle">Free Shipping Progress</span>
+          <span className={`checkoutShippingProgressBadge ${freeShippingUnlocked ? 'unlocked' : ''}`}>
+            {freeShippingUnlocked ? 'Unlocked' : 'In Progress'}
+          </span>
+        </div>
+        <span className="checkoutShippingProgressValue">AED {Math.min(discountedDynamicSubtotal, FREE_SHIPPING_THRESHOLD).toFixed(2)} / AED {FREE_SHIPPING_THRESHOLD.toFixed(2)}</span>
+      </div>
+      <div className="checkoutShippingTrack" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(animatedProgress)}>
+        <div className={`checkoutShippingFill ${freeShippingUnlocked ? 'unlocked' : ''}`} style={{ width: `${animatedProgress}%` }} />
+      </div>
+      <div className="checkoutShippingMilestones">
+        <span>AED 0</span>
+        <span>AED {FREE_SHIPPING_THRESHOLD.toFixed(0)}</span>
+      </div>
+      <p className="checkoutShippingHint">
+        {freeShippingUnlocked
+          ? 'Free shipping unlocked for this order.'
+          : `Add AED ${amountRemainingForFreeShipping.toFixed(2)} more to get free shipping.`}
+      </p>
+      <p className="checkoutShippingGiftHint">
+        {giftUnlocked
+          ? '🎁 Free gift unlocked! Pick 1 free gift below.'
+          : `🎁 Spend AED ${amountRemainingForGift.toFixed(2)} more (on regular products) to unlock 1 free gift!`}
+      </p>
+      {giftUnlocked && showGiftGuide && (
+        <div className="checkoutGiftGuidePopup" role="status" aria-live="polite">
+          <span>Choose 1 free gift below</span>
+          <button
+            type="button"
+            className="checkoutGiftGuideClose"
+            aria-label="Dismiss gift guide"
+            onClick={() => setShowGiftGuide(false)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      {giftUnlocked && giftProducts.length > 0 && (
+        <div className="checkoutGiftPreviewRow">
+          {giftProducts.map(p => (
+            <button
+              key={p.id}
+              type="button"
+              className={`checkoutGiftPreviewCard ${selectedGiftSlug === p.slug ? 'selected' : ''}`}
+              onClick={() => {
+                setSelectedGiftSlug(p.slug);
+                setShowGiftGuide(false);
+              }}
+            >
+              {p.images?.[0]?.src && (
+                <img src={p.images[0].src} alt={p.name} className="checkoutGiftPreviewImg" />
+              )}
+              <div className="checkoutGiftPreviewInfo">
+                <span className="checkoutGiftPreviewName">{p.name}</span>
+                <span className="checkoutGiftPreviewPrice">
+                  {selectedGiftSlug === p.slug ? 'Selected' : 'FREE'}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>}
 
     <div className="checkoutGrid" style={{ minHeight: '100vh', overflowY: 'auto' }}>
       <CheckoutLeft

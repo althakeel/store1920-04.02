@@ -154,8 +154,21 @@
   font-weight: 400;
 }
 
+.pi-installment-methods {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.pi-installment-method-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .pi-installment-separator {
-  margin: 0 2px;
+  margin: 0;
 }
 
 .pi-installment-chip {
