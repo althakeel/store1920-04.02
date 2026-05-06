@@ -27,6 +27,7 @@ export default function CheckoutLeft({
   countries,
   cartItems,
   subtotal,
+  deliveryFee = 0,
   orderId,
   formData,
   setFormData,
@@ -377,6 +378,7 @@ export default function CheckoutLeft({
         selectedMethodId={selectedShippingMethodId}
         onSelect={(id) => { setSelectedShippingMethodId(id); handleShippingMethodChange(id); }}
         subtotal={subtotal}
+        deliveryFee={deliveryFee}
       />
 
       {/* Cart Items */}

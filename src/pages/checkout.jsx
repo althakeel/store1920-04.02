@@ -58,7 +58,7 @@ const fetchWithAuth = async (endpoint, options = {}) => {
 
 const sanitizeField = (value) => (value && value.trim() ? value : 'NA');
 const DELIVERY_FEE = 13;
-const FREE_SHIPPING_THRESHOLD = 150;
+const FREE_SHIPPING_THRESHOLD = 100;
 const FREE_GIFT_THRESHOLD = 150;
 const FREE_GIFT_SLUGS = ['nexso-curly-hair-brush', 'nexso-black-mouth-tape-30pcs-hypoallergenic-snore-strips'];
 
@@ -98,12 +98,12 @@ export default function CheckoutPage() {
     .reduce((sum, item) => sum + (parseFloat(item.price) || 0) * item.quantity, 0);
   const discountedDynamicSubtotal = Math.max(0, dynamicSubtotal - discount - coinDiscount);
   const deliveryFee =
-    discountedDynamicSubtotal > 0 && discountedDynamicSubtotal < 150 && hasDynamicProducts ? DELIVERY_FEE : 0;
+    discountedDynamicSubtotal > 0 && discountedDynamicSubtotal < FREE_SHIPPING_THRESHOLD && hasDynamicProducts ? DELIVERY_FEE : 0;
   const freeShippingUnlocked = discountedDynamicSubtotal >= FREE_SHIPPING_THRESHOLD;
   const amountRemainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - discountedDynamicSubtotal);
-  const freeShippingProgress = Math.min(
+  const freeGiftProgress = Math.min(
     100,
-    Math.max(0, (discountedDynamicSubtotal / FREE_SHIPPING_THRESHOLD) * 100)
+    Math.max(0, (discountedDynamicSubtotal / FREE_GIFT_THRESHOLD) * 100)
   );
   const giftUnlocked = discountedDynamicSubtotal >= FREE_GIFT_THRESHOLD;
   const amountRemainingForGift = Math.max(0, FREE_GIFT_THRESHOLD - discountedDynamicSubtotal);
@@ -111,7 +111,7 @@ export default function CheckoutPage() {
   // Animate progress bar value for smoother visual feedback
   useEffect(() => {
     const startValue = animatedProgress;
-    const endValue = freeShippingProgress;
+    const endValue = freeGiftProgress;
     const durationMs = 900;
     let frameId;
     const startTime = performance.now();
@@ -126,7 +126,7 @@ export default function CheckoutPage() {
 
     frameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameId);
-  }, [freeShippingProgress]);
+  }, [freeGiftProgress]);
 
   useEffect(() => {
     setShowGiftGuide(giftUnlocked);
@@ -618,6 +618,7 @@ useEffect(() => {
       countries={countries}
       cartItems={cartItems}
       subtotal={subtotal}
+      deliveryFee={deliveryFee}
       orderId={orderId}
       formData={formData}
       setFormData={setFormData}
@@ -683,25 +684,20 @@ return (
     {hasDynamicProducts && <div className="checkoutShippingProgressWrap">
       <div className="checkoutShippingProgressHead">
         <div className="checkoutShippingProgressTitleGroup">
-          <span className="checkoutShippingProgressTitle">Free Shipping Progress</span>
-          <span className={`checkoutShippingProgressBadge ${freeShippingUnlocked ? 'unlocked' : ''}`}>
-            {freeShippingUnlocked ? 'Unlocked' : 'In Progress'}
+          <span className="checkoutShippingProgressTitle">Free Gift Progress</span>
+          <span className={`checkoutShippingProgressBadge ${giftUnlocked ? 'unlocked' : ''}`}>
+            {giftUnlocked ? 'Unlocked' : 'In Progress'}
           </span>
         </div>
-        <span className="checkoutShippingProgressValue">AED {Math.min(discountedDynamicSubtotal, FREE_SHIPPING_THRESHOLD).toFixed(2)} / AED {FREE_SHIPPING_THRESHOLD.toFixed(2)}</span>
+        <span className="checkoutShippingProgressValue">AED {Math.min(discountedDynamicSubtotal, FREE_GIFT_THRESHOLD).toFixed(2)} / AED {FREE_GIFT_THRESHOLD.toFixed(2)}</span>
       </div>
       <div className="checkoutShippingTrack" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(animatedProgress)}>
-        <div className={`checkoutShippingFill ${freeShippingUnlocked ? 'unlocked' : ''}`} style={{ width: `${animatedProgress}%` }} />
+        <div className={`checkoutShippingFill ${giftUnlocked ? 'unlocked' : ''}`} style={{ width: `${animatedProgress}%` }} />
       </div>
       <div className="checkoutShippingMilestones">
         <span>AED 0</span>
-        <span>AED {FREE_SHIPPING_THRESHOLD.toFixed(0)}</span>
+        <span>AED {FREE_GIFT_THRESHOLD.toFixed(0)}</span>
       </div>
-      <p className="checkoutShippingHint">
-        {freeShippingUnlocked
-          ? 'Free shipping unlocked for this order.'
-          : `Add AED ${amountRemainingForFreeShipping.toFixed(2)} more to get free shipping.`}
-      </p>
       <p className="checkoutShippingGiftHint">
         {giftUnlocked
           ? '🎁 Free gift unlocked! Pick 1 free gift below.'
@@ -752,6 +748,7 @@ return (
         countries={countries}
         cartItems={cartItems}
         subtotal={subtotal}
+        deliveryFee={deliveryFee}
         orderId={orderId}
         formData={formData}
         setFormData={setFormData}

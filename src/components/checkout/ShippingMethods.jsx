@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import '../../assets/styles/checkout/ShippingMethods.css';
 
-const ShippingMethods = ({ selectedMethodId, onSelect }) => {
-  const [methods] = useState([
+const ShippingMethods = ({ selectedMethodId, onSelect, deliveryFee = 0 }) => {
+  const methods = [
     {
       id: 'free_shipping',
-      title: 'Free Shipping',
+      title: deliveryFee > 0 ? 'Standard Shipping' : 'Free Shipping',
       description: 'Delivered within 2–5 business days',
-      cost: 0,
+      cost: deliveryFee,
       eligible: true,
     },
-  ]);
+  ];
 
   // Auto-select Free Shipping by default
   useEffect(() => {
