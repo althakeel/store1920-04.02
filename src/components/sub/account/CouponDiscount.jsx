@@ -230,6 +230,106 @@ export default function CouponDiscount({ onApplyCoupon }) {
           color: #333;
         }
 
+        .coupon-signin-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .coupon-signin-card {
+          margin-top: 10px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          background: #fff;
+          border: 1.5px solid #ffe0cc;
+          border-radius: 12px;
+          padding: 12px 14px;
+          box-shadow: 0 2px 8px rgba(255,98,7,0.07);
+        }
+
+        .coupon-signin-card-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .coupon-signin-tag-icon {
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 38px;
+          height: 38px;
+          background: #fff4ee;
+          border-radius: 10px;
+        }
+
+        .coupon-signin-card-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          min-width: 0;
+        }
+
+        .coupon-signin-card-title {
+          font-size: 13px;
+          font-weight: 700;
+          color: #1a1a1a;
+          white-space: nowrap;
+        }
+
+        .coupon-signin-card-sub {
+          font-size: 11px;
+          color: #888;
+          white-space: nowrap;
+        }
+
+        .coupon-signin-card-btn {
+          flex-shrink: 0;
+          padding: 8px 18px;
+          border-radius: 8px;
+          border: none;
+          background: #ff6207;
+          color: #fff;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.15s, transform 0.15s;
+          white-space: nowrap;
+        }
+
+        .coupon-signin-card-btn:hover {
+          background: #e0550a;
+          transform: translateY(-1px);
+        }
+
+        .coupon-signin-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0,0,0,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        }
+
+        .coupon-signin-modal {
+          background: #fff;
+          border-radius: 18px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+          padding: 32px 24px 24px 24px;
+          min-width: 320px;
+          max-width: 95vw;
+        }
+
         .coupon-row {
           display: flex;
           gap: 8px;
@@ -314,6 +414,15 @@ export default function CouponDiscount({ onApplyCoupon }) {
         }
 
         @media (max-width: 480px) {
+          .coupon-signin-card {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .coupon-signin-card-btn {
+            width: 100%;
+          }
+
           .coupon-row {
             flex-direction: row;
           }
