@@ -65,17 +65,22 @@ export default function CouponDiscount({ onApplyCoupon }) {
       {!user ? (
         <div className="coupon-signin-wrapper">
           {/* <div className="coupon-message error">Please sign in to use a coupon.</div> */}
-          <button className="coupon-signin-btn-better" onClick={() => setShowSignInModal(true)}>
-            <span className="signin-icon-better">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="11" cy="11" r="11" fill="#ff9800"/>
-                <path d="M7.5 10V8.5C7.5 6.57 9.07 5 11 5C12.93 5 14.5 6.57 14.5 8.5V10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                <rect x="6.5" y="10" width="9" height="6" rx="2" fill="#fff"/>
-                <circle cx="11" cy="13" r="1" fill="#ff9800"/>
-              </svg>
-            </span>
-            <span className="signin-text-better">Sign In to Use Coupon</span>
-          </button>
+          <div className="coupon-signin-card">
+            <div className="coupon-signin-card-left">
+              <div className="coupon-signin-tag-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21.41 11.58L12.41 2.58C12.05 2.22 11.55 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.55 2.22 12.05 2.59 12.42L11.59 21.42C11.95 21.78 12.45 22 13 22C13.55 22 14.05 21.78 14.41 21.41L21.41 14.41C21.78 14.05 22 13.55 22 13C22 12.45 21.77 11.94 21.41 11.58ZM5.5 7C4.67 7 4 6.33 4 5.5C4 4.67 4.67 4 5.5 4C6.33 4 7 4.67 7 5.5C7 6.33 6.33 7 5.5 7Z" fill="#ff6207"/>
+                </svg>
+              </div>
+              <div className="coupon-signin-card-info">
+                <span className="coupon-signin-card-title">Have a Coupon Code?</span>
+                <span className="coupon-signin-card-sub">Sign in to apply discounts</span>
+              </div>
+            </div>
+            <button className="coupon-signin-card-btn" onClick={() => setShowSignInModal(true)}>
+              Sign In
+            </button>
+          </div>
           {showSignInModal && (
             <div className="coupon-signin-modal-overlay">
               <div className="coupon-signin-modal">
@@ -92,38 +97,69 @@ export default function CouponDiscount({ onApplyCoupon }) {
                     flex-direction: column;
                     align-items: flex-start;
                   }
-                  .coupon-signin-btn-better {
-                    margin-top: 12px;
+                  .coupon-signin-card {
+                    margin-top: 10px;
                     width: 100%;
-                    padding: 16px 0;
-                    border-radius: 32px;
-                    border: none;
-                    font-weight: 800;
-                    font-size: 18px;
-                    color: #222;
-                    background: linear-gradient(90deg, #ffe0b2 0%, #ff9800 100%);
-                    box-shadow: 0 2px 12px rgba(255, 152, 0, 0.10);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    background: #fff;
+                    border: 1.5px solid #ffe0cc;
+                    border-radius: 12px;
+                    padding: 12px 14px;
+                    box-shadow: 0 2px 8px rgba(255,98,7,0.07);
+                  }
+                  .coupon-signin-card-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    flex: 1;
+                    min-width: 0;
+                  }
+                  .coupon-signin-tag-icon {
+                    flex-shrink: 0;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 14px;
-                    letter-spacing: 0.7px;
-                    transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+                    width: 38px;
+                    height: 38px;
+                    background: #fff4ee;
+                    border-radius: 10px;
                   }
-                  .coupon-signin-btn-better:hover:not(:disabled) {
-                    background: linear-gradient(90deg, #ffd54f 0%, #ff9800 100%);
-                    box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
-                    transform: translateY(-2px) scale(1.03);
-                  }
-                  .signin-icon-better {
+                  .coupon-signin-card-info {
                     display: flex;
-                    align-items: center;
-                    margin-right: 6px;
+                    flex-direction: column;
+                    gap: 2px;
+                    min-width: 0;
                   }
-                  .signin-text-better {
-                    font-size: 18px;
-                    font-weight: 800;
-                    letter-spacing: 0.7px;
+                  .coupon-signin-card-title {
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #1a1a1a;
+                    white-space: nowrap;
+                  }
+                  .coupon-signin-card-sub {
+                    font-size: 11px;
+                    color: #888;
+                    white-space: nowrap;
+                  }
+                  .coupon-signin-card-btn {
+                    flex-shrink: 0;
+                    padding: 8px 18px;
+                    border-radius: 8px;
+                    border: none;
+                    background: #ff6207;
+                    color: #fff;
+                    font-size: 13px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: background 0.15s, transform 0.15s;
+                    white-space: nowrap;
+                  }
+                  .coupon-signin-card-btn:hover {
+                    background: #e0550a;
+                    transform: translateY(-1px);
                   }
                   .coupon-signin-modal-overlay {
                     position: fixed;

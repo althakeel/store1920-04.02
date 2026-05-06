@@ -5153,10 +5153,234 @@ Most parents buy multiple strollers as their child grows. The Nexso 2-in-1 adapt
 `,
 }
 
-];
+
 
 
  
+
+
+
+//rohith
+ 
+
+,
+{
+  id: 543443,
+  name: "Nexso 2-in-1 Baby Stroller - The Last Stroller You'll Ever Need",
+  slug: "porodo-trackfit-smart-fitness-band-black-orange",
+  price: 329.0,
+  salePrice: 329.0,
+  regularPrice: 700.0,
+
+  description:
+    "Converts from newborn bassinet to toddler seat (0-6 yrs). Lightweight, foldable, shock-absorbing and designed for busy UAE families who refuse to compromise.",
+  shortdesc:
+    "A 2-in-1 stroller with reversible seating, UV canopy, rain cover, one-hand folding and smooth rubber wheels for newborns through age 6.",
+
+  subdesc: "2-in-1 bassinet to toddler seat conversion",
+  subdesc1: "UV canopy and rain protection for UAE weather",
+  subdesc2: "5-point safety harness with dual-brake confidence",
+  subdesc3: "Lightweight 7.5 kg frame with one-hand fold",
+  subdesc4: "Large under-seat storage for daily essentials",
+
+  image: Product268,
+  thumb1: Product267,
+  thumb2: Product265,
+  thumb3: Product258,
+  thumb4: Product259,
+  thumb5: Product260,
+  thumb6: Product261,
+  thumb7: Product262,
+  thumb8: Product263,
+  thumb9: Product264,
+
+  bundles: [
+    {
+      type: "Buy 1",
+      id: 543450,
+      name: "Nexso 2-in-1 Baby Stroller",
+      label: "Buy 1 stroller",
+      discount: 5,
+      slug: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
+      price: 329.0,
+      originalPrice: 700.0,
+      image: Product258,
+    },
+    {
+      type: "Bundle of 2",
+      id: 543446,
+      name: "Nexso 2-in-1 Baby Stroller",
+      label: "Buy 2 and save more",
+      discount: 8,
+      price: 595.0,
+      originalPrice: 1400.0,
+      note: "Ideal for twins, gifting, or keeping one at home and one in the car.",
+      mostPopular: true,
+      image: Product259,
+      slug: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
+    },
+    {
+      type: "Bundle of 3",
+      id: 543444,
+      name: "Nexso 2-in-1 Baby Stroller",
+      label: "Buy 3 for the biggest bundle value",
+      discount: 10,
+      price: 810.0,
+      originalPrice: 2100.0,
+      note: "Best for family gifting, nursery setups, or reseller-style bulk buying.",
+      mostPopular: false,
+      image: Product260,
+      slug: "nexso-2-in-1-baby-stroller-the-last-stroller-youll-ever-need",
+    },
+  ],
+
+  BundleTitle: "BUY MORE, SAVE MORE",
+
+  section2contentTitle: "Grow With Your Baby - One Stroller, Six Years of Use",
+  section2contentDesc:
+    "Most parents buy 2-3 different strollers as their child grows. The Nexso 2-in-1 adapts from the first week all the way to age 6, helping you save money, space, and daily hassle.",
+  section2list: [
+    "2-in-1 convertible design switches from bassinet to toddler seat in seconds.",
+    "Reversible seat lets baby face you or the world whenever you choose.",
+    "Shock-absorbing rubber wheels glide smoothly across malls, pavements, parks, and uneven streets.",
+    "Lightweight 7.5 kg build folds with one hand and fits easily in most UAE car boots.",
+    "3-stage UV canopy plus rain protection shields from sun, wind, and light rain.",
+    "Large under-seat basket keeps nappies, toys, groceries, and travel essentials within reach.",
+  ],
+  section2contentPoints: [
+    "Arrives in 2-5 business days",
+    "Free returns across the UAE",
+    "Secure payment with Tabby and Tamara available",
+    "Safe packaging with rigorous quality checks",
+  ],
+  section2image: Product265,
+
+  section3title: "Everything You Need - Nothing You Don't",
+  section3image: Product262,
+  section3points: [
+    "2-in-1 Convertible Design",
+    "Reversible Seat",
+    "Shock-Absorbing Rubber Wheels",
+    "Lightweight One-Hand Fold",
+  ],
+
+  sectionProgressTitle: "Trusted by Growing Families Across the UAE",
+  sectionProgressSubtitle: "",
+  sectionProgress: [
+    {
+      title: "Superior Safety Rating",
+      desc: "Parents rated the 5-point harness and dual brakes top-tier.",
+      percent: 97,
+    },
+    {
+      title: "Time-Saving Convenience",
+      desc: "One-hand fold in under 5 seconds, proven by UAE parents.",
+      percent: 94,
+    },
+    {
+      title: "Multi-Surface Performance",
+      desc: "Smooth ride on mall floors, pavements, and outdoor paths.",
+      percent: 91,
+    },
+    {
+      title: "Long-Term Value",
+      desc: "Families love using one stroller from newborn stage to toddler years.",
+      percent: 95,
+    },
+  ],
+
+  comparisonData: {
+    title: "Why Nexso Beats the Rest",
+    description:
+      "Unlike ordinary strollers, the Nexso 2-in-1 is engineered for UAE families - lightweight enough for daily use and tough enough for real-world surfaces.",
+    headers: ["Feature", "Nexso 2-in-1", "Ordinary Strollers"],
+    rows: [
+      { feature: "2-in-1 bassinet plus toddler seat", lumineux: true, others: false },
+      { feature: "Reversible seat", lumineux: true, others: false },
+      { feature: "Shock-absorbing rubber wheels", lumineux: true, others: false },
+      { feature: "One-hand quick fold", lumineux: true, others: false },
+      { feature: "UV canopy plus rain protection", lumineux: true, others: false },
+      { feature: "Large under-seat storage", lumineux: true, others: false },
+      { feature: "5-point safety harness", lumineux: true, others: false },
+      { feature: "30-day money-back guarantee", lumineux: true, others: false },
+    ],
+  },
+
+  section5image: Product268,
+
+  Guaranteetitle: "Our 30-Day Risk-Free Guarantee",
+  Guranteedesc:
+    "Choosing a stroller is a big decision, so every Nexso comes with a 30-day money-back guarantee. If you're not completely satisfied, simply return it for a full refund.",
+
+  Faq1Q: "What age range is the Nexso stroller suitable for?",
+  fAQ1A:
+    "The Nexso 2-in-1 is designed for newborns through children up to 6 years old. Bassinet mode is ideal from birth and converts easily into a toddler seat as your child grows.",
+  Faq2Q: "How heavy is it and will it fit in my car?",
+  fAQ2A:
+    "At just 7.5 kg, the Nexso is lightweight for a full-feature stroller. It folds with one hand and fits comfortably in most UAE car boots, including SUVs and sedans.",
+  Faq3Q: "Is delivery available across the UAE?",
+  fAQ3A:
+    "Yes. Fast delivery is available to Dubai, Abu Dhabi, Sharjah, and all other Emirates, with typical arrival in 2-5 business days.",
+  Faq4Q: "What's included in the box?",
+  fAQ4A:
+    "The box includes the stroller frame, bassinet, toddler seat, UV canopy, rain cover, 5-point harness, front child handle, and under-seat storage basket.",
+  Faq5Q: "Can I return it if I'm not satisfied?",
+  fAQ5A:
+    "Absolutely. We offer a 30-day no-questions-asked return policy with a full refund if the stroller is not the right fit for your family.",
+
+  reviewsTitle: "What UAE Parents Are Saying",
+  reviewsRating: 4.9,
+  reviews: [
+    {
+      text: "Bought this for my newborn. Folds in seconds, fits in my Land Cruiser boot, and the UV canopy is a lifesaver in Dubai heat.",
+      author: "Ahmed Al Mansoori, Dubai",
+      stars: 5,
+    },
+    {
+      text: "My baby loves the face-me mode. The wheels handle our building's marble floors perfectly and it's so easy to use.",
+      author: "Fatima Al Rashidi, Abu Dhabi",
+      stars: 5,
+    },
+    {
+      text: "We've had it for 8 months and it still looks brand new. The storage basket holds my whole diaper bag and more.",
+      author: "Priya Nair, Sharjah",
+      stars: 5,
+    },
+  ],
+
+  longCopy: `
+Free Shipping
+Up to 90 Days Returns
+Hurry Up! Limited Stock
+Sun and Rain Protection. Safety and Convenience.
+Signup Rewards
+
+Nexso 2-in-1 Baby Stroller - The Last Stroller You'll Ever Need
+
+Converts from newborn bassinet to toddler seat (0-6 yrs). Lightweight, foldable, shock-absorbing and designed for busy UAE families who refuse to compromise.
+
+AED 369.00
+AED 351.00
+As low as AED 87.75/month with 4 interest-free installments via Tabby or Tamara
+
+Arrives in 2-5 Business Days
+Free Returns
+Secure Payment
+AED 20 Credit for Delay
+
+Grow With Your Baby - One Stroller, Six Years of Use
+Most parents buy multiple strollers as their child grows. The Nexso 2-in-1 adapts with your baby from the first week all the way to age 6 - saving money, storage space, and hassle.
+`,
+}
+
+];
+
+
+
+ 
+ 
+
+
 
 
 export default staticProducts;

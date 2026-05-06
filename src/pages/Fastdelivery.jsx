@@ -26,6 +26,7 @@ import Product22 from '../assets/images/staticproducts/baby_stroller/10.webp';
 import Product23 from '../assets/images/staticproducts/mansoory-scooty/1.webp';
 import Product274 from '../assets/images/staticproducts/PorodoTrackFit/1.webp';
 import Product279 from '../assets/images/staticproducts/airtab-mini/5.webp';
+import Product29 from '../assets/images/staticproducts/porodoband/3.webp';
 import NoItemImage from '../assets/images/noitem.png';
 
 const DESKTOP_COLUMNS = 5;
@@ -121,6 +122,24 @@ const staticProducts = [
     reviews: 48,
     sold: 139
   },
+
+  {
+    id: "Porodo TrackFit Smart Fitness Band – 120+ Sports Modes, 30-Day Battery",
+    name: "Porodo TrackFit Smart Fitness Band – 120+ Sports Modes, 30-Day Battery",
+    price: "99.90",
+    regular_price: "169.00",
+    sale_price: "99.90",
+    images: [{ src: Product29 }],
+    path: "/products/porodo-trackfit-smart-fitness-band-black-orange",
+    rating: 5,
+    reviews: 28,
+    sold: 29
+  },
+
+
+
+
+
   {
     id: "48V Cordless Portable Car Wash Pressure Washer Gun with Dual",
     name: "48V Cordless Portable Car Wash Pressure Washer Gun with Dual",

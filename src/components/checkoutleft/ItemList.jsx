@@ -185,11 +185,35 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
 
               <div style={{ flex: 1 }}>
                 <p style={{ margin: 0, fontWeight: 600 }}>{item.name}</p>
-                <p style={{ margin: '4px 0' }}>AED {price} × <span style={{fontWeight:"bold"}}>{item.quantity ?? 1}</span></p>
+                {item.isGift ? (
+                  <p style={{ margin: '4px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '13px' }}>
+                      AED {parseFloat(item.regular_price || item.originalPrice || price).toFixed(2)}
+                    </span>
+                    <span style={{ fontWeight: 700, color: '#0f6b3a', fontSize: '14px' }}>AED 0.00</span>
+                  </p>
+                ) : (
+                  <p style={{ margin: '4px 0' }}>AED {price} × <span style={{fontWeight:"bold"}}>{item.quantity ?? 1}</span></p>
+                )}
                 
-                {/* COD Availability Badge */}
-                <div style={{ marginTop: 6 }}>
-                  {isCodAvailable ? (
+                {/* Free Gift Badge or COD Availability Badge */}
+                <div style={{ marginTop: 6, display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {item.isGift && (
+                    <span style={{
+                      display: 'inline-block',
+                      padding: '3px 8px',
+                      background: 'linear-gradient(90deg, #0f6b3a, #1a9e56)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontSize: '11px',
+                      fontWeight: '700',
+                      letterSpacing: '0.3px',
+                    }}>
+                      🎁 Free Gift
+                    </span>
+                  )}
+                  {!item.isGift && (isCodAvailable ? (
                     <span style={{
                       display: 'inline-block',
                       padding: '3px 8px',
@@ -215,10 +239,10 @@ const ItemList = ({ items = [], onRemove, onUpdateQuantity }) => {
                     }}>
                       ✗ COD Not Available
                     </span>
-                  )}
+                  ))}
                 </div>
 
-                <div style={quantityStyle}>
+                <div style={item.isGift ? { display: 'none' } : quantityStyle}>
                   <button
                     style={qtyButtonStyle}
                     onClick={(e) => {
