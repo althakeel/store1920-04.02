@@ -57,7 +57,7 @@ const fetchWithAuth = async (endpoint, options = {}) => {
 };
 
 const sanitizeField = (value) => (value && value.trim() ? value : 'NA');
-const DELIVERY_FEE = 13;
+const DELIVERY_FEE = 15;
 const FREE_SHIPPING_THRESHOLD = 100;
 const FREE_GIFT_THRESHOLD = 150;
 const FREE_GIFT_SLUGS = ['nexso-curly-hair-brush', 'nexso-black-mouth-tape-30pcs-hypoallergenic-snore-strips'];
@@ -199,7 +199,12 @@ export default function CheckoutPage() {
     const savedData = localStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
     if (savedData) {
       try {
-        setFormData(JSON.parse(savedData));
+        const parsed = JSON.parse(savedData);
+        // Force COD as default payment method
+        parsed.paymentMethod = 'cod';
+        parsed.paymentMethodTitle = 'Cash On Delivery';
+        parsed.paymentMethodLogo = null;
+        setFormData(parsed);
         return;
       } catch {}
     }
@@ -213,6 +218,9 @@ export default function CheckoutPage() {
       setFormData((prev) => ({
         ...prev,
         ...mapAccountAddressToCheckoutForm(savedAddress, user?.email || ''),
+        paymentMethod: 'cod',
+        paymentMethodTitle: 'Cash On Delivery',
+        paymentMethodLogo: null,
       }));
     }
   }, [user?.email, user?.id]);
@@ -243,7 +251,12 @@ useEffect(() => {
     const savedData = localStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
     if (savedData) {
       try {
-        setFormData(JSON.parse(savedData));
+        const parsed = JSON.parse(savedData);
+        // Force COD as default payment method
+        parsed.paymentMethod = 'cod';
+        parsed.paymentMethodTitle = 'Cash On Delivery';
+        parsed.paymentMethodLogo = null;
+        setFormData(parsed);
         return; // Stop here, don't fetch from WooCommerce
       } catch (err) {
         console.warn('Failed to parse saved checkout data:', err);
@@ -255,6 +268,10 @@ useEffect(() => {
 
     if (savedAddress) {
       const mappedData = mapAccountAddressToCheckoutForm(savedAddress, user.email || '');
+      // Force COD as default payment method
+      mappedData.paymentMethod = 'cod';
+      mappedData.paymentMethodTitle = 'Cash On Delivery';
+      mappedData.paymentMethodLogo = null;
       setFormData(mappedData);
       localStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(mappedData));
       return;
@@ -404,12 +421,21 @@ useEffect(() => {
   }, []);
 
   const handlePaymentSelect = (id, title, logo) => {
+    if (id === 'cod' && discount > 0) {
+      setDiscount(0);
+    }
+
     setFormData(prev => ({ 
       ...prev, 
       paymentMethod: id, 
       paymentMethodTitle: title,
       paymentMethodLogo: logo 
     }));
+  };
+
+  const clearCheckoutAndGlobalCart = () => {
+    clearCart();
+    setCartItems([]);
   };
 
   const createOrder = async () => {
@@ -487,12 +513,15 @@ useEffect(() => {
     };
 
 
+    const isCodPayment = String(formData.paymentMethod || '').toLowerCase() === 'cod';
+    const effectiveDiscount = isCodPayment ? 0 : discount;
+
     // Add discount and coinDiscount as negative fee lines if present
     const fee_lines = [];
-    if (discount > 0) {
+    if (effectiveDiscount > 0) {
       fee_lines.push({
         name: 'Coupon Discount',
-        total: (-discount).toFixed(2),
+        total: (-effectiveDiscount).toFixed(2),
       });
     }
     if (coinDiscount > 0) {
@@ -539,7 +568,12 @@ useEffect(() => {
         floor: sanitizeField(shipping.floor),
       },
       line_items,
-      shipping_lines: formData.shippingMethodId ? [{ method_id: formData.shippingMethodId }] : [],
+      shipping_lines:
+        discountedDynamicSubtotal >= FREE_SHIPPING_THRESHOLD
+          ? []
+          : formData.shippingMethodId
+            ? [{ method_id: formData.shippingMethodId }]
+            : [],
       fee_lines,
       meta_data: [
         { key: '_from_react_checkout', value: true },
@@ -631,7 +665,7 @@ useEffect(() => {
       formData={formData}
       orderId={orderId}
       createOrder={createOrder}
-      clearCart={() => setCartItems([])}
+      clearCart={clearCheckoutAndGlobalCart}
       handlePlaceOrder={handlePlaceOrder}
       subtotal={subtotal}
       showForm={showForm}
@@ -754,13 +788,15 @@ return (
         setFormData={setFormData}
         handlePlaceOrder={handlePlaceOrder}
         createOrder={createOrder}
+        discount={discount}
+        setDiscount={setDiscount}
       />
       <CheckoutRight
         cartItems={cartItems}
         formData={formData}
         orderId={orderId}
         createOrder={createOrder}
-        clearCart={() => setCartItems([])}
+        clearCart={clearCheckoutAndGlobalCart}
         handlePlaceOrder={handlePlaceOrder}
         subtotal={subtotal}
         discount={discount}

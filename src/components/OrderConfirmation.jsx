@@ -14,6 +14,15 @@ const getSafeAmount = (value) => {
   return Number.isFinite(amount) ? amount : 0;
 };
 
+const getFeeDiscountTotal = (feeLines = []) =>
+  (Array.isArray(feeLines) ? feeLines : []).reduce((sum, fee) => {
+    const feeTotal = getSafeAmount(fee?.total);
+    return feeTotal < 0 ? sum + Math.abs(feeTotal) : sum;
+  }, 0);
+
+const SHIPPING_FREE_THRESHOLD = 100;
+const SHIPPING_UNDER_THRESHOLD_FEE = 15;
+
 const isFreeGiftItem = (item) =>
   Array.isArray(item?.meta_data) &&
   item.meta_data.some(
@@ -72,7 +81,19 @@ export default function OrderConfirmation() {
     if (isFreeGiftItem(item)) return sum;
     return sum + getSafeAmount(item.total);
   }, 0);
-  const discountTotal = getSafeAmount(order.discount_total);
+  const couponDiscountTotal = getSafeAmount(order.discount_total);
+  const feeDiscountTotal = getFeeDiscountTotal(order.fee_lines);
+  const discountTotal = couponDiscountTotal + feeDiscountTotal;
+  const shippingTotal = itemsSubtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_UNDER_THRESHOLD_FEE;
+  const isCOD = order?.payment_method === 'cod' || order?.payment_method_title === 'Cash on Delivery';
+  const expectedCodTotal = itemsSubtotal + shippingTotal;
+  const orderTotal = getSafeAmount(order.total);
+  const hasAnyDiscount = discountTotal > 0;
+  const isLikelyResidualCodUpsellDiscount =
+    isCOD &&
+    !hasAnyDiscount &&
+    orderTotal + 0.01 < expectedCodTotal;
+  const displayTotal = isLikelyResidualCodUpsellDiscount ? expectedCodTotal : (itemsSubtotal + shippingTotal);
 
   return (
     <div className="order-confirmation-containe">
@@ -115,7 +136,7 @@ export default function OrderConfirmation() {
           </div>
           <div className="info-item">
             <span className="info-label">Total</span>
-            <span className="info-value">{formatPrice(order.total)}</span>
+            <span className="info-value">{formatPrice(displayTotal)}</span>
           </div>
           <div className="info-item">
             <span className="info-label">Payment method</span>
@@ -191,16 +212,16 @@ export default function OrderConfirmation() {
               <span className="summary-value">{discountTotal > 0 ? `-AED ${discountTotal.toFixed(2)}` : 'AED 0.00'}</span>
             </div>
             
-            {order.shipping_total && parseFloat(order.shipping_total) > 0 && (
+            {shippingTotal > 0 && (
               <div className="summary-row">
                 <span className="summary-label">Shipping & handling</span>
-                <span className="summary-value">{formatPrice(order.shipping_total)}</span>
+                <span className="summary-value">{formatPrice(shippingTotal)}</span>
               </div>
             )}
             
             <div className="summary-row total-row">
               <span className="summary-label">Total</span>
-              <span className="summary-value">{formatPrice(order.total)}</span>
+              <span className="summary-value">{formatPrice(displayTotal)}</span>
             </div>
           </div>
         </div>

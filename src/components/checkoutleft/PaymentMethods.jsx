@@ -107,6 +107,7 @@ const PaymentMethods = ({
   onMethodSelect,
   subtotal,
   cartItems = [],
+  onDiscountChange = null,
 }) => {
   const [showCodPopup, setShowCodPopup] = useState(false);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
@@ -125,10 +126,10 @@ const PaymentMethods = ({
 console.log('Auth user ID:', user?.id);
 
 
-  // Set Tabby as default if nothing is selected and subtotal > 0
+  // Set COD as default if nothing is selected and subtotal > 0
   useEffect(() => {
     if (!selectedMethod && subtotal > 0) {
-      onMethodSelect('tabby', 'Tabby', TabbyIcon);
+      onMethodSelect('cod', 'Cash on Delivery', CashIcon);
     }
   }, [selectedMethod, subtotal, onMethodSelect]);
 
@@ -148,20 +149,50 @@ console.log('Auth user ID:', user?.id);
     methodLogo = null,
     extra = {}
   ) => {
+    // Manual card selection should always use normal pricing (no COD upsell 5% off).
     if (methodId === 'card') {
-      setConfirmationMethod({
-        id: methodId,
-        title: methodTitle,
-        logo: methodLogo,
-        extra,
-      });
-      setShowPaymentConfirmation(true);
-    } else {
-      onMethodSelect(methodId, methodTitle, methodLogo, extra);
+      sessionStorage.removeItem('paymentRedirectInitiated');
+      sessionStorage.removeItem('paymentStartTime');
+      if (onDiscountChange) {
+        onDiscountChange(0);
+      }
     }
+
+    onMethodSelect(methodId, methodTitle, methodLogo, extra);
   };
 
   const handleConfirmationClose = () => {
+    // Clear flags and discount when user manually closes (clicks "NO THANKS")
+    sessionStorage.removeItem('paymentRedirectInitiated');
+    sessionStorage.removeItem('paymentStartTime');
+    
+    // Clear the 5% discount when canceling payment
+    if (onDiscountChange) {
+      onDiscountChange(0);
+      console.log('🗑️ Cleared 5% discount (user clicked NO THANKS)');
+    }
+    
+    setShowPaymentConfirmation(false);
+    setConfirmationMethod(null);
+  };
+
+  // COD selection should not open any upsell popup.
+  const handleCodSelect = () => {
+    // Always switch to COD immediately so radio state is consistent
+    // even after switching from Tabby/Tamara/Card.
+    onMethodSelect('cod', 'Cash on Delivery', CashIcon);
+
+    // Clear any in-progress pay-now redirect flags and discount remnants.
+    sessionStorage.removeItem('paymentRedirectInitiated');
+    sessionStorage.removeItem('paymentStartTime');
+    if (onDiscountChange) {
+      onDiscountChange(0);
+    }
+  };
+
+  const closePopupWithoutClearingFlags = () => {
+    // Close popup but keep flags for return detection
+    // Used when confirming payment (user will be redirected to Stripe)
     setShowPaymentConfirmation(false);
     setConfirmationMethod(null);
   };
@@ -174,7 +205,8 @@ console.log('Auth user ID:', user?.id);
         confirmationMethod.logo,
         confirmationMethod.extra || {}
       );
-      handleConfirmationClose();
+      // Don't clear flags - keep them for return detection from Stripe
+      closePopupWithoutClearingFlags();
     }
   };
 
@@ -183,11 +215,6 @@ console.log('Auth user ID:', user?.id);
       selectedSavedCardId: card.id,
       selectedSavedCardHint: buildSavedCardHint(card),
     };
-
-    if (selectedMethod === 'card') {
-      onMethodSelect('card', 'Credit/Debit Card', CardIcon, extra);
-      return;
-    }
 
     handlePaymentMethodSelect('card', 'Credit/Debit Card', CardIcon, extra);
   };
@@ -230,6 +257,17 @@ console.log('Auth user ID:', user?.id);
     (hasOnlyStaticProducts && !hasNonStaticProducts && staticProductIds.length > 0) || 
     allItemsSupportCOD;
 
+  // Set default payment method: COD if available, otherwise Card
+  useEffect(() => {
+    if (!selectedMethod && subtotal > 0) {
+      if (isCodAvailableForCart) {
+        onMethodSelect('cod', 'Cash on Delivery', CashIcon);
+      } else {
+        onMethodSelect('card', 'Credit/Debit Card', CardIcon);
+      }
+    }
+  }, [selectedMethod, subtotal, onMethodSelect, isCodAvailableForCart]);
+
   console.log('💳 COD Availability Check:', {
     cartItemCount: cartItems.length,
     codRelevantItemCount: codRelevantItems.length,
@@ -240,6 +278,55 @@ console.log('Auth user ID:', user?.id);
     isCodAvailableForCart
   });
 
+  // ✅ DETECT RETURN FROM PAYMENT PROVIDER AND RESET STATES
+  // When user comes back from Stripe/payment page, reset payment popups and method
+  // This ensures the original COD price is shown (without any 5% discount)
+  useEffect(() => {
+    const checkReturnFromPayment = () => {
+      const wasPaymentRedirectInitiated = sessionStorage.getItem('paymentRedirectInitiated');
+      const paymentStartTime = sessionStorage.getItem('paymentStartTime');
+      const now = Date.now();
+      
+      // If payment redirect was initiated and we still have the timestamp, check if user returned
+      if (wasPaymentRedirectInitiated && paymentStartTime) {
+        const timeSincePayment = now - parseInt(paymentStartTime, 10);
+        
+        // If payment was initiated but user is still on card method after 200ms,
+        // it likely means they returned from payment provider (without successful redirect)
+        if (timeSincePayment > 200) {
+          console.log('🔄 Detected return from payment provider - timeSincePayment:', timeSincePayment);
+          console.log('💰 Resetting to original COD price (no 5% discount)');
+          
+          // Clear the flags
+          sessionStorage.removeItem('paymentRedirectInitiated');
+          sessionStorage.removeItem('paymentStartTime');
+          
+          // ✅ CLEAR 5% DISCOUNT when returning from payment provider
+          if (onDiscountChange) {
+            onDiscountChange(0);
+            console.log('🗑️ Cleared 5% discount');
+          }
+          
+          // Close all payment-related popups
+          if (showPaymentConfirmation) {
+            console.log('❌ Closing payment confirmation popup');
+            setShowPaymentConfirmation(false);
+            setConfirmationMethod(null);
+          }
+          
+          // Reset payment method back to COD to restore original price (without 5% off)
+          if (selectedMethod === 'card' && isCodAvailableForCart) {
+            console.log('↩️ Resetting payment method back to COD');
+            onMethodSelect('cod', 'Cash on Delivery', CashIcon);
+          }
+        }
+      }
+    };
+    
+    // Check on mount and when payment-related states change
+    checkReturnFromPayment();
+  }, [selectedMethod, showPaymentConfirmation, onMethodSelect, isCodAvailableForCart, onDiscountChange]);
+
   const amount = Number(subtotal) || 0;
   const tamaraMinAmount = 99;
   const tamaraMaxAmount = 3000;
@@ -247,14 +334,8 @@ console.log('Auth user ID:', user?.id);
   const canUseWallet =
   Number(walletBalance || 0) >= amount &&
   amount > 0;
-  useEffect(() => {
-    if (selectedMethod === 'cod' && !isCodAvailableForCart) {
-      onMethodSelect('card', 'Credit/Debit Card', CardIcon);
-    }
-  }, [cartItems, selectedMethod, onMethodSelect, isCodAvailableForCart]);
 
   const installmentAmounts = getInstallmentAmounts(amount);
-
 
 useEffect(() => {
   console.log('Wallet fetch triggered');
@@ -436,7 +517,7 @@ console.log('Wallet loading:', walletLoading);
               id="cod"
               name="payment-method"
               checked={selectedMethod === 'cod'}
-              onChange={() => onMethodSelect('cod', 'Cash on Delivery', CashIcon)}
+              onChange={handleCodSelect}
             />
             <label htmlFor="cod" className="payment-method-label">
               <img src={CashIcon} alt="Cash on Delivery" className="payment-icon" />
