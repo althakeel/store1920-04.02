@@ -61,6 +61,16 @@ const getNormalizedOrderTotals = (orderData) => {
       );
 
     if (isGift) return sum;
+    useEffect(() => {
+      // Prevent browser-back from landing on an invalid/blank intermediate callback state.
+      window.history.pushState(null, '', window.location.href);
+      const handleBackNavigation = () => {
+        navigate('/', { replace: true });
+      };
+
+      window.addEventListener('popstate', handleBackNavigation);
+      return () => window.removeEventListener('popstate', handleBackNavigation);
+    }, [navigate]);
     return sum + getSafeAmount(item?.total);
   }, 0);
 
